@@ -178,11 +178,8 @@
         $('#serial_label').text(serial_no);
         $('#serial_no').val(serial_no);
 
-
         var serial = sessionStorage.setItem('serial_no', serial_no);
         var stats = sessionStorage.getItem('status', status);
-        // var serial_no = document.getElementById('serial_no').value;
-        // const serial_no = $('#serial_no').val();
         $.ajax({
             type: "POST",
             url: '../../process/checker/load_data.php',

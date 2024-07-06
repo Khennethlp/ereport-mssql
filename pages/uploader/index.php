@@ -18,7 +18,8 @@
                 require '../../process/conn.php';
                 $uploader_name = $_SESSION['name'];
 
-                $sql = "SELECT DISTINCT(serial_no), COUNT(checker_status) as total FROM t_training_record WHERE checker_status = 'Pending' AND uploader_name = :uploader_name ";
+                $sql = "SELECT DISTINCT COUNT(checker_status) as total FROM t_training_record WHERE checker_status = 'Pending' AND uploader_name = :uploader_name";
+                // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'pending' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
                 $stmt->execute();
@@ -27,13 +28,13 @@
                   $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                   foreach ($rows as $row) {
-                    echo '<h3>'.$row['total'].'</h3>';
+                    echo '<h3>' . $row['total'] . '</h3>';
                   }
                 } else {
                   echo '<h3>0</h3>';
                 }
                 ?>
-                
+
                 <p>Pending</p>
               </div>
               <div class="icon">
@@ -45,11 +46,13 @@
           <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
               <div class="inner">
-              <?php
+                <?php
                 require '../../process/conn.php';
                 $uploader_name = $_SESSION['name'];
 
-                $sql = "SELECT COUNT(serial_no) as total FROM t_training_record WHERE checker_status = 'Approved' AND uploader_name = :uploader_name";
+                // $sql = "SELECT COUNT(serial_no) as total FROM t_training_record WHERE checker_status = 'Approved' AND uploader_name = :uploader_name";
+                // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'approved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
+                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Approved' AND uploader_name = :uploader_name";
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
                 $stmt->execute();
@@ -60,7 +63,7 @@
 
                   // Output data of each row
                   foreach ($rows as $row) {
-                    echo '<h3>'.$row['total'].'</h3>';
+                    echo '<h3>' . $row['total'] . '</h3>';
                   }
                 } else {
                   echo '<h3>No Record.</h3>';
@@ -77,11 +80,12 @@
           <div class="col-lg-3 col-6">
             <div class="small-box bg-danger">
               <div class="inner">
-              <?php
+                <?php
                 require '../../process/conn.php';
                 $uploader_name = $_SESSION['name'];
 
                 $sql = "SELECT COUNT(checker_status) as total FROM t_training_record WHERE checker_status = 'Disapproved' AND uploader_name = :uploader_name";
+                // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'disapproved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
                 $stmt->execute();
@@ -92,7 +96,7 @@
 
                   // Output data of each row
                   foreach ($rows as $row) {
-                    echo '<h3>'.$row['total'].'</h3>';
+                    echo '<h3>' . $row['total'] . '</h3>';
                   }
                 } else {
                   echo '<h3>No Record.</h3>';
@@ -112,7 +116,7 @@
           <div class="col-sm-12">
             <div class="card card-primary card-outline">
               <div class="card-header">
-                <h3 class="card-title text-uppercase"><i class="fas fa-file-upload mr-2"></i>Upload</h3>
+                <h3 class="card-title text-uppercase"><i class="fas fa-upload mr-2"></i>Upload</h3>
               </div>
 
               <div class="card-body">
@@ -139,25 +143,26 @@
 
                         <div class="col-md-6">
                           <div class="row ml-auto">
+
                             <div class="col-md-3 mb-1">
-                              <label for="">&nbsp;</label>
-                              <button class="form-control btn btn-warning" onclick="refresh();">
-                                <i class="fas fa-sync-alt"></i>&nbsp;
-                                Refresh
-                              </button>
-                            </div>
-                            <div class="col-md-4 mb-1">
                               <label for="">&nbsp;</label>
                               <button class="form-control btn btn-danger" onclick="load_data();">
                                 <i class="fas fa-search"></i>&nbsp;
                                 Search
                               </button>
                             </div>
-                            <div class="col-md-4 mb-1">
+                            <div class="col-md-6 mb-1">
                               <label for="">&nbsp;</label>
                               <button class="form-control btn_Submit" id="" data-toggle="modal" data-target="#upload">
                                 <i class="fas fa-upload"></i>&nbsp;
                                 Upload
+                              </button>
+                            </div>
+                            <div class="col-md-3 mb-1">
+                              <label for="">&nbsp;</label>
+                              <button class="form-control btn btn-secondary" onclick="refresh();">
+                                <i class="fas fa-sync-alt"></i>&nbsp;
+                                Refresh
                               </button>
                             </div>
                           </div>
@@ -171,13 +176,14 @@
               <div class="row">
                 <div class="col-12">
                   <div class="card-body table-responsive p-0" id="table_container" style="height: 600px; overflow: auto;">
-                    <table class="table table-head-fixed text-nowrap text-center" id="table">
+                    <table class="table table-head-fixed text-nowrap text-center table-hover" id="table">
                       <thead>
                         <tr>
                           <th>#</th>
                           <th>Status</th>
                           <th>Serial No.</th>
                           <th>Batch No.</th>
+                          <!-- <th>Filename</th> -->
                           <th>Upload By</th>
                           <th>Date</th>
                         </tr>

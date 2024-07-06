@@ -1,13 +1,13 @@
-<div class="modal fade bd-example-modal-xl" id="checker_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-xl" id="view_upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header ">
                 <h5 class="modal-title " id="exampleModalLabel">
                     <div class="row">
                         <label for="serial_label">Serial No:&nbsp;&nbsp; </label> 
-                        <p id="serial_label"></p>
-                        <input type="hidden" class="form-control" id="serial_no">
-                        <input type="hidden" class="form-control" id="id_no">
+                        <p id="u_serial_label"></p>
+                        <input type="hidden" class="form-control" id="u_serial_no">
+                        <input type="hidden" class="form-control" id="u_id_no">
                         <!-- <p id="id_no"></p> -->
                     </div>
                 </h5>
@@ -22,9 +22,10 @@
                         <tr>
                             <th>#</th>
                             <th>File(s)</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody id="checker_modal_table"> </tbody>
+                    <tbody id="uploads_modal_table"> </tbody>
                 </table>
 
             </div>

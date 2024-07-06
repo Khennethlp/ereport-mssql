@@ -111,9 +111,9 @@
             page = 1; // Reset page number for initial load
         }
 
-        const date = $('#search_date').val();
-        const status = $('#status').val();
-        const uploader_name = $('#uploader_name').val();
+        var date = $('#search_date').val();
+        var status = $('#status').val();
+        var uploader_name = $('#uploader_name').val();
 
         $.ajax({
             type: "POST",
@@ -288,4 +288,36 @@
             });
         }
     };
+
+    const get_uploads_details = param => {
+        var data = param.split('~!~');
+        var id = data[0];
+        var serial_no = data[1];
+        var status = data[2];
+        $('#u_id_no').val(id);
+        $('#u_serial_label').text(serial_no);
+        $('#u_serial_no').val(serial_no);
+
+        console.log(param);
+        sessionStorage.setItem('serial_no', serial_no);
+        // var status = sessionStorage.getItem('status'); // Correctly retrieve the status
+
+        $.ajax({
+            type: "POST",
+            url: '../../process/uploader/load_data.php',
+            cache: false,
+            data: {
+                method: 'uploads_modal_table',
+                id: id,
+                serial_no: serial_no,
+                status: status 
+            },
+            success: function(response) {
+                document.getElementById('uploads_modal_table').innerHTML = response;
+            },
+            error: function() {
+                console.log("Error loading data");
+            }
+        });
+    }
 </script>

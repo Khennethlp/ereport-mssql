@@ -44,6 +44,7 @@
                                                     <th>#</th>
                                                     <th>Main Document</th>
                                                     <th>Sub Document</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody id="m_report_table"></tbody>
@@ -61,6 +62,7 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Training Title</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody id="m_training_table"></tbody>

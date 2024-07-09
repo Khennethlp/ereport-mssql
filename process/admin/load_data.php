@@ -13,10 +13,11 @@ if ($method == 'load_docs') {
     if ($stmt->rowCount()) {
         while ($k = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $c++;
-            echo '<tr style="cursor: pointer;" data-toggle="modal" data-target="#update_docs" onclick="get_docs(&quot;' . $k['id'] . '~!~' . $k['main_doc'] . '~!~' . $k['sub_doc'] . ' &quot;)">';
+            echo '<tr >';
             echo '<td>' . $c . '</td>';
             echo '<td>' . $k['main_doc'] . '</td>';
             echo '<td>' . $k['sub_doc'] . '</td>';
+            echo '<td style="cursor: pointer;" data-toggle="modal" data-target="#update_docs" onclick="get_docs(&quot;' . $k['id'] . '~!~' . $k['main_doc'] . '~!~' . $k['sub_doc'] . ' &quot;)"><i class="fas fa-ellipsis-h"></i></td>';
             echo '</tr>';
         }
     }
@@ -81,9 +82,10 @@ if ($method == 'load_trainings') {
     if ($stmt->rowCount()) {
         while ($k = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $c++;
-            echo '<tr style="cursor: pointer;" data-toggle="modal" data-target="#update_training" onclick="get_train(&quot;' . $k['id'] . '~!~' . $k['training_title'] . ' &quot;)">';
+            echo '<tr >';
             echo '<td>' . $c . '</td>';
             echo '<td>' . $k['training_title'] . '</td>';
+            echo '<td style="cursor: pointer;" data-toggle="modal" data-target="#update_training" onclick="get_train(&quot;' . $k['id'] . '~!~' . $k['training_title'] . ' &quot;)"><i class="fas fa-ellipsis-h"></i></td>';
             echo '</tr>';
         }
     }

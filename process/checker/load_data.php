@@ -55,6 +55,7 @@ if ($method == 'checker_table') {
     }
 
     $stmt->execute();
+
     $c = 0;
 
     if ($stmt->rowCount() > 0) {

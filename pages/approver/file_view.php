@@ -1,8 +1,9 @@
 <?php
 $title = "E-REPORT SYSTEM";
 $file_path = $_GET['file_path'];
-$checker = $_GET['checked_by'];
-$seriesNo = $_GET['series_no'];
+$approver = $_GET['approver'];
+$serial_no = $_GET['serial_no'];
+$id = $_GET['id'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,14 +55,39 @@ $seriesNo = $_GET['series_no'];
     select:focus {
         border: 2px solid #0F85E6 !important;
     }
+
+    #iframe-container {
+        /* position: relative; */
+        width: 100%;
+        height: 650px;
+    }
+    iframe {
+        border: none;
+        width: 100%;
+        height: 100%;
+    }
+    #fullscreen-btn {
+        /* position: absolute; */
+        top: 10px;
+        right: 10px;
+        /* z-index: 1; */
+        padding: 10px;
+        background-color: #275DAD;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
 </style>
 
 <body>
     <div class="row">
         <div class="col-md-6">
             <div class="card m-3">
+                <button id="fullscreen-btn" onclick="toggleFullscreen()">Fullscreen</button>
                 <div class="card-body">
-                    <iframe src="<?= htmlspecialchars($file_path) ? htmlspecialchars($file_path) : "No file to preview." ?>" frameborder="0" height="650" width="100%"></iframe>
+                    <div id="iframe-container">
+                        <iframe id="my-iframe" src="<?= htmlspecialchars($file_path) ? htmlspecialchars($file_path) : "No file to preview." ?>" frameborder="0" height="650" width="100%"></iframe>
+                    </div>
                 </div>
             </div>
         </div>
@@ -70,49 +96,28 @@ $seriesNo = $_GET['series_no'];
                 <div class="card-body">
                     <div class="card-body">
                         <div class="row">
-                            <div class=" mb-5">
-
-                                <label for="series_no_label" class="d-inline-block mb-0 text-lg">Status:</label>
-                                <p id="series_no_label" class="d-inline-block mb-0 text-lg">
-                                    <?php
-                                    require '../../process/conn.php';
-
-                                    $sql = "SELECT status FROM uploads WHERE series_no = '$seriesNo'";
-                                    $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-                                    $stmt->execute();
-
-                                    if ($stmt->rowCount() > 0) {
-                                        // Output data of each row
-                                        $rows = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                                        $status = strtoupper(htmlspecialchars($rows['status']));
-                                        $badgeColor = ($status == 'PENDING') ? 'secondary' : (($status == 'CHECKED') ? 'info' : (($status == 'APPROVED') ? 'success' : (($status == 'DISAPPROVED') ? 'danger' : 'default')));
-                                        echo "<span class='badge badge-$badgeColor'>$status</span>";
-                                    } else {
-                                        echo 'N/A';
-                                    }
-                                    ?>
-                                </p>
-                            </div>
+                        
                             <div class="ml-auto mb-5">
-                                <input type="hidden" id="checked_by" value="<?php echo $checker; ?>">
-                                <label for="series_no_label" class="d-inline-block mb-0 text-lg">Series no:</label>
-                                <p id="series_no_label" class="d-inline-block mb-0 text-lg"><?= $seriesNo; ?></p>
+                            <input type="hidden" id="a_id" value="<?php echo $id; ?>">
+                                <input type="hidden" id="approved_by" value="<?php echo $approver; ?>">
+                                <label for="series_no_label" class="d-inline-block mb-0 text-lg">Serial_no:</label>
+                                <p id="series_no_label" class="d-inline-block mb-0 text-lg"><?= $serial_no; ?></p>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 mb-5">
+                            <div class="col-md-12 mb-5">
                                 <label for="">Status:</label>
-                                <select class="form-control" name="status_checker" id="status_checker">
+                                <select class="form-control" name="status_approver" id="status_approver">
                                     <option value="">---Status---</option>
-                                    <option value="approved">Approved</option>
-                                    <option value="disapproved">Disapproved</option>
+                                    <option value="approved">Approve</option>
+                                    <option value="disapproved">Disapprove</option>
                                 </select>
 
                             </div>
-                            <div class="col-md-6 mb-5">
+                            
+                            <!-- <div class="col-md-6 mb-5">
                                 <label for="">Approval by:</label>
-                                <select class="form-control" name="approver_checker" id="approver_checker">
+                                <select class="form-control" name="approver_select" id="approver_select">
                                     <option value="">---Choose Approver---</option>
                                     <?php
                                     require '../../process/conn.php';
@@ -134,19 +139,16 @@ $seriesNo = $_GET['series_no'];
                                     }
                                     ?>
                                 </select>
-                            </div>
-                            <div class="col-md-6">
+                            </div> -->
+                            <div class="col-md-12">
                                 <label for="">Comment:</label>
-                                <textarea class="form-control" name="comment_checker" id="comment_checker" rows="3" cols="5" maxlength="250"></textarea>
+                                <textarea class="form-control" name="comment_approver" id="comment_approver" rows="3" cols="5" maxlength="250"></textarea>
                             </div>
-                            <div class="col-md-6">
-                                <label for="">Remarks:</label>
-                                <textarea class="form-control" name="remarks_checker" id="remarks_checker" rows="3" cols="5" maxlength="250"></textarea>
-                            </div>
+                        
                             <div class="col-md-12 mt-3">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <button class="form-control btn_submit mb-2" id="submit_upload_btn" onclick="upload_checked();">
+                                        <button class="form-control btn_submit mb-2" id="submit_upload_btn" onclick="upload_approved();">
                                             <i class="fas fa-paper-plane"></i>&nbsp;
                                             Submit</button>
                                     </div>
@@ -181,7 +183,60 @@ $seriesNo = $_GET['series_no'];
     <!-- AdminLTE App -->
     <script src="../../dist/js/adminlte.js"></script>
     <script src="plugins/js/custom.js"></script>
-</body>
 
+    <script>
+        
+        function toggleFullscreen() {
+          var iframe = document.getElementById('my-iframe');
+          if (!document.fullscreenElement && !document.mozFullScreenElement &&
+              !document.webkitFullscreenElement && !document.msFullscreenElement ) {
+              if (iframe.requestFullscreen) {
+                  iframe.requestFullscreen();
+              } else if (iframe.msRequestFullscreen) {
+                  iframe.msRequestFullscreen();
+              } else if (iframe.mozRequestFullScreen) {
+                  iframe.mozRequestFullScreen();
+              } else if (iframe.webkitRequestFullscreen) {
+                  iframe.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+              }
+          } else {
+              if (document.exitFullscreen) {
+                  document.exitFullscreen();
+              } else if (document.msExitFullscreen) {
+                  document.msExitFullscreen();
+              } else if (document.mozCancelFullScreen) {
+                  document.mozCancelFullScreen();
+              } else if (document.webkitExitFullscreen) {
+                  document.webkitExitFullscreen();
+              }
+          }
+        }
+        
+        // Optional: Detect fullscreen change and update button text
+        document.addEventListener("fullscreenchange", function () {
+          updateButton();
+        });
+        document.addEventListener("mozfullscreenchange", function () {
+          updateButton();
+        });
+        document.addEventListener("webkitfullscreenchange", function () {
+          updateButton();
+        });
+        document.addEventListener("MSFullscreenChange", function () {
+          updateButton();
+        });
+        
+        function updateButton() {
+          var iframe = document.getElementById('my-iframe');
+          var btn = document.getElementById('fullscreen-btn');
+          if (document.fullscreenElement || document.mozFullScreenElement ||
+              document.webkitFullscreenElement || document.msFullscreenElement ) {
+              btn.textContent = 'Exit Fullscreen';
+          } else {
+              btn.textContent = 'Fullscreen';
+          }
+        }
+            </script>
+</body>
 </html>
 <?php include 'plugins/js/index_script.php' ?>;

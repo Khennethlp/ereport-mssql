@@ -45,13 +45,12 @@
                     <div class="card-header">
                       <div class="col-md-12">
                         <div class="row">
-                          <input type="hidden" name="checker_name" id="checker_name" value="<?php echo $_SESSION['name']; ?>">
+                          <input type="hidden" name="approver_name" id="approver_name" value="<?php echo $_SESSION['name']; ?>">
                           <div class="col-md-3">
                             <label for="">Status:</label>
                             <select name="status" id="status" class="form-control">
-                              <option value="">--All--</option>
-                              <!-- <option value="pending">Pending</option>
-                              <option value="checked">Checked</option> -->
+                              <!-- <option value="">--All--</option> -->
+                              <option value="pending">Pending</option>
                               <option value="approved">Approved</option>
                               <option value="disapproved">Disapproved</option>
                             </select>
@@ -66,14 +65,14 @@
                           </div>
                           <div class="col-md-3">
                             <label for="">To:</label>
-                            <input type="date" class="form-control" name="" value="<?= $server_month ?>" id="search_by_date_to">
+                            <input type="date" class="form-control" name="" id="search_by_date_to">
                           </div>
 
                         </div>
                         <div class="row">
                           <div class="col-md-3">
                             <label for="">&nbsp;</label>
-                            <button class="form-control btn_check_refresh" onclick="load_data();">
+                            <button class="form-control btn_check_refresh" >
                               <i class="fas fa-search"></i>&nbsp;
                               Search
                             </button>
@@ -90,16 +89,13 @@
                     </div>
                   </div>
                   <div class="card-body table-responsive p-0" style="height: 600px;">
-                    <table class="table table-head-fixed text-nowrap sortable" id="table">
+                    <table class="table table-head-fixed text-nowrap table-hover" id="table">
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Series No.</th>
-                          <th>Filename</th>
                           <th>Status</th>
-                          <th>By</th>
-                          <th>Date</th>
-                          <!-- <th>Action</th> -->
+                          <th>Serial No.</th>
+                          <th>Checked By</th>
                         </tr>
                       </thead>
                       <tbody id="approver_table"> </tbody>

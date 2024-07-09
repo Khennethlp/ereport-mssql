@@ -1,6 +1,6 @@
 
 <footer class="main-footer text-sm">
-    Developed by: <em>Khennethlp</em> 🍔
+    Developed by: <em>Khennethlp</em>
     <div class="float-right d-none d-sm-inline-block">
     <strong class="text-center">Copyright &copy;
       <script>   
@@ -17,7 +17,7 @@
 <?php
 //MODALS
 include '../../modals/logout_modal.php';
-// include '../../modals/checking_modal.php';
+include '../../modals/approver_modal.php';
 ?>
 <!-- jQuery -->
 <script src="../../plugins/jquery/dist/jquery.min.js"></script>

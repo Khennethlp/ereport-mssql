@@ -121,12 +121,12 @@ $_SERVER['SERVER_PORT'];
                             </div>
                             <div class="col-md-6 mb-5">
                                 <label for="">Approval by:</label>
-                                <select class="form-control" name="approver_checker" id="approver_select">
+                                <select class="form-control" name="approver_select" id="approver_select">
                                     <option value="">---Choose Approver---</option>
                                     <?php
                                     require '../../process/conn.php';
 
-                                    $sql = "SELECT fullname, email FROM m_accounts WHERE role = 'approver'";
+                                    $sql = "SELECT emp_id, fullname, email FROM m_accounts WHERE role = 'approver'";
                                     $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                                     $stmt->execute();
 
@@ -136,7 +136,7 @@ $_SERVER['SERVER_PORT'];
 
                                         // Output data of each row
                                         foreach ($rows as $row) {
-                                            echo '<option value="' . $row["email"] . '">' . $row["fullname"] . '</option>';
+                                            echo '<option value="' . $row["email"] . '" data-emp-id="' . $row["emp_id"] . '">' . $row["fullname"] . '</option>';
                                         }
                                     } else {
                                         echo '<option value="">No data available</option>';

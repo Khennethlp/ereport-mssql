@@ -57,7 +57,15 @@
         const checked_by = $('#checked_by').val();
         const id = $('#c_id').val();
         const serial_no = $('#series_no_label').text().trim();
-
+        
+        var selectElement = document.getElementById('approver_select');
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        var approver_id = selectedOption.getAttribute('data-emp-id');
+        var approver_name = selectedOption.textContent || selectedOption.innerText;
+        var approver_email = selectedOption.value;
+        var approver_status = 'Pending';
+        var approver_comment = $('#approver_comment').val();
+        
         if (status === '') {
             Swal.fire({
                 icon: 'info',
@@ -68,17 +76,6 @@
             });
             return;
         }
-
-        // if (approver === '') {
-        //     Swal.fire({
-        //         icon: 'info',
-        //         title: 'Please Select Approver.',
-        //         text: 'Information',
-        //         showConfirmButton: false,
-        //         timer: 1000
-        //     });
-        //     return;
-        // }
 
         if (status === 'disapproved' && comment === '') {
             Swal.fire({
@@ -113,6 +110,11 @@
                 checked_by: checked_by,
                 id: id,
                 serial_no: serial_no,
+                approver_id: approver_id,
+                approver_name: approver_name,
+                approver_email: approver_email,
+                approver_status: approver_status,
+                approver_comment: approver_comment,
             },
             success: function(response) {
                 if (response == 'success') {
@@ -198,4 +200,14 @@
             }
         });
     }
+
+    // const update_approver = () => {
+    //     var selectElement = document.getElementById('approver_select');
+    //     var selectedOption = selectElement.options[selectElement.selectedIndex];
+    //     var approver_id = selectedOption.getAttribute('data-emp-id');
+    //     var approver_name = selectedOption.textContent || selectedOption.innerText;
+    //     var approver_email = selectedOption.value;
+    //     var approver_status = 'Pending';
+    //     var approver_comment = $('#approver_comment').val();
+    // }
 </script>

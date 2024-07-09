@@ -11,15 +11,25 @@ if ($method == 'update_check_uploader') {
     $comment = $_POST['comment'];
     $id = $_POST['id'];
 
+    $approver_id = $_POST['approver_id'];
+    $approver_name = $_POST['approver_name'];
+    $approver_email = $_POST['approver_email'];
+    $approver_status = $_POST['approver_status'];
+
     try {
 
         // Update t_training_record
-        $update_sql = "UPDATE t_training_record SET checker_status = :status, checked_date = NOW(), checker_comment = :comment WHERE id = :id ";
+        $update_sql = "UPDATE t_training_record SET checker_status = :status, checked_date = NOW(), checker_comment = :comment, approver_id = :approver_id, approver_name = :approver_name, approver_email = :approver_email, approver_status = :approver_status WHERE id = :id ";
         $stmt = $conn->prepare($update_sql);
         $stmt->bindParam(':id', $id);
         // $stmt->bindParam(':serial_no', $serial_no);
         $stmt->bindParam(':status', $status);
         $stmt->bindParam(':comment', $comment);
+
+        $stmt->bindParam(':approver_id', $approver_id);
+        $stmt->bindParam(':approver_name', $approver_name);
+        $stmt->bindParam(':approver_email', $approver_email);
+        $stmt->bindParam(':approver_status', $approver_status);
 
         if($stmt->execute()){
             echo "success";

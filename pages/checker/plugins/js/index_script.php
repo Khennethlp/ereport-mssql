@@ -124,7 +124,7 @@
                         showCancelButton: true,
                         confirmButtonColor: "#3085d6",
                         cancelButtonColor: "#d33",
-                        confirmButtonText: "Close tab"
+                        confirmButtonText: "Ok"
                         // timer: 1000
                     }).then((result) => {
                         if (result.isConfirmed) {

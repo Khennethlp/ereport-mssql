@@ -1,7 +1,7 @@
 <script>
-    // document.addEventListener('DOMContentLoaded', function() {
-        
-    // });
+    document.addEventListener('DOMContentLoaded', function() {
+        load_accounts(); 
+    });
 
     const load_accounts = () => {
         var search = document.getElementById('search_account').value;

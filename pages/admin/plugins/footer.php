@@ -1,5 +1,5 @@
 <footer class="main-footer text-sm">
-    Developed by: <em>Khennethlp</em> 🍔
+    Developed by: <em>Khennethlp</em> 
     <div class="float-right d-none d-sm-inline-block">
       <strong>Copyright &copy;
         <script>   
@@ -18,6 +18,11 @@
 include '../../modals/logout_modal.php';
 include '../../modals/add_accounts.php';
 include '../../modals/update_acc.php';
+include '../../modals/add_docs.php';
+include '../../modals/add_training.php';
+
+include '../../modals/update_docs.php';
+include '../../modals/update_training.php';
 
 
 ?>

@@ -102,7 +102,7 @@ if (!isset($_SESSION['username'])) {
       </ul>
 
       <!-- Right navbar links -->
-      <ul class="navbar-nav ml-auto">
+      <!-- <ul class="navbar-nav ml-auto">
         <div class="row">
           <li class="nav-item">
             <a class="nav-link" data-widget="fullscreen" href="#" role="button">
@@ -110,6 +110,6 @@ if (!isset($_SESSION['username'])) {
             </a>
           </li>
         </div>
-      </ul>
+      </ul> -->
     </nav>
     <!-- /.navbar -->

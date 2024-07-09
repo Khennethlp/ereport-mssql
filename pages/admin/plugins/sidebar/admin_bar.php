@@ -46,18 +46,18 @@
               </p>
               </a>
         </li>
-        <!-- <li class="nav-item">
-          <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/admin/page3.php") { ?>
-            <a href="page3.php" class="nav-link active">
+        <li class="nav-item">
+          <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/admin/masterlist.php") { ?>
+            <a href="masterlist.php" class="nav-link active">
             <?php } else { ?>
-              <a href="page3.php" class="nav-link">
+              <a href="masterlist.php" class="nav-link">
               <?php } ?>
-              <i class="nav-icon fas fa-exclamation"></i>
+              <i class="nav-icon fas fa-list-ul"></i>
               <p>
-              Title Page 3
+               Document Masterlist
               </p>
               </a>
-        </li> -->
+        </li>
         <!-- <li class="nav-item">
           <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/admin/page4.php") { ?>
             <a href="page4.php" class="nav-link active">

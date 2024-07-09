@@ -17,12 +17,21 @@ if ($method == 'approver_table') {
     // $account = $acc_stmt->fetch(PDO::FETCH_ASSOC);
     // $approver_email = $account['email'];
 
-    $sql = "SELECT DISTINCT a.id AS id, a.serial_no AS serial_no, a.batch_no As batch_no, a.checked_date AS checked_date, a.checker_name AS checker_name, a.approver_status AS approver_status, a.approver_name AS approver_name, a.approver_email AS approver_email, b.serial_no, b.main_doc AS main_doc, b.sub_doc AS sub_doc, b.file_name AS filenames FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.approver_name = :approver_name AND a.approver_status = '$status' GROUP BY b.serial_no";
+    $sql = "SELECT DISTINCT a.id AS id, a.serial_no AS serial_no, a.batch_no As batch_no, a.checked_date AS checked_date, a.checker_name AS checker_name, a.approver_status AS approver_status, a.approver_name AS approver_name, a.approver_email AS approver_email, b.serial_no, b.main_doc AS main_doc, b.sub_doc AS sub_doc, b.file_name AS filenames FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.approver_name = :approver_name AND a.approver_status = :status ";
+
+    if (!empty($search_by)) {
+        $sql .= " AND a.serial_no LIKE :search_by";
+    }
+    if (!empty($date_from) && !empty($date_to)) {
+        $sql .= " AND a.upload_date BETWEEN :date_from AND :date_to";
+    }
+    $sql .= " GROUP BY b.serial_no";
 
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':approver_name', $approver_name, PDO::PARAM_STR);
     // $stmt->bindParam(':approver_email', $approver_email, PDO::PARAM_STR);
-    // $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+    $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+
 
     if (!empty($search_by)) {
         $search_by = "%$search_by%";
@@ -47,12 +56,12 @@ if ($method == 'approver_table') {
             echo '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
             // echo '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
             echo '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
-            // echo '<td>' . htmlspecialchars($k['upload_date']) . '</td>';
+            echo '<td>' . htmlspecialchars($k['checked_date']) . '</td>';
             echo '</tr>';
         }
     } else {
-        echo '<tr >';
-        echo '<td colspan="4" class="text-center">Nothing found.</td>';
+        echo '<tr>';
+        echo '<td colspan="5" class="text-center">No file(s) found.</td>';
         echo '</tr>';
     }
 }
@@ -119,6 +128,3 @@ if ($method == 'approver_modal_table') {
         }
     }
 }
-
-
-?>

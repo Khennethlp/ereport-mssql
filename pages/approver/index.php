@@ -48,7 +48,7 @@
                           <input type="hidden" name="approver_name" id="approver_name" value="<?php echo $_SESSION['name']; ?>">
                           <div class="col-md-3">
                             <label for="">Status:</label>
-                            <select name="status" id="status" class="form-control">
+                            <select name="status" id="approver_status" class="form-control">
                               <!-- <option value="">--All--</option> -->
                               <option value="pending">Pending</option>
                               <option value="approved">Approved</option>
@@ -57,7 +57,7 @@
                           </div>
                           <div class="col-md-3">
                             <label for="">Search:</label>
-                            <input type="search" class="form-control" name="" id="search_by">
+                            <input type="search" class="form-control" name="" id="search_by" placeholder="search by serial no.">
                           </div>
                           <div class="col-md-3">
                             <label for="">From:</label>
@@ -72,7 +72,7 @@
                         <div class="row">
                           <div class="col-md-3">
                             <label for="">&nbsp;</label>
-                            <button class="form-control btn_check_refresh" >
+                            <button class="form-control btn_check_refresh" onclick="load_data();">
                               <i class="fas fa-search"></i>&nbsp;
                               Search
                             </button>
@@ -96,6 +96,7 @@
                           <th>Status</th>
                           <th>Serial No.</th>
                           <th>Checked By</th>
+                          <th>Checked Date</th>
                         </tr>
                       </thead>
                       <tbody id="approver_table"> </tbody>

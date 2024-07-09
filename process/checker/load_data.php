@@ -5,6 +5,9 @@ $method = $_POST['method'];
 
 if ($method == 'checker_table') {
     $status = isset($_POST['status']) ? $_POST['status'] : '';
+    $search_by = isset($_POST['search_by']) ? $_POST['search_by'] : '';
+    $date_from = isset($_POST['date_from']) ? $_POST['date_from'] : '';
+    $date_to = isset($_POST['date_to']) ? $_POST['date_to'] : '';
     $checker_name = isset($_POST['checker_name']) ? $_POST['checker_name'] : '';
 
     $acc_sql = "SELECT email, fullname FROM m_accounts WHERE fullname = :checker_name";
@@ -26,13 +29,32 @@ if ($method == 'checker_table') {
                 b.main_doc, 
                 b.sub_doc, 
                 b.file_name AS filenames
-            FROM t_training_record a RIGHT JOIN (SELECT id, serial_no, main_doc, sub_doc, file_name FROM t_upload_file GROUP BY serial_no) b ON a.serial_no = b.serial_no RIGHT JOIN (SELECT fullname, email FROM m_accounts) m ON a.uploader_name = m.fullname WHERE a.checker_name = :checker_name AND a.checker_email = :checker_email AND a.checker_status = '$status' GROUP BY b.serial_no";
+            FROM t_training_record a RIGHT JOIN (SELECT id, serial_no, main_doc, sub_doc, file_name FROM t_upload_file GROUP BY serial_no) b ON a.serial_no = b.serial_no RIGHT JOIN (SELECT fullname, email FROM m_accounts) m ON a.uploader_name = m.fullname WHERE a.checker_name = :checker_name AND a.checker_email = :checker_email AND a.checker_status = :status ";
+
+    if (!empty($search_by)) {
+        $sql .= " AND a.serial_no LIKE :search_by";
+    }
+    if (!empty($date_from) && !empty($date_to)) {
+        $sql .= " AND a.upload_date BETWEEN :date_from AND :date_to";
+    }
+
+    $sql .= " GROUP BY b.serial_no";
 
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':checker_name', $checker_name, PDO::PARAM_STR);
     $stmt->bindParam(':checker_email', $checker_email, PDO::PARAM_STR);
+    $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+
+    if (!empty($search_by)) {
+        $search_by = "%$search_by%";
+        $stmt->bindParam(':search_by', $search_by, PDO::PARAM_STR);
+    }
+    if (!empty($date_from) && !empty($date_to)) {
+        $stmt->bindParam(':date_from', $date_from, PDO::PARAM_STR);
+        $stmt->bindParam(':date_to', $date_to, PDO::PARAM_STR);
+    }
+
     $stmt->execute();
-    
     $c = 0;
 
     if ($stmt->rowCount() > 0) {
@@ -48,6 +70,10 @@ if ($method == 'checker_table') {
             // echo '<td>' . htmlspecialchars($k['upload_date']) . '</td>';
             echo '</tr>';
         }
+    } else {
+        echo '<tr >';
+        echo '<td colspan="4" class="text-center">Nothing found.</td>';
+        echo '</tr>';
     }
 }
 

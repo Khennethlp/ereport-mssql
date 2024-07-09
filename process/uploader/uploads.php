@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
 
     // Check if files were uploaded
     if (isset($_FILES['files']) && count($_FILES['files']['error']) > 0) {
-        $uploadDir = __DIR__ . '/../../uploads/';
+        $uploadDir = __DIR__ . '/../../../uploads/ereport/';
 
         // Check if the uploads folder exists, if not, create it
         if (!is_dir($uploadDir)) {

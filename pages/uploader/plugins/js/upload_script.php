@@ -115,6 +115,7 @@
         var status = $('#status').val();
         var uploader_name = $('#uploader_name').val();
 
+        // sessionStorage.setItem('status', status);
         $.ajax({
             type: "POST",
             url: '../../process/uploader/load_data.php',
@@ -310,13 +311,73 @@
                 method: 'uploads_modal_table',
                 id: id,
                 serial_no: serial_no,
-                status: status 
+                status: status
             },
             success: function(response) {
                 document.getElementById('uploads_modal_table').innerHTML = response;
             },
             error: function() {
                 console.log("Error loading data");
+            }
+        });
+    }
+
+    //get details for selected disapproved file
+    const get_disapprovedDetails = (param) => {
+        var data = param.split('~!~');
+        var id = data[0];
+        var serial_no = data[1];
+        var comment = data[2];
+
+        $('#updateFile_id').val(id);
+        $('#updateFile_serialNo').val(serial_no);
+        $('#disapproved_comment').val(comment);
+        console.log(param);
+    }
+
+    const updateUpload = () => {
+        var updateFile_id = document.getElementById('updateFile_id').value;
+        var updateFile_serialNo = document.getElementById('updateFile_serialNo').value;
+        var update_files = document.getElementById('file_update').files[0];
+        var updated_status = 'Pending';
+
+        var formData = new FormData();
+        formData.append("method", "update_file_upload");
+        formData.append("updateFile_serialNo", updateFile_serialNo);
+        formData.append("updateFile_id", updateFile_id);
+        formData.append("update_files", update_files);
+        formData.append("updated_status", updated_status);
+
+        $.ajax({
+            type: 'POST',
+            url: "../../process/uploader/file_update.php", //updating disapproved file
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response == 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Updated successfully!',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+                    load_data();
+                }else if(response == 'error'){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Cannot update file.',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Opps! Something went wrong.',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+                }
             }
         });
     }

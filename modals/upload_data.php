@@ -1,5 +1,5 @@
 <div class="modal fade bd-example-modal-xl" id="view_upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header ">
                 <h5 class="modal-title " id="exampleModalLabel">
@@ -22,7 +22,8 @@
                         <tr>
                             <th>#</th>
                             <th>File(s)</th>
-                            <th>Status</th>
+                            <!-- <th>Status</th> -->
+                             <th></th>
                         </tr>
                     </thead>
                     <tbody id="uploads_modal_table"> </tbody>

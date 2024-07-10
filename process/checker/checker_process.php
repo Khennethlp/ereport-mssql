@@ -14,12 +14,13 @@ if ($method == 'update_check_uploader') {
     $approver_id = $_POST['approver_id'];
     $approver_name = $_POST['approver_name'];
     $approver_email = $_POST['approver_email'];
-    $approver_status = $_POST['approver_status'];
+    $approver_status = ($status == 'disapproved') ? 'disapproved' : 'pending';
+    $approved_date = ($status == 'disapproved') ? date('Y-m-d H:i:s') : null;
 
     try {
 
         // Update t_training_record
-        $update_sql = "UPDATE t_training_record SET checker_status = :status, checked_date = NOW(), checker_comment = :comment, approver_id = :approver_id, approver_name = :approver_name, approver_email = :approver_email, approver_status = :approver_status WHERE id = :id ";
+        $update_sql = "UPDATE t_training_record SET checker_status = :status, checked_date = NOW(), checker_comment = :comment, approver_id = :approver_id, approver_name = :approver_name, approver_email = :approver_email, approver_status = :approver_status, approved_date = :approved_date WHERE id = :id ";
         $stmt = $conn->prepare($update_sql);
         $stmt->bindParam(':id', $id);
         // $stmt->bindParam(':serial_no', $serial_no);
@@ -30,6 +31,7 @@ if ($method == 'update_check_uploader') {
         $stmt->bindParam(':approver_name', $approver_name);
         $stmt->bindParam(':approver_email', $approver_email);
         $stmt->bindParam(':approver_status', $approver_status);
+        $stmt->bindParam(':approved_date', $approved_date);
 
         if($stmt->execute()){
             echo "success";

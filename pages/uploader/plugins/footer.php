@@ -18,6 +18,7 @@
 include '../../modals/logout_modal.php';
 include '../../modals/upload_modal.php';
 include '../../modals/upload_data.php';
+include '../../modals/update_uploads.php';
 ?>
 
 <script src="plugins/js/custom.js"></script>
@@ -39,7 +40,7 @@ include '../../modals/upload_data.php';
 <script src="../../dist/js/adminlte.js"></script>
 <!-- AdminLTE App -->
 <script src="../../dist/js/popup_center.js"></script>
-
+<script src="plugins/js/handle_files.js"></script>
 
 </body>
 </html>

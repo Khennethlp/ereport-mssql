@@ -122,7 +122,7 @@ $_SERVER['SERVER_PORT'];
                             <div class="col-md-6 mb-5">
                                 <label for="">Approval by:</label>
                                 <select class="form-control" name="approver_select" id="approver_select">
-                                    <option value="">---Choose Approver---</option>
+                                    <option value=""></option>
                                     <?php
                                     require '../../process/conn.php';
 

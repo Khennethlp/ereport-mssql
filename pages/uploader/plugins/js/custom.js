@@ -73,7 +73,7 @@
 //     button.addEventListener('click', function () {
 //         // Remove 'active' class from all buttons
 //         buttons.forEach(btn => btn.classList.remove('theme-active'));
-        
+
 //         // Add 'active' class to the clicked button
 //         this.classList.add('theme-active');
 //         this.style.color = "white";
@@ -88,7 +88,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Function to detect system theme
   function detectSystemTheme() {
-    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
+      .matches
+      ? "dark"
+      : "light";
     console.log("Detected system theme:", systemTheme);
     return systemTheme;
   }
@@ -105,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
       navbar.classList.add("navbar-dark");
       navbar.classList.remove("navbar-light");
     } else {
-      body.classList.remove("dark-mode"); 
+      body.classList.remove("dark-mode");
       body.classList.add("light-mode");
 
       sidebar.classList.remove("sidebar-dark-primary");
@@ -123,7 +126,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Event listener for system theme changes
-  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", function (e) {
       console.log("System theme changed to:", e.matches ? "dark" : "light");
       applySystemTheme();
     });
@@ -131,4 +136,5 @@ document.addEventListener("DOMContentLoaded", function () {
   // Apply the initial system theme
   applySystemTheme();
 });
+
 

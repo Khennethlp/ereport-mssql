@@ -115,13 +115,11 @@ if ($method == 'uploads_modal_table') {
             FROM t_upload_file a 
             LEFT JOIN t_training_record b 
             ON a.serial_no = b.serial_no AND a.id = b.id 
-            WHERE a.serial_no = :serial_no AND b.approver_status = :status ";
-    // $sql = "SELECT a.id as id, a.serial_no AS serial_no, a.main_doc AS main_doc, a.sub_doc AS sub_doc, a.file_name AS file_name, b.checker_status AS c_status, b.checker_name AS c_name FROM t_upload_file a RIGHT JOIN (SELECT serial_no, uploader_name, checker_status, checker_name FROM t_training_record GROUP BY serial_no) b ON a.serial_no = b.serial_no WHERE a.serial_no = :serial_no";
-
+            WHERE a.serial_no = :serial_no AND (b.checker_status = :status OR b.approver_status = :status)";
+            
     $stmt = $conn->prepare($sql);
-    // $stmt->bindParam(':id', $serial_no, PDO::PARAM_INT);
     $stmt->bindParam(':serial_no', $serial_no, PDO::PARAM_STR);
-    $stmt->bindParam(':status', $status, PDO::PARAM_STR);  // Bind the status parameter
+    $stmt->bindParam(':status', $status, PDO::PARAM_STR);
 
     $stmt->execute();
     $c = 0;
@@ -155,17 +153,17 @@ if ($method == 'uploads_modal_table') {
             } else {
                 echo '<td>File not found</td>';
             }
-
-            if ($k['c_status'] == 'disapproved') {
-                echo '<td style="cursor: pointer;" data-toggle="modal" data-target="#update_upload" onclick="get_disapprovedDetails(&quot; ' . $k['id'] . '~!~' .  $k['serial_no'] . '~!~' . $k['c_comment'] . '&quot;)"><i class="fas fa-ellipsis-h"></i></td>';
-            } else if ($k['a_status'] == 'disapproved') {
+            
+            $approver_stats = ($c_status == 'Pending') ? 'For Checking':'For Approval';
+            if ($k['a_status'] == 'disapproved') {
                 echo '<td style="cursor: pointer;" data-toggle="modal" data-target="#update_upload" onclick="get_disapprovedDetails(&quot; ' . $k['id'] . '~!~' .  $k['serial_no'] . '~!~' . $k['a_comment'] . '&quot;)"><i class="fas fa-ellipsis-h"></i></td>';
-            }else if ($k['a_status'] == 'pending'){
-                echo '<td><p href="#">' . htmlspecialchars($k['file_name']) . '</p></td>';
+            } else{
+                echo '<td>'.$approver_stats.'</td>';
             }
             echo '</tr>';
         }
     } else {
-        echo '<tr><td colspan="2">No records founds.</td></tr>';
+        echo '<tr><td colspan="5">No records found.</td></tr>';
     }
 }
+?>

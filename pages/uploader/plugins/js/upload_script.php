@@ -366,10 +366,18 @@
                 }else if(response == 'error'){
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Cannot update file.',
+                        title: 'Failed to update file.',
                         showConfirmButton: false,
                         timer: 1000
                     });
+                }else if(response == 'file error'){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'File not found.',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+
                 }else{
                     Swal.fire({
                         icon: 'error',

@@ -46,15 +46,15 @@
                       <div class="col-md-12">
                         <div class="row">
                           <input type="hidden" name="checker_name" id="checker_name" value="<?php echo $_SESSION['name']; ?>">
-                          <div class="col-md-2">
+                          <!-- <div class="col-md-2">
                             <label for="">Status:</label>
                             <select name="status" id="status" class="form-control">
-                              <!-- <option value="">--All--</option> -->
+                              <option value="">--All--</option>
                               <option value="pending">Pending</option>
                               <option value="approved">Approved</option>
                               <option value="disapproved">Disapproved</option>
                             </select>
-                          </div>
+                          </div> -->
                           <div class="col-md-2">
                             <label for="">Search:</label>
                             <input type="text" class="form-control" name="search_by" id="search_by" placeholder="search by serial no.">
@@ -94,14 +94,15 @@
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Status</th>
+                          <!-- <th>Status</th> -->
                           <th>Serial No.</th>
-                          <th>Upload By</th>
-                          <!-- <th>Date</th> -->
+                          <th>Files</th>
+                          <th>Date</th>
+                          <th></th>
                         
                         </tr>
                       </thead>
-                      <tbody id="checker_table"> </tbody>
+                      <tbody id="history_checker_table"> </tbody>
                     </table>
                     <div id="c_load_more" class="text-center" style="display: none;">
                       <p class="badge badge-dark border border-outline p-2 mt-3 " style="cursor: pointer;">Load More...</p>
@@ -129,7 +130,7 @@
 </section>
 </div>
 
-<?php include 'plugins/js/index_script.php' ?>;
+<?php include 'plugins/js/history_script.php' ?>;
 <?php include 'plugins/footer.php'; ?>
 <?php //include 'plugins/js/pagination_script.php';
 ?>

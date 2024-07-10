@@ -32,6 +32,18 @@
             </p>
           </a>
         </li> 
+        <li class="nav-item">
+          <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/approver/history.php") {?>
+          <a href="history.php" class="nav-link active">
+          <?php } else {?>
+          <a href="history.php" class="nav-link">
+          <?php } ?>
+            <i class="nav-icon fas fa-history"></i>
+            <p>
+              History
+            </p>
+          </a>
+        </li> 
 
         <?php include 'logout.php';?>
       </ul>

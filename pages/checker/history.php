@@ -57,7 +57,7 @@
                           </div> -->
                           <div class="col-md-2">
                             <label for="">Search:</label>
-                            <input type="text" class="form-control" name="search_by" id="search_by" placeholder="search by serial no.">
+                            <input type="search" class="form-control" name="search_by" id="search_by" placeholder="serial no.">
                           </div>
                           <div class="col-md-2">
                             <label for="">From:</label>
@@ -68,14 +68,14 @@
                             <input type="date" class="form-control" name="search_by_date_to" id="search_by_date_to">
                           </div>
 
-                          <div class="col-md-2">
+                          <div class="col-md-3">
                             <label for="">&nbsp;</label>
                             <button class="form-control btn_check_refresh" onclick="load_data();">
                               <i class="fas fa-search"></i>&nbsp;
                               Search
                             </button>
                           </div>
-                          <div class="col-md-2">
+                          <div class="col-md-3">
                             <label for="">&nbsp;</label>
                             <button class="form-control btn-secondary" onclick="location.reload();">
                               <i class="fas fa-sync-alt"></i>&nbsp;
@@ -104,7 +104,7 @@
                       </thead>
                       <tbody id="history_checker_table"> </tbody>
                     </table>
-                    <div id="c_load_more" class="text-center" style="display: none;">
+                    <div id="history_load_more" class="text-center" style="display: none;">
                       <p class="badge badge-dark border border-outline p-2 mt-3 " style="cursor: pointer;">Load More...</p>
                     </div>
                   </div>

@@ -121,7 +121,6 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
-                        showCancelButton: true,
                         confirmButtonColor: "#3085d6",
                         cancelButtonColor: "#d33",
                         confirmButtonText: "Ok"
@@ -134,8 +133,6 @@
                             checker();
                         }
                     });
-                    load_data();
-                    checker();
 
                     // Clear form fields after successful submission
                     $('#checker_status').val('');

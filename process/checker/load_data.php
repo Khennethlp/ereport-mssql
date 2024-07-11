@@ -73,7 +73,7 @@ if ($method == 'checker_table') {
         }
     } else {
         echo '<tr >';
-        echo '<td colspan="4" class="text-center">Nothing found.</td>';
+        echo '<td colspan="4" class="text-center">No data found.</td>';
         echo '</tr>';
     }
 }

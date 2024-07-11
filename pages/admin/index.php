@@ -31,7 +31,7 @@
                 <?php
                 require '../../process/conn.php';
 
-                $sql = "SELECT COUNT(status) as total FROM uploads WHERE status = 'pending'";
+                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'pending'";
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->execute();
 
@@ -53,47 +53,17 @@
               <div class="icon">
                 <i class="fas fa-clock"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
             </div>
           </div>
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-info">
-              <div class="inner">
-                <?php
-                require '../../process/conn.php';
-
-                $sql = "SELECT COUNT(status) as total FROM uploads WHERE status = 'checked'";
-                $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-                $stmt->execute();
-
-                if ($stmt->rowCount() > 0) {
-                  // Output data of each row
-                  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                  // Output data of each row
-                  foreach ($rows as $row) {
-                    echo '<h3>'.$row['total'].'</h3>';
-                  }
-                } else {
-                  echo '<h3>No Record.</h3>';
-                }
-                ?>
-                
-                <p>For Checking</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-user-check"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
+          
           <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
               <div class="inner">
               <?php
                 require '../../process/conn.php';
 
-                $sql = "SELECT COUNT(status) as total FROM uploads WHERE status = 'approved'";
+                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE approver_status = 'approved'";
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->execute();
 
@@ -114,7 +84,7 @@
               <div class="icon">
                 <i class="fas fa-thumbs-up"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
             </div>
           </div>
           <div class="col-lg-3 col-6">
@@ -123,7 +93,7 @@
               <?php
                 require '../../process/conn.php';
 
-                $sql = "SELECT COUNT(status) as total FROM uploads WHERE status = 'disapproved'";
+                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE approver_status = 'disapproved'";
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->execute();
 
@@ -144,7 +114,7 @@
               <div class="icon">
                 <i class="fas fa-thumbs-down"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
             </div>
           </div>
 

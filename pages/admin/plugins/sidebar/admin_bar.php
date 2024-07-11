@@ -35,18 +35,6 @@
               </a>
         </li>
         <li class="nav-item">
-          <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/admin/accounts.php") { ?>
-            <a href="accounts.php" class="nav-link active">
-            <?php } else { ?>
-              <a href="accounts.php" class="nav-link">
-              <?php } ?>
-              <i class="nav-icon fas fa-users"></i>
-              <p>
-                Accounts
-              </p>
-              </a>
-        </li>
-        <li class="nav-item">
           <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/admin/masterlist.php") { ?>
             <a href="masterlist.php" class="nav-link active">
             <?php } else { ?>
@@ -58,6 +46,19 @@
               </p>
               </a>
         </li>
+        <li class="nav-item">
+          <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/admin/accounts.php") { ?>
+            <a href="accounts.php" class="nav-link active">
+            <?php } else { ?>
+              <a href="accounts.php" class="nav-link">
+              <?php } ?>
+              <i class="nav-icon fas fa-users"></i>
+              <p>
+                Accounts Management
+              </p>
+              </a>
+        </li>
+       
         <!-- <li class="nav-item">
           <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/admin/page4.php") { ?>
             <a href="page4.php" class="nav-link active">

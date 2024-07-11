@@ -14,9 +14,9 @@
                     <div class="row col-12 mt-2 ">
                         <div class="col-md-12">
                             <div class="col-md-6">
-                            <input type="hidden" class="form-control" id="uploader_name" value="<?= $_SESSION['name']; ?>">
-                            <input type="hidden" class="form-control" id="uploader_id" value="<?= $_SESSION['emp_id']; ?>">
-                            <input type="hidden" class="form-control" id="uploader_email" value="<?= $_SESSION['email']; ?>">
+                                <input type="hidden" class="form-control" id="uploader_name" value="<?= $_SESSION['name']; ?>">
+                                <input type="hidden" class="form-control" id="uploader_id" value="<?= $_SESSION['emp_id']; ?>">
+                                <input type="hidden" class="form-control" id="uploader_email" value="<?= $_SESSION['email']; ?>">
                             </div>
                             <div class="row">
                                 <div class="col-md-4 mb-3">
@@ -29,19 +29,19 @@
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="">Training Group:</label>
-                                    <select class="form-control" name="training_group" id="training_group" >
+                                    <select class="form-control" name="training_group" id="training_group">
                                         <option value="">--SELECT TRAINING GROUP--</option>
                                         <?php
                                         require '../../process/conn.php';
-    
+
                                         $sql = "SELECT DISTINCT training_title FROM t_training_group";
                                         $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                                         $stmt->execute();
-    
+
                                         if ($stmt->rowCount() > 0) {
                                             // Output data of each row
                                             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
                                             // Output data of each row
                                             foreach ($rows as $row) {
                                                 echo '<option value="' . $row["training_title"] . '">' . $row["training_title"] . '</option>';
@@ -54,92 +54,83 @@
                                 </div>
                             </div>
                             <div class="col-md-12 mb-3">
-                               <div class="row">
-                                <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="main_doc">Document:</label>
+                                        <!-- <input type="text" class="form-control"> -->
+                                        <select class="form-control" name="main_doc" id="main_doc" onchange="fetch_sub_doc();">
+                                            <option value="">--SELECT DOCUMENT--</option>
+                                            <?php
+                                            require '../../process/conn.php';
 
-                                    <label for="main_doc">Document:</label>
-                                    <!-- <input type="text" class="form-control"> -->
-                                    <select class="form-control" name="main_doc" id="main_doc" onchange="fetch_sub_doc();">
-                                        <option value="">--SELECT DOCUMENT--</option>
-                                        <?php
-                                        require '../../process/conn.php';
-    
-                                        $sql = "SELECT DISTINCT main_doc FROM m_report_title";
-                                        $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-                                        $stmt->execute();
-    
-                                        if ($stmt->rowCount() > 0) {
-                                            // Output data of each row
-                                            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-                                            // Output data of each row
-                                            foreach ($rows as $row) {
-                                                echo '<option value="' . $row["main_doc"] . '">' . $row["main_doc"] . '</option>';
+                                            $sql = "SELECT DISTINCT main_doc FROM m_report_title";
+                                            $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                                            $stmt->execute();
+
+                                            if ($stmt->rowCount() > 0) {
+                                                // Output data of each row
+                                                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                                // Output data of each row
+                                                foreach ($rows as $row) {
+                                                    echo '<option value="' . $row["main_doc"] . '">' . $row["main_doc"] . '</option>';
+                                                }
+                                            } else {
+                                                echo '<option value="">No data available</option>';
                                             }
-                                        } else {
-                                            echo '<option value="">No data available</option>';
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 mb-3" id="sub_doc_container">
-                                    <label for="sub_doc">Sub Document:</label>
-                                    <select class="form-control" name="sub_doc" id="sub_doc">
-                                        <option value="">--Select Sub Document--</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="">Check by:</label>
-                                    <Select class="form-control" id="check_by">
-                                        <option value="">---Choose Checker---</option>
-                                        <?php
-                                        require '../../process/conn.php';
-    
-                                        $sql = "SELECT emp_id, fullname, email FROM m_accounts WHERE role = 'checker'";
-                                        $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-                                        $stmt->execute();
-    
-                                        if ($stmt->rowCount() > 0) {
-                                            // Output data of each row
-                                            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-                                            // Output data of each row
-                                            foreach ($rows as $row) {
-                                                 
-                                                echo '<option value="' . $row["email"] . '"  data-emp-id="' . $row["emp_id"] . '">' . $row["fullname"] . '</option>';
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3" id="sub_doc_container">
+                                        <label for="sub_doc">Sub Document:</label>
+                                        <select class="form-control" name="sub_doc" id="sub_doc">
+                                            <option value="">--Select Sub Document--</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="">Check by:</label>
+                                        <Select class="form-control" id="check_by">
+                                            <option value="">---Choose Checker---</option>
+                                            <?php
+                                            require '../../process/conn.php';
+
+                                            $sql = "SELECT emp_id, fullname, email FROM m_accounts WHERE role = 'checker'";
+                                            $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                                            $stmt->execute();
+
+                                            if ($stmt->rowCount() > 0) {
+                                                // Output data of each row
+                                                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                                // Output data of each row
+                                                foreach ($rows as $row) {
+
+                                                    echo '<option value="' . $row["email"] . '"  data-emp-id="' . $row["emp_id"] . '">' . $row["fullname"] . '</option>';
+                                                }
+                                            } else {
+                                                echo '<option value="">No data available</option>';
                                             }
-                                        } else {
-                                            echo '<option value="">No data available</option>';
-                                        }
-                                        ?>
-    
-                                    </Select>
-                                </div>
-                               </div>
-   
+                                            ?>
 
-                               </div>
-                           
-                        </div>
-                        
-
-                            <div class="col-md-12">
-                            <div class="col-md-12 mb-3">
-                                    <label for="">Upload File:</label>
-                                    <!-- <input type="file" id="files" class="form-control" style="height: 112px;"> -->
-                                    <div class="form-group file-drop-area" id="fileDropArea">
-                                        <input type="file" class="custom-file-input" id="files" name="files">
-                                        <p>Click or Drop file here</p>
+                                        </Select>
                                     </div>
                                 </div>
-    
-                                <!-- <div class="col-md-12 mb-2">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12 mb-3">
+                                <label for="">Upload File:</label>
+                                <!-- <input type="file" id="files" class="form-control" style="height: 112px;"> -->
+                                <div class="form-group file-drop-area" id="fileDropArea">
+                                    <input type="file" class="custom-file-input" id="files" name="files">
+                                    <p>Click or Drop file here</p>
+                                </div>
+                            </div>
+                            <!-- <div class="col-md-12 mb-2">
                                     <label for="">Comment:</label>
                                     <textarea class="form-control" name="comment" id="comment" rows="3" cols="5" maxlength="255" placeholder="Type here..."></textarea>
                                 </div> -->
-    
-                            </div>
-                       
+                        </div>
                     </div>
                 </div>
                 <br>
@@ -162,8 +153,6 @@
                                 Submit
                             </button>
                         </div>
-
-
                     </div>
                     <!-- <button class="btn  btn-block" onclick="" style="background: #3765AA !important;color:#fff;height:34px;border-radius:.25rem;font-size:15px;font-weight:normal; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);">Submit</button> -->
                 </div>

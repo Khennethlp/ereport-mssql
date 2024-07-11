@@ -102,11 +102,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
     } else {
         $response = "no upload"; // Set no upload error response
     }
+ 
 } else {
     $response = "invalid request"; // Set invalid request error response
 }
 
 echo $response; // Echo the final response
-
 
 ?>

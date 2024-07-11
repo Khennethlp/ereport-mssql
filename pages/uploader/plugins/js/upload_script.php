@@ -54,10 +54,9 @@
             fileDropArea.find('p').text(fileNames.length > 0 ? fileNames.join(', ') : 'Click or Drop file here');
         }
 
-
-
-        document.getElementById('sub_doc_container').style.display = 'none';
+        // document.getElementById('sub_doc_container').style.display = 'none';
         load_data();
+        // fetch_sub_doc();
     });
 
     const refresh = () => {
@@ -79,29 +78,33 @@
     }
 
     const fetch_sub_doc = () => {
-        const main_doc = document.getElementById('main_doc').value;
+    const main_doc = document.getElementById('main_doc').value;
 
-        $.ajax({
-            type: "POST",
-            url: '../../process/uploader/get_sub_doc.php',
-            cache: false,
-            data: {
-                method: 'get_sub_doc',
-                main_doc: main_doc
-            },
-            success: function(response) {
-                const subDocContainer = document.getElementById('sub_doc_container');
-                const subDocSelect = document.getElementById('sub_doc');
+    $.ajax({
+        type: "POST",
+        url: '../../process/uploader/get_sub_doc.php',
+        cache: false,
+        data: {
+            method: 'get_sub_doc',
+            main_doc: main_doc
+        },
+        success: function(response) {
+            // const subDocContainer = document.getElementById('sub_doc_container');
+            const subDocSelect = document.getElementById('sub_doc').innerHTML = response;
+            // subDocSelect.innerHTML = response;
 
-                if (response.trim() === '<option disabled selected value="">--Select Sub Document--</option>') {
-                    subDocContainer.style.display = 'none';
-                } else {
-                    subDocSelect.innerHTML = response;
-                    subDocContainer.style.display = 'block';
-                }
-            }
-        });
-    }
+            // if (response.trim() === '<option disabled selected value="">--No Sub Documents Available--</option>' || response.trim() === '') {
+            //     subDocContainer.style.display = 'none';
+            // } else {
+            //     subDocContainer.style.display = 'block';
+            // }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching sub documents:', error);
+        }
+    });
+}
+
 
     let page = 1; // Initial page number
     const rowsPerPage = 10; // Number of rows to fetch per request

@@ -1,114 +1,69 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // var fileDropArea = $('#fileDropArea');
-        // var fileInput = $('#files');
-        // var selectedFiles = [];
 
-        // fileDropArea.on('dragover', function(e) {
-        //     e.preventDefault();
-        //     e.stopPropagation();
-        //     fileDropArea.addClass('dragover');
-        // });
-
-        // fileDropArea.on('dragleave', function(e) {
-        //     e.preventDefault();
-        //     e.stopPropagation();
-        //     fileDropArea.removeClass('dragover');
-        // });
-
-        // fileDropArea.on('drop', function(e) {
-        //     e.preventDefault();
-        //     e.stopPropagation();
-        //     fileDropArea.removeClass('dragover');
-        //     var files = e.originalEvent.dataTransfer.files;
-        //     handleFiles(files);
-        //     updateLabel();
-        // });
-
-        // fileInput.on('change', function() {
-        //     if (fileInput[0].files.length === 0) {
-        //         // If file input is cleared, reset the selectedFiles array
-        //         selectedFiles = [];
-        //     } else {
-        //         var files = fileInput[0].files;
-        //         handleFiles(files);
-        //     }
-        //     updateLabel();
-        // });
-
-        // fileInput.on('input', function() {
-        //     if (fileInput[0].files.length === 0) {
-        //         // If file input is cleared, reset the selectedFiles array
-        //         selectedFiles = [];
-        //         updateLabel();
-        //     }
-        // });
-
-        // function handleFiles(files) {
-        //     for (var i = 0; i < files.length; i++) {
-        //         selectedFiles.push(files[i]);
-        //     }
-        //     updateFileInput();
-        // }
-
-        // function updateFileInput() {
-        //     var dataTransfer = new DataTransfer();
-        //     for (var i = 0; i < selectedFiles.length; i++) {
-        //         dataTransfer.items.add(selectedFiles[i]);
-        //     }
-        //     fileInput[0].files = dataTransfer.files;
-        // }
-
-        // function updateLabel() {
-        //     var fileNames = [];
-        //     for (var i = 0; i < selectedFiles.length; i++) {
-        //         fileNames.push(selectedFiles[i].name);
-        //     }
-        //     fileDropArea.find('p').text(fileNames.length > 0 ? fileNames.join(', ') : 'Click or Drop file here');
-        // }
-
-        const dt = new DataTransfer(); // Permet de manipuler les fichiers de l'input file
-
-        $("#files").on('change', function(e) {
-            for (var i = 0; i < this.files.length; i++) {
-                let fileBloc = $('<span/>', {
-                        class: 'file-block'
-                    }),
-                    fileName = $('<span/>', {
-                        class: 'name',
-                        text: this.files.item(i).name
-                    });
-                fileBloc.append('<span class="file-delete" title="remove"><span>&times</span></span>')
-                    .append(fileName);
-                $("#filesList > #files-names").append(fileBloc);
-            };
-
-            for (let file of this.files) {
-                dt.items.add(file);
-            }
-
-            this.files = dt.files;
-
-            $('span.file-delete').click(function() {
-                let name = $(this).next('span.name').text();
-
-                $(this).parent().remove();
-                for (let i = 0; i < dt.items.length; i++) {
-
-                    if (name === dt.items[i].getAsFile().name) {
-                        dt.items.remove(i);
-                        continue;
-                    }
-                }
-                document.getElementById('files').files = dt.files;
-            });
-        });
-
-
+        // Call the function to initialize file input handling
+        initializeFileInput("#files", "#filesList > #files-names");
         // document.getElementById('sub_doc_container').style.display = 'none';
         load_data();
         // fetch_sub_doc();
     });
+
+    const dt = new DataTransfer(); // Permet de manipuler les fichiers de l'input file
+    function initializeFileInput(selector, fileListSelector) {
+
+        $(selector).on('change', function(e) {
+            handleFileSelection(this, dt, fileListSelector);
+        });
+    }
+
+    function handleFileSelection(inputElement, dt, fileListSelector) {
+        for (var i = 0; i < inputElement.files.length; i++) {
+            let fileBloc = $('<span/>', {
+                    class: 'file-block'
+                }),
+                fileName = $('<span/>', {
+                    class: 'name',
+                    text: inputElement.files.item(i).name
+                });
+            fileBloc.append('<span class="file-delete" title="remove"><span>&times</span></span>')
+                .append(fileName);
+            $(fileListSelector).append(fileBloc);
+        };
+
+        for (let file of inputElement.files) {
+            dt.items.add(file);
+        }
+
+        inputElement.files = dt.files;
+
+        attachDeleteEvent(fileListSelector, dt);
+    }
+
+    function attachDeleteEvent(fileListSelector, dt) {
+        $('span.file-delete').off('click').on('click', function() {
+            let name = $(this).next('span.name').text();
+
+            $(this).parent().remove();
+            for (let i = 0; i < dt.items.length; i++) {
+                if (name === dt.items[i].getAsFile().name) {
+                    dt.items.remove(i);
+                    break;
+                }
+            }
+            document.getElementById('files').files = dt.files;
+        });
+    }
+
+    function deleteAllFiles(dt, fileListSelector) {
+        $(fileListSelector).empty(); // Clear the file list from the DOM
+        dt.items.clear(); // Clear the DataTransfer object
+        document.getElementById('files').files = dt.files; // Update the file input
+    }
+
+    const del = () => {
+        deleteAllFiles(dt, "#filesList > #files-names");
+
+    }
 
     const refresh = () => {
         $('#search_date').val('');
@@ -124,6 +79,7 @@
         $('#batch_no').val('');
         $('#training_group').val('');
         $('#search_date').val('');
+        del();
     }
 
     const fetch_sub_doc = () => {
@@ -234,8 +190,9 @@
         var selectElement = document.getElementById('check_by');
         var selectedOption = selectElement.options[selectElement.selectedIndex];
         var checker_id = selectedOption.getAttribute('data-emp-id');
-        var checker_name = selectedOption.textContent || selectedOption.innerText;
+        // var checker_name = selectedOption.textContent || selectedOption.innerText;
         var checker_email = selectedOption.value;
+        // var checker_email = document.getElementById('check_by').value;
         var checker_status = 'Pending';
 
         var main_doc = document.getElementById('main_doc').value;
@@ -252,7 +209,7 @@
         formData.append('uploader_id', uploader_id);
         formData.append('uploader_name', uploader_name);
         formData.append('checker_id', checker_id);
-        formData.append('checker_name', checker_name);
+        // formData.append('checker_name', checker_name);
         formData.append('checker_email', checker_email);
         formData.append('checker_status', checker_status);
 
@@ -260,7 +217,7 @@
             formData.append('files[]', files[i]); // Append each file to the FormData with the key 'files[]'
         }
 
-        if (!main_doc || !batch_no || !training_group || !checker_email) {
+        if (!main_doc || !batch_no || !training_group) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Fields must not be empty!',
@@ -292,6 +249,7 @@
 
                         load_data(); // Example function to load data after successful upload
                         clear_all();
+
                     } else if (response == 'exist') {
                         Swal.fire({
                             icon: 'info',

@@ -9,6 +9,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+      
             <div class="modal-body">
                 <div class="row">
                     <div class="row col-12 mt-2 ">
@@ -19,6 +20,7 @@
                                 <input type="hidden" class="form-control" id="uploader_email" value="<?= $_SESSION['email']; ?>">
                             </div>
                             <div class="row">
+                       
                                 <div class="col-md-4 mb-3">
                                     <label for="">Batch No.</label>
                                     <input type="text" class="form-control" id="batch_no">

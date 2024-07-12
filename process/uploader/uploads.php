@@ -12,9 +12,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
     $uploader_id = $_POST['uploader_id'];
     $uploader_name = $_POST['uploader_name'];
     $checker_id = $_POST['checker_id'];
-    $checker_name = $_POST['checker_name'];
+    // $checker_name = $_POST['checker_name'];
     $checker_email = $_POST['checker_email'];
     $checker_status = $_POST['checker_status'];
+
+    // $sql = "SELECT * FROM m_accounts WHERE emp_id = '$checker_id'";
+    // $stmt = $conn->prepare($sql);
+    // $stmt->execute();
+
+    // if($stmt->rowCount() > 0){
+    //     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    //         $c_name = $row['checker_name'];
+    //     }
+    // }
 
     // Check if files were uploaded
     if (isset($_FILES['files']) && count($_FILES['files']['error']) > 0) {
@@ -60,8 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
                 // Move the uploaded file to the designated folder
                 if (move_uploaded_file($_FILES['files']['tmp_name'][$key], $uploadFile)) {
                     // Insert a new record in t_training_record
-                    $stmt = $conn->prepare("INSERT INTO t_training_record (serial_no, batch_no, training_group, group_no, uploader_id, uploader_name, checker_id, checker_name, checker_email, checker_status) 
-                                            VALUES (:serial_no, :batch_no, :training_group, :group_no, :uploader_id, :uploader_name, :checker_id, :checker_name, :checker_email, :checker_status)");
+                    $stmt = $conn->prepare("INSERT INTO t_training_record (serial_no, batch_no, training_group, group_no, uploader_id, uploader_name, checker_id, checker_email, checker_status) 
+                                            VALUES (:serial_no, :batch_no, :training_group, :group_no, :uploader_id, :uploader_name, :checker_id, :checker_email, :checker_status)");
                     $stmt->bindParam(":serial_no", $serial_no);
                     $stmt->bindParam(":batch_no", $batch_no);
                     $stmt->bindParam(":training_group", $training_group);
@@ -69,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
                     $stmt->bindParam(":uploader_id", $uploader_id);
                     $stmt->bindParam(":uploader_name", $uploader_name);
                     $stmt->bindParam(":checker_id", $checker_id);
-                    $stmt->bindParam(":checker_name", $checker_name);
+                    // $stmt->bindParam(":checker_name", $checker_name);
                     $stmt->bindParam(":checker_email", $checker_email);
                     $stmt->bindParam(":checker_status", $checker_status);
 

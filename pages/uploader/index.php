@@ -197,7 +197,7 @@
                           <th>Batch No.</th>
                           <th>Group No</th>
                           <th>Training Group</th>
-                          <th>Check By</th>
+                          <th>Checked By</th>
                           <th>Checked Date</th>
                           <th>Approve By</th>
                           <th>Approver Status</th>

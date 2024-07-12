@@ -18,7 +18,7 @@
                 require '../../process/conn.php';
                 $uploader_name = $_SESSION['name'];
 
-                $sql = "SELECT DISTINCT COUNT(checker_status) as total FROM t_training_record WHERE approver_status = 'Pending' AND uploader_name = :uploader_name";
+                $sql = "SELECT DISTINCT COUNT(checker_status) as total FROM t_training_record WHERE checker_status = 'Pending' AND uploader_name = :uploader_name";
                 // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'pending' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
@@ -52,7 +52,7 @@
 
                 // $sql = "SELECT COUNT(serial_no) as total FROM t_training_record WHERE checker_status = 'Approved' AND uploader_name = :uploader_name";
                 // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'approved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
-                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE approver_status = 'Approved' AND uploader_name = :uploader_name";
+                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Approved' AND uploader_name = :uploader_name";
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
                 $stmt->execute();
@@ -84,7 +84,7 @@
                 require '../../process/conn.php';
                 $uploader_name = $_SESSION['name'];
 
-                $sql = "SELECT COUNT(checker_status) as total FROM t_training_record WHERE approver_status = 'Disapproved' AND uploader_name = :uploader_name";
+                $sql = "SELECT COUNT(checker_status) as total FROM t_training_record WHERE checker_status = 'Disapproved' AND uploader_name = :uploader_name";
                 // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'disapproved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
@@ -126,8 +126,20 @@
                       <div class="row col-12 mb-0">
                         <div class="col-md-3">
                           <div class="col-md-12 mb-2">
-                            <label for="">Date:</label>
+                            <label for="">Date To:</label>
                             <input type="date" id="search_date" class="form-control">
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="col-md-12 mb-2">
+                            <label for="">Date From:</label>
+                            <input type="date" id="search_date" class="form-control">
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="col-md-12 mb-2">
+                            <label for="">Batch No:</label>
+                            <input type="text" id="search_batch" class="form-control">
                           </div>
                         </div>
                         <div class="col-md-3">
@@ -141,7 +153,7 @@
                           </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                           <div class="row ml-auto">
 
                             <div class="col-md-3 mb-1">
@@ -184,7 +196,7 @@
                           <th>Serial No.</th>
                           <th>Batch No.</th>
                           <!-- <th>Filename</th> -->
-                          <th>Upload By</th>
+                          <th>Check By</th>
                           <!-- <th>Date</th> -->
                         </tr>
                       </thead>

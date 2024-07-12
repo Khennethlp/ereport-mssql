@@ -1,58 +1,109 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var fileDropArea = $('#fileDropArea');
-        var fileInput = $('#files');
-        var selectedFiles = [];
+        // var fileDropArea = $('#fileDropArea');
+        // var fileInput = $('#files');
+        // var selectedFiles = [];
 
-        fileDropArea.on('dragover', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            fileDropArea.addClass('dragover');
-        });
+        // fileDropArea.on('dragover', function(e) {
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        //     fileDropArea.addClass('dragover');
+        // });
 
-        fileDropArea.on('dragleave', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            fileDropArea.removeClass('dragover');
-        });
+        // fileDropArea.on('dragleave', function(e) {
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        //     fileDropArea.removeClass('dragover');
+        // });
 
-        fileDropArea.on('drop', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            fileDropArea.removeClass('dragover');
-            var files = e.originalEvent.dataTransfer.files;
-            handleFiles(files);
-            updateLabel();
-        });
+        // fileDropArea.on('drop', function(e) {
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        //     fileDropArea.removeClass('dragover');
+        //     var files = e.originalEvent.dataTransfer.files;
+        //     handleFiles(files);
+        //     updateLabel();
+        // });
 
-        fileInput.on('change', function() {
-            var files = fileInput[0].files;
-            handleFiles(files);
-            updateLabel();
-        });
+        // fileInput.on('change', function() {
+        //     if (fileInput[0].files.length === 0) {
+        //         // If file input is cleared, reset the selectedFiles array
+        //         selectedFiles = [];
+        //     } else {
+        //         var files = fileInput[0].files;
+        //         handleFiles(files);
+        //     }
+        //     updateLabel();
+        // });
 
-        function handleFiles(files) {
-            for (var i = 0; i < files.length; i++) {
-                selectedFiles.push(files[i]);
+        // fileInput.on('input', function() {
+        //     if (fileInput[0].files.length === 0) {
+        //         // If file input is cleared, reset the selectedFiles array
+        //         selectedFiles = [];
+        //         updateLabel();
+        //     }
+        // });
+
+        // function handleFiles(files) {
+        //     for (var i = 0; i < files.length; i++) {
+        //         selectedFiles.push(files[i]);
+        //     }
+        //     updateFileInput();
+        // }
+
+        // function updateFileInput() {
+        //     var dataTransfer = new DataTransfer();
+        //     for (var i = 0; i < selectedFiles.length; i++) {
+        //         dataTransfer.items.add(selectedFiles[i]);
+        //     }
+        //     fileInput[0].files = dataTransfer.files;
+        // }
+
+        // function updateLabel() {
+        //     var fileNames = [];
+        //     for (var i = 0; i < selectedFiles.length; i++) {
+        //         fileNames.push(selectedFiles[i].name);
+        //     }
+        //     fileDropArea.find('p').text(fileNames.length > 0 ? fileNames.join(', ') : 'Click or Drop file here');
+        // }
+
+        const dt = new DataTransfer(); // Permet de manipuler les fichiers de l'input file
+
+        $("#files").on('change', function(e) {
+            for (var i = 0; i < this.files.length; i++) {
+                let fileBloc = $('<span/>', {
+                        class: 'file-block'
+                    }),
+                    fileName = $('<span/>', {
+                        class: 'name',
+                        text: this.files.item(i).name
+                    });
+                fileBloc.append('<span class="file-delete" title="remove"><span>&times</span></span>')
+                    .append(fileName);
+                $("#filesList > #files-names").append(fileBloc);
+            };
+
+            for (let file of this.files) {
+                dt.items.add(file);
             }
-            updateFileInput();
-        }
 
-        function updateFileInput() {
-            var dataTransfer = new DataTransfer();
-            for (var i = 0; i < selectedFiles.length; i++) {
-                dataTransfer.items.add(selectedFiles[i]);
-            }
-            fileInput[0].files = dataTransfer.files;
-        }
+            this.files = dt.files;
 
-        function updateLabel() {
-            var fileNames = [];
-            for (var i = 0; i < selectedFiles.length; i++) {
-                fileNames.push(selectedFiles[i].name);
-            }
-            fileDropArea.find('p').text(fileNames.length > 0 ? fileNames.join(', ') : 'Click or Drop file here');
-        }
+            $('span.file-delete').click(function() {
+                let name = $(this).next('span.name').text();
+
+                $(this).parent().remove();
+                for (let i = 0; i < dt.items.length; i++) {
+
+                    if (name === dt.items[i].getAsFile().name) {
+                        dt.items.remove(i);
+                        continue;
+                    }
+                }
+                document.getElementById('files').files = dt.files;
+            });
+        });
+
 
         // document.getElementById('sub_doc_container').style.display = 'none';
         load_data();
@@ -73,38 +124,34 @@
         $('#batch_no').val('');
         $('#training_group').val('');
         $('#search_date').val('');
-        $('#sub_doc_container').css('display', 'none');
-        updateLabel();
     }
 
     const fetch_sub_doc = () => {
-    const main_doc = document.getElementById('main_doc').value;
+        const main_doc = document.getElementById('main_doc').value;
 
-    $.ajax({
-        type: "POST",
-        url: '../../process/uploader/get_sub_doc.php',
-        cache: false,
-        data: {
-            method: 'get_sub_doc',
-            main_doc: main_doc
-        },
-        success: function(response) {
-            // const subDocContainer = document.getElementById('sub_doc_container');
-            const subDocSelect = document.getElementById('sub_doc').innerHTML = response;
-            // subDocSelect.innerHTML = response;
+        $.ajax({
+            type: "POST",
+            url: '../../process/uploader/get_sub_doc.php',
+            cache: false,
+            data: {
+                method: 'get_sub_doc',
+                main_doc: main_doc
+            },
+            success: function(response) {
+                const subDocSelect = document.getElementById('sub_doc').innerHTML = response;
 
-            // if (response.trim() === '<option disabled selected value="">--No Sub Documents Available--</option>' || response.trim() === '') {
-            //     subDocContainer.style.display = 'none';
-            // } else {
-            //     subDocContainer.style.display = 'block';
-            // }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error fetching sub documents:', error);
-        }
-    });
-}
+                if (response.trim() == '') {
+                    console.log('Not Empty');
+                } else {
+                    console.log('Empty');
 
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching sub documents:', error);
+            }
+        });
+    }
 
     let page = 1; // Initial page number
     const rowsPerPage = 10; // Number of rows to fetch per request
@@ -170,14 +217,14 @@
         $('#training_group').val('');
         $('#batch_no').val('');
         $('#group_no').val('');
-        $('#checker_email').val('');
-        $('#sub_doc_container').css('display', 'none');
+        $('#check_by').val('');
         $('#fileDropArea p').text('Click or Drop file here');
         $('#upload').modal('hide');
     }
 
     // document.getElementById('uploadBtn').addEventListener('click', function()
     const upload = () => {
+
         var batch_no = document.getElementById('batch_no').value;
         var training_group = document.getElementById('training_group').value;
         var group_no = document.getElementById('group_no').value;
@@ -217,6 +264,13 @@
             Swal.fire({
                 icon: 'warning',
                 title: 'Fields must not be empty!',
+                showConfirmButton: false,
+                timer: 1000
+            });
+        } else if (sub_doc !== '' && sub_doc == '') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sub Document field is empty!',
                 showConfirmButton: false,
                 timer: 1000
             });
@@ -291,6 +345,7 @@
                 }
             });
         }
+
     };
 
     const get_uploads_details = param => {
@@ -366,14 +421,14 @@
                         timer: 1000
                     });
                     load_data();
-                }else if(response == 'error'){
+                } else if (response == 'error') {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Failed to update file.',
                         showConfirmButton: false,
                         timer: 1000
                     });
-                }else if(response == 'file error'){
+                } else if (response == 'file error') {
                     Swal.fire({
                         icon: 'error',
                         title: 'File not found.',
@@ -381,7 +436,7 @@
                         timer: 1000
                     });
 
-                }else{
+                } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'Opps! Something went wrong.',

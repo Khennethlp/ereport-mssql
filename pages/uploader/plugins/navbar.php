@@ -165,15 +165,18 @@ if (!isset($_SESSION['username'])) {
       color: #333;
       transform: rotate(180deg);
     }
-    .btn_Submit{
+
+    .btn_Submit {
       background-color: #275DAD !important;
       color: #ffffff;
     }
-    .btn-danger{
+
+    .btn-danger {
       background-color: #F8403A !important;
       color: #ffffff;
     }
-    .btn-warning{
+
+    .btn-warning {
       background-color: #F9C04E !important;
       color: #ffffff;
     }
@@ -192,9 +195,11 @@ if (!isset($_SESSION['username'])) {
       cursor: pointer;
       text-align: center;
     }
+
     .file-drop-area.dragover {
       border-color: #007bff;
     }
+
     .file-drop-area input[type="file"] {
       position: absolute;
       width: 100%;
@@ -204,6 +209,7 @@ if (!isset($_SESSION['username'])) {
       opacity: 0;
       cursor: pointer;
     }
+
     .file-drop-area p {
       margin: 0;
       font-size: 16px;
@@ -211,11 +217,50 @@ if (!isset($_SESSION['username'])) {
     }
 
 
-    ---
-  
-    .btn_refresh{
+    --- .btn_refresh {
       background-color: #28a745;
     }
+
+    #files-area {
+      width: 30%;
+      margin: 20px;
+    }
+
+    .file-block {
+      border-radius: 10px;
+      background-color: #fff;
+      /* rgba(144, 163, 203, 0.5); */
+      margin: 5px;
+      color: initial;
+      display: inline-flex;
+
+      &>span.name {
+        padding-right: 10px;
+        width: max-content;
+        display: inline-flex;
+      }
+    }
+
+    .file-delete {
+      display: flex;
+      width: 24px;
+      color: initial;
+      background-color: #6eb4ff00;
+      font-size: large;
+      justify-content: center;
+      margin-right: 3px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #F57029;
+        border-radius: 10px;
+      }
+
+      &>span {
+        transform: rotate(45deg);
+      }
+    }
+
     /* .nav-link.no-caret::after {
       display: block;
     } */

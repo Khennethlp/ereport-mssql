@@ -118,18 +118,25 @@
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <div class="col-md-12 mb-3">
-                                <label for="">Upload File:</label>
-                                <!-- <input type="file" id="files" class="form-control" style="height: 112px;"> -->
-                                <div class="form-group file-drop-area" id="fileDropArea">
-                                    <input type="file" class="custom-file-input" id="files" name="files">
-                                    <p>Click or Drop file here</p>
+                            <div class="row">
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="files">Upload File:</label>
+                                    <!-- <input type="file" id="files" class="form-control" style="height: 112px;"> -->
+                                    <div class="form-group file-drop-area" id="fileDropArea">
+                                        <input type="file" class="custom-file-input" id="files" name="files">
+                                        <p>Click or Drop file here</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="files-names"></label>
+                                    <p id="files-area">
+                                        <span id="filesList">
+                                            <span id="files-names"></span>
+                                        </span>
+                                    </p>
                                 </div>
                             </div>
-                            <!-- <div class="col-md-12 mb-2">
-                                    <label for="">Comment:</label>
-                                    <textarea class="form-control" name="comment" id="comment" rows="3" cols="5" maxlength="255" placeholder="Type here..."></textarea>
-                                </div> -->
                         </div>
                     </div>
                 </div>

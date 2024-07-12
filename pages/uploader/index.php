@@ -192,12 +192,16 @@
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Status</th>
+                          <th>Status</th> <!--Checker Status-->
                           <th>Serial No.</th>
                           <th>Batch No.</th>
-                          <!-- <th>Filename</th> -->
+                          <th>Group No</th>
+                          <th>Training Group</th>
                           <th>Check By</th>
-                          <!-- <th>Date</th> -->
+                          <th>Checked Date</th>
+                          <th>Approve By</th>
+                          <th>Approver Status</th>
+                          <th>Approved Date</th>
                         </tr>
                       </thead>
                       <tbody id="t_table"></tbody>

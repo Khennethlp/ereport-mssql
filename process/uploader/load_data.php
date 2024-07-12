@@ -66,9 +66,13 @@ if ($method == 'load_data') {
             $data .= '<td><span>' . strtoupper(htmlspecialchars($k['checker_status'])) . '</span></td>';
             $data .= '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
-            // $data .= '<td>' . htmlspecialchars($k['file_name']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['group_no']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['training_group']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
-            // $data .= '<td>' . htmlspecialchars($k['upload_date']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['checked_date']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['approver_name']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['approver_status']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['approved_date']) . '</td>';
             $data .= '</tr>';
             $c++;
         }
@@ -153,14 +157,14 @@ if ($method == 'uploads_modal_table') {
                 echo '<td>File not found</td>';
             }
             
-            $checker_stats = ($c_status == 'Pending') ? 'For Checking':'For Approval';
-            $approver_status = ($a_status == 'Pending') ? 'For Checking':'Approved';
+            // $checker_stats = ($c_status == 'Pending') ? 'For Checking':'For Approval';
+            // $approver_status = ($a_status == 'Pending') ? 'For Checking':'Approved';
 
             if ($k['a_status'] == 'disapproved') {
                 echo '<td style="cursor: pointer;" data-toggle="modal" data-target="#update_upload" onclick="get_disapprovedDetails(&quot; ' . $k['id'] . '~!~' .  $k['serial_no'] . '~!~' . $k['c_comment'] . '&quot;)"><i class="fas fa-ellipsis-h"></i></td>';
             } 
             else{
-                echo '<td>'.$checker_stats.'</td>';
+                echo '<td></td>';
             }
             echo '</tr>';
         }

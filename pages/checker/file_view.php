@@ -102,8 +102,8 @@ $_SERVER['SERVER_PORT'];
                     <div class="card-body">
                         <div class="row">
                           
-                                <input type="hidden" id="checked_by" value="<?php echo $checker; ?>">
-                                <input type="hidden" id="c_id" value="<?php echo $id; ?>">
+                                <input type="text" id="checked_by" value="<?php echo $checker; ?>">
+                                <input type="text" id="c_id" value="<?php echo $id; ?>">
                                 <label for="series_no_label" class="d-inline-block mb-0 text-lg">Series no:&nbsp;&nbsp;</label>
                                 <p id="series_no_label" class="d-inline-block mb-0 text-lg"><?= $seriesNo; ?></p>
                             </div>

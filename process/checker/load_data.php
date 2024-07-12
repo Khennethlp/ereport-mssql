@@ -8,11 +8,11 @@ if ($method == 'checker_table') {
     $search_by = isset($_POST['search_by']) ? $_POST['search_by'] : '';
     $date_from = isset($_POST['date_from']) ? $_POST['date_from'] : '';
     $date_to = isset($_POST['date_to']) ? $_POST['date_to'] : '';
-    $checker_name = isset($_POST['checker_name']) ? $_POST['checker_name'] : '';
+    $checker_id = isset($_POST['checker_id']) ? $_POST['checker_id'] : '';
 
-    $acc_sql = "SELECT email, fullname FROM m_accounts WHERE fullname = :checker_name";
+    $acc_sql = "SELECT emp_id, email, fullname FROM m_accounts WHERE emp_id = :checker_id";
     $acc_stmt = $conn->prepare($acc_sql);
-    $acc_stmt->bindParam(':checker_name', $checker_name, PDO::PARAM_STR);
+    $acc_stmt->bindParam(':checker_id', $checker_id, PDO::PARAM_STR);
     $acc_stmt->execute();
     $account = $acc_stmt->fetch(PDO::FETCH_ASSOC);
     $checker_email = $account['email'];
@@ -22,6 +22,7 @@ if ($method == 'checker_table') {
                 a.id AS id,
                 a.uploader_name, 
                 a.checker_status, 
+                a.checker_id, 
                 a.checker_name, 
                 a.checker_email, 
                 a.upload_date, 
@@ -29,7 +30,7 @@ if ($method == 'checker_table') {
                 b.main_doc, 
                 b.sub_doc, 
                 b.file_name AS filenames
-            FROM t_training_record a RIGHT JOIN (SELECT id, serial_no, main_doc, sub_doc, file_name FROM t_upload_file GROUP BY serial_no) b ON a.serial_no = b.serial_no RIGHT JOIN (SELECT fullname, email FROM m_accounts) m ON a.uploader_name = m.fullname WHERE a.checker_name = :checker_name AND a.checker_email = :checker_email AND a.checker_status = :status ";
+            FROM t_training_record a RIGHT JOIN (SELECT id, serial_no, main_doc, sub_doc, file_name FROM t_upload_file GROUP BY serial_no) b ON a.serial_no = b.serial_no WHERE a.checker_id = :checker_id AND a.checker_email = :checker_email AND a.checker_status = :status ";
 
     if (!empty($search_by)) {
         $sql .= " AND a.serial_no LIKE :search_by";
@@ -41,7 +42,7 @@ if ($method == 'checker_table') {
     $sql .= " GROUP BY b.serial_no";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':checker_name', $checker_name, PDO::PARAM_STR);
+    $stmt->bindParam(':checker_id', $checker_id, PDO::PARAM_STR);
     $stmt->bindParam(':checker_email', $checker_email, PDO::PARAM_STR);
     $stmt->bindParam(':status', $status, PDO::PARAM_STR);
 
@@ -94,6 +95,7 @@ if ($method == 'checker_modal_table') {
     a.sub_doc AS sub_doc, 
     a.file_name AS file_name, 
     b.checker_status AS c_status, 
+    b.checker_id AS c_id, 
     b.checker_name AS c_name 
     FROM t_upload_file a 
     LEFT JOIN t_training_record b 
@@ -119,6 +121,7 @@ if ($method == 'checker_modal_table') {
             $file_path .= htmlspecialchars($k['file_name']);
             $serial_no = htmlspecialchars($k['serial_no']);
             $c_name = htmlspecialchars($k['c_name']);
+            $c_id = htmlspecialchars($k['c_id']);
             $id = htmlspecialchars($k['id']);
 
             echo '<tr>';
@@ -127,7 +130,7 @@ if ($method == 'checker_modal_table') {
 
             // Check if file exists and display link
             if (file_exists($file_path)) {
-                echo '<td><a href="../../pages/checker/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . urlencode($file_path) . '&checker=' . htmlspecialchars($c_name) . '" target="_blank">' . htmlspecialchars($k['file_name']) . '</a></td>';
+                echo '<td><a href="../../pages/checker/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . urlencode($file_path) . '&checker=' . htmlspecialchars($c_id) . '" target="_blank">' . htmlspecialchars($k['file_name']) . '</a></td>';
             } else {
                 echo '<td>File not found</td>';
             }

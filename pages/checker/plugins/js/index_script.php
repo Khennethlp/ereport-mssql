@@ -21,7 +21,7 @@
         }
 
         const status = document.getElementById('status').value;
-        const checker_name = document.getElementById('checker_name').value;
+        const checker_id = document.getElementById('checker_id').value;
         const date_from = document.getElementById('search_by_date_from').value;
         const date_to = document.getElementById('search_by_date_to').value;
         const search_by = document.getElementById('search_by').value;
@@ -37,7 +37,7 @@
                 search_by: search_by,
                 date_from: date_from,
                 date_to: date_to,
-                checker_name: checker_name,
+                checker_id: checker_id,
                 page: page,
                 rows_per_page: rowsPerPage
             },
@@ -60,11 +60,11 @@
         
         var selectElement = document.getElementById('approver_select');
         var selectedOption = selectElement.options[selectElement.selectedIndex];
+        // var approver_name = selectedOption.textContent || selectedOption.innerText;
         var approver_id = selectedOption.getAttribute('data-emp-id');
-        var approver_name = selectedOption.textContent || selectedOption.innerText;
         var approver_email = selectedOption.value;
         var approver_status = 'Pending';
-        var approver_comment = $('#approver_comment').val();
+        // var approver_comment = $('#approver_comment').val();
         
         if (status === '') {
             Swal.fire({
@@ -111,10 +111,9 @@
                 id: id,
                 serial_no: serial_no,
                 approver_id: approver_id,
-                approver_name: approver_name,
                 approver_email: approver_email,
                 approver_status: approver_status,
-                approver_comment: approver_comment,
+                // approver_comment: approver_comment,
             },
             success: function(response) {
                 if (response == 'success') {

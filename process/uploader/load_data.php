@@ -26,7 +26,7 @@ if ($method == 'load_data') {
     //  b.file_name AS file_name 
     //  FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE checker_status = :status AND a.uploader_name =:uploader_name";
 
-    $sql = "SELECT * FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file GROUP BY serial_no) b ON a.serial_no = b.serial_no WHERE checker_status = :status AND uploader_name = :uploader_name ";
+    $sql = "SELECT * FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file GROUP BY serial_no) b ON a.serial_no = b.serial_no WHERE checker_status = :status  AND uploader_name = :uploader_name ";
 
     $conditions = [];
     if (!empty($date)) {
@@ -70,8 +70,8 @@ if ($method == 'load_data') {
             $data .= '<td>' . htmlspecialchars($k['training_group']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['checked_date']) . '</td>';
+            $data .= '<td>' . strtoupper(htmlspecialchars($k['approver_status'])) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['approver_name']) . '</td>';
-            $data .= '<td>' . htmlspecialchars($k['approver_status']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['approved_date']) . '</td>';
             $data .= '</tr>';
             $c++;

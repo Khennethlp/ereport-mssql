@@ -199,8 +199,8 @@
                           <th>Training Group</th>
                           <th>Checked By</th>
                           <th>Checked Date</th>
-                          <th>Approve By</th>
                           <th>Approver Status</th>
+                          <th>Approved By</th>
                           <th>Approved Date</th>
                         </tr>
                       </thead>

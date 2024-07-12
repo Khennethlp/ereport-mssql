@@ -14,7 +14,7 @@
         const status = document.getElementById('approver_status').value;
         const date_from = document.getElementById('search_by_date_from').value;
         const date_to = document.getElementById('search_by_date_to').value;
-        const approver_name = document.getElementById('approver_name').value;
+        const approver_id = document.getElementById('approver_id').value;
         const search_by = document.getElementById('search_by').value;
 
         var stats =sessionStorage.setItem('status', status);
@@ -25,7 +25,7 @@
             data: {
                 method: 'approver_table',
                 status: status,
-                approver_name: approver_name,
+                approver_id: approver_id,
                 search_by: search_by,
                 date_from: date_from,
                 date_to: date_to,
@@ -44,6 +44,7 @@
         const id = $('#a_id').val();
         const status = $('#status_approver').val();
         const comment = $('#comment_approver').val();
+        const approved_id = $('#approved_id').val();
         const serial_no = $('#series_no_label').text().trim();
 
         if (status === '') {
@@ -77,16 +78,17 @@
                 serial_no: serial_no,
                 status: status,
                 comment: comment,
+                approved_id: approved_id,
             },
             success: function(response) {
                 if (response == 'success') {
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
-                        showCancelButton: true,
+                        // showCancelButton: true,
                         confirmButtonColor: "#3085d6",
                         cancelButtonColor: "#d33",
-                        confirmButtonText: "Close tab"
+                        confirmButtonText: "Ok"
                         // timer: 1000
                     }).then((result) => {
                         if (result.isConfirmed) {

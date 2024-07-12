@@ -8,7 +8,7 @@ if ($method == 'approver_table') {
     $search_by = isset($_POST['search_by']) ? $_POST['search_by'] : '';
     $date_from = isset($_POST['date_from']) ? $_POST['date_from'] : '';
     $date_to = isset($_POST['date_to']) ? $_POST['date_to'] : '';
-    $approver_name = isset($_POST['approver_name']) ? $_POST['approver_name'] : '';
+    $approver_id = isset($_POST['approver_id']) ? $_POST['approver_id'] : '';
 
     // $acc_sql = "SELECT email, fullname FROM m_accounts WHERE fullname = :approver_name";
     // $acc_stmt = $conn->prepare($acc_sql);
@@ -17,7 +17,7 @@ if ($method == 'approver_table') {
     // $account = $acc_stmt->fetch(PDO::FETCH_ASSOC);
     // $approver_email = $account['email'];
 
-    $sql = "SELECT DISTINCT a.id AS id, a.serial_no AS serial_no, a.batch_no As batch_no, a.checked_date AS checked_date, a.checker_name AS checker_name, a.approver_status AS approver_status, a.approver_name AS approver_name, a.approver_email AS approver_email, b.serial_no, b.main_doc AS main_doc, b.sub_doc AS sub_doc, b.file_name AS filenames FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.approver_name = :approver_name AND a.approver_status = :status ";
+    $sql = "SELECT DISTINCT a.id AS id, a.serial_no AS serial_no, a.batch_no As batch_no, a.checked_date AS checked_date, a.checker_name AS checker_name, a.approver_status AS approver_status, a.approver_name AS approver_name, a.approver_email AS approver_email, b.serial_no, b.main_doc AS main_doc, b.sub_doc AS sub_doc, b.file_name AS filenames FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.approver_id = :approver_id AND a.approver_status = :status ";
 
     if (!empty($search_by)) {
         $sql .= " AND a.serial_no LIKE :search_by";
@@ -28,7 +28,7 @@ if ($method == 'approver_table') {
     $sql .= " GROUP BY b.serial_no";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':approver_name', $approver_name, PDO::PARAM_STR);
+    $stmt->bindParam(':approver_id', $approver_id, PDO::PARAM_STR);
     // $stmt->bindParam(':approver_email', $approver_email, PDO::PARAM_STR);
     $stmt->bindParam(':status', $status, PDO::PARAM_STR);
 
@@ -83,6 +83,7 @@ if ($method == 'approver_modal_table') {
     a.sub_doc AS sub_doc, 
     a.file_name AS file_name, 
     b.approver_status AS a_status, 
+    b.approver_id AS a_id, 
     b.approver_name AS a_name 
     FROM t_upload_file a 
     LEFT JOIN t_training_record b 
@@ -108,6 +109,7 @@ if ($method == 'approver_modal_table') {
             $file_path .= htmlspecialchars($k['file_name']);
             $serial_no = htmlspecialchars($k['serial_no']);
             $a_name = htmlspecialchars($k['a_name']);
+            $a_id = htmlspecialchars($k['a_id']);
             $id = htmlspecialchars($k['id']);
 
             echo '<tr>';
@@ -116,7 +118,11 @@ if ($method == 'approver_modal_table') {
 
             // Check if file exists and display link
             if (file_exists($file_path)) {
-                echo '<td><a href="../../pages/approver/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . urlencode($file_path) . '&approver=' . htmlspecialchars($a_name) . '" target="_blank">' . htmlspecialchars($k['file_name']) . '</a></td>';
+                if ($status == 'approved') {
+                    echo '<td>' . htmlspecialchars($k['file_name']) . '</td>';
+                } else {
+                    echo '<td><a href="../../pages/approver/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . urlencode($file_path) . '&approver=' . htmlspecialchars($a_id) . '" target="_blank">' . htmlspecialchars($k['file_name']) . '</a></td>';
+                }
             } else {
                 echo '<td>File not found</td>';
             }

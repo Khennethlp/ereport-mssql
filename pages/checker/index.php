@@ -45,7 +45,7 @@
                     <div class="card-header">
                       <div class="col-md-12">
                         <div class="row">
-                          <input type="hidden" name="checker_name" id="checker_name" value="<?php echo $_SESSION['name']; ?>">
+                          <input type="hidden" name="checker_id" id="checker_id" value="<?php echo $_SESSION['emp_id']; ?>">
                           <div class="col-md-3">
                             <label for="">Status:</label>
                             <select name="status" id="status" class="form-control">

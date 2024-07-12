@@ -99,7 +99,7 @@ $id = $_GET['id'];
                         
                             <div class="ml-auto mb-5">
                             <input type="hidden" id="a_id" value="<?php echo $id; ?>">
-                                <input type="hidden" id="approved_by" value="<?php echo $approver; ?>">
+                                <input type="hidden" id="approved_id" value="<?php echo $approver; ?>">
                                 <label for="series_no_label" class="d-inline-block mb-0 text-lg">Serial_no:</label>
                                 <p id="series_no_label" class="d-inline-block mb-0 text-lg"><?= $serial_no; ?></p>
                             </div>

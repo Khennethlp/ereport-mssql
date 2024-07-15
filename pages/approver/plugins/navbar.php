@@ -16,7 +16,7 @@ if (!isset($_SESSION['username'])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title class="text-uppercase"><?= $title; ?></title>
+  <title class="text-uppercase"><?= $title; ?> - APPROVER</title>
 
   <link rel="icon" href="../../dist/img/e-report-icon.png" type="image/x-icon" />
   <!-- Google Font: Source Sans Pro -->
@@ -93,6 +93,14 @@ if (!isset($_SESSION['username'])) {
    textarea:focus, select:focus
     {
       border: 2px solid #D02530;
+    }
+
+    input[type=date], 
+    input[type=search], 
+    input[type=date],
+    #approver_status, 
+    .btn_check_refresh, .btn_check{
+      height: 40px;
     }
     /* select:focus,
     input[type=search]:focus,

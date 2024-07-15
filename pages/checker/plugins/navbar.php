@@ -16,7 +16,7 @@ if (!isset($_SESSION['username'])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title class="text-uppercase"><?= $title; ?></title>
+  <title class="text-uppercase"><?= $title; ?> - CHECKER</title>
 
   <link rel="icon" href="../../dist/img/e-report-icon.png" type="image/x-icon" />
   <!-- Google Font: Source Sans Pro -->
@@ -86,7 +86,13 @@ if (!isset($_SESSION['username'])) {
     .nav-link.no-caret::after {
       display: none;
     }
-
+    input[type=date], 
+    input[type=search], 
+    input[type=date],
+    #status, 
+    .btn_check_refresh, .btn_check{
+      height: 40px;
+    }
    
   </style>
 </head>

@@ -61,7 +61,7 @@
                                                     <th>Employee ID</th>
                                                     <th>Fullname</th>
                                                     <th>Username</th>
-                                                    <th>Email</th>
+                                                    <!-- <th>Email</th> -->
                                                     <th>Role</th>
                                                 </tr>
                                             </thead>

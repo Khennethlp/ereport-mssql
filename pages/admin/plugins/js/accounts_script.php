@@ -22,12 +22,12 @@
     const add_account = () => {
         var emp_id = document.getElementById('add_emp_id').value;
         var fullname = document.getElementById('add_fullname').value;
-        var email = document.getElementById('add_email').value;
+        // var email = document.getElementById('add_email').value;
         var username = document.getElementById('add_username').value;
         var password = document.getElementById('add_password').value;
         var role = document.getElementById('add_role').value;
 
-        if (!emp_id || !fullname || !email || !username || !password || !role) {
+        if (!emp_id || !fullname || !username || !password || !role) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Fields must not be empty!',
@@ -44,7 +44,7 @@
                     method: 'add_accounts',
                     emp_id: emp_id,
                     fullname: fullname,
-                    email: email,
+                    // email: email,
                     username: username,
                     password: password,
                     role: role,
@@ -102,7 +102,7 @@
         var emp_id = data[1];
         var username = data[2];
         var fullname = data[3];
-        var email = data[4];
+        // var email = data[4];
         var password = data[5];
         var role = data[6];
 
@@ -110,7 +110,7 @@
         $('#empId_edit').val(emp_id);
         $('#username_edit').val(username);
         $('#fullname_edit').val(fullname);
-        $('#email_edit').val(email);
+        // $('#email_edit').val(email);
         $('#password_edit').val(password);
         $('#role_edit').val(role);
 
@@ -122,11 +122,11 @@
         var emp_id = document.getElementById('empId_edit').value;
         var username = document.getElementById('username_edit').value;
         var fullname = document.getElementById('fullname_edit').value;
-        var email = document.getElementById('email_edit').value;
+        // var email = document.getElementById('email_edit').value;
         var password = document.getElementById('password_edit').value;
         var role = document.getElementById('role_edit').value;
 
-        if (!emp_id || !username || !fullname || !email || !password || !role) {
+        if (!emp_id || !username || !fullname || !password || !role) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Fields must not be empty.',
@@ -144,7 +144,7 @@
                     emp_id: emp_id,
                     username: username,
                     fullname: fullname,
-                    email: email,
+                    // email: email,
                     password: password,
                     role: role,
                 },

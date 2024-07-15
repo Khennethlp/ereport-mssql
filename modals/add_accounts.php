@@ -19,13 +19,13 @@
                         <span><b>Full Name:</b></span>
                         <input type="text" id="add_fullname" class="form-control mb-2" placeholder="e.g. Juan Dela Cruz" autocomplete="off">
                     </div>
-                    <div class="col-sm-4">
+                    <!-- <div class="col-sm-4">
                         <span><b>Email:</b></span>
                         <input type="email" id="add_email" class="form-control mb-2" placeholder="e.g. sample@furukawaelectric.com" autocomplete="off">
-                    </div>
-                    <div class="col-sm-4  mt-2">
+                    </div> -->
+                    <div class="col-sm-4">
                         <span><b>Username:</b></span>
-                        <input type="text" id="add_username" class="form-control mb-2" placeholder="e.g. 20-01234" autocomplete="off">
+                        <input type="text" id="add_username" class="form-control mb-2" placeholder="e.g. emp_id or name" autocomplete="off">
                     </div>
                     <div class="col-sm-4 mt-2">
                         <span><b>Password:</b></span>

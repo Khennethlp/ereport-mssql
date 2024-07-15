@@ -15,7 +15,8 @@ if ($method == 'checker_table') {
     $acc_stmt->bindParam(':checker_id', $checker_id, PDO::PARAM_STR);
     $acc_stmt->execute();
     $account = $acc_stmt->fetch(PDO::FETCH_ASSOC);
-    $checker_email = $account['email'];
+    // $checker_email = $account['email'];
+    // $checker_email = $account['email'];
 
     $sql = "SELECT DISTINCT
                 a.serial_no AS serial_no, 
@@ -26,12 +27,13 @@ if ($method == 'checker_table') {
                 a.checker_name, 
                 a.checker_email, 
                 a.upload_date, 
+                a.batch_no AS batch_no, 
                 b.serial_no AS b_serial_no, 
                 b.main_doc, 
                 b.sub_doc, 
                 b.file_name AS filenames
-            FROM t_training_record a RIGHT JOIN (SELECT id, serial_no, main_doc, sub_doc, file_name FROM t_upload_file GROUP BY serial_no) b ON a.serial_no = b.serial_no WHERE a.checker_id = :checker_id AND a.checker_email = :checker_email AND a.checker_status = :status ";
-
+            FROM t_training_record a RIGHT JOIN (SELECT id, serial_no, main_doc, sub_doc, file_name FROM t_upload_file GROUP BY serial_no) b ON a.serial_no = b.serial_no WHERE a.checker_id = :checker_id AND a.checker_status = :status ";
+//  AND a.checker_email = :checker_email
     if (!empty($search_by)) {
         $sql .= " AND a.serial_no LIKE :search_by";
     }
@@ -43,7 +45,7 @@ if ($method == 'checker_table') {
 
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':checker_id', $checker_id, PDO::PARAM_STR);
-    $stmt->bindParam(':checker_email', $checker_email, PDO::PARAM_STR);
+    // $stmt->bindParam(':checker_email', $checker_email, PDO::PARAM_STR);
     $stmt->bindParam(':status', $status, PDO::PARAM_STR);
 
     if (!empty($search_by)) {
@@ -66,15 +68,15 @@ if ($method == 'checker_table') {
 
             echo '<tr style="cursor:pointer" data-toggle="modal" data-target="#checker_modal"  onclick="checker(&quot;' . $k['id'] . '~!~' . $k['b_serial_no'] . '&quot;)">';
             echo '<td>' . $c . '</td>';
-            echo '<td><span>' . htmlspecialchars($k['checker_status']) . '</span></td>';
+            echo '<td><span>' . strtoupper(htmlspecialchars($k['checker_status'])) . '</span></td>';
             echo '<td>' . htmlspecialchars($k['b_serial_no']) . '</td>';
+            echo '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
             echo '<td>' . htmlspecialchars($k['uploader_name']) . '</td>';
-            // echo '<td>' . htmlspecialchars($k['upload_date']) . '</td>';
             echo '</tr>';
         }
     } else {
         echo '<tr >';
-        echo '<td colspan="4" class="text-center">No data found.</td>';
+        echo '<td colspan="5" class="text-center">No data found.</td>';
         echo '</tr>';
     }
 }

@@ -13,8 +13,8 @@ if ($method == 'update_check_uploader') {
 
     $approver_id = $_POST['approver_id'];
     $approver_email = $_POST['approver_email'];
-    $approver_status = 'Pending';
-    // $approver_status = ($status == 'disapproved') ? 'Disapproved' : 'Pending';
+    // $approver_status = 'Pending';
+    $approver_status = ($status == 'disapproved') ? '' : 'Pending';
 
     $acc_sql = "SELECT emp_id, email, fullname FROM m_accounts WHERE emp_id = :checker_id";
     $acc_stmt = $conn->prepare($acc_sql);
@@ -22,6 +22,7 @@ if ($method == 'update_check_uploader') {
     $acc_stmt->execute();
     $account = $acc_stmt->fetch(PDO::FETCH_ASSOC);
     $checker_name = $account['fullname'];
+    
     try {
 
         // Update t_training_record

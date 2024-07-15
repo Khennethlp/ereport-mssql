@@ -61,7 +61,7 @@ if ($method == 'approver_table') {
         }
     } else {
         echo '<tr>';
-        echo '<td colspan="5" class="text-center">No file(s) found.</td>';
+        echo '<td colspan="5" class="text-center">No data found.</td>';
         echo '</tr>';
     }
 }

@@ -5,7 +5,109 @@
   <!-- Content Header (Page header) -->
   <div class="content-header">
     <div class="container-fluid">
-      <!-- Alert -->
+    <div class="row">
+        <div class="col-lg-3 col-6">
+          <input type="hidden" id="approver_name" value="<?= $_SESSION['name']; ?>">
+          <input type="hidden" id="approver_id" value="<?= $_SESSION['emp_id']; ?>">
+          <div class="small-box bg-info">
+            <div class="inner">
+              <?php
+              require '../../process/conn.php';
+              $approver_id = $_SESSION['emp_id'];
+
+              $sql = "SELECT DISTINCT COUNT(*) as total FROM t_training_record WHERE approver_status = 'Pending' AND approver_id = :approver_id";
+              // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'pending' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
+              $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+              $stmt->bindParam(':approver_id', $approver_id, PDO::PARAM_STR);
+              $stmt->execute();
+
+              if ($stmt->rowCount() > 0) {
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($rows as $row) {
+                  echo '<h3>' . $row['total'] . '</h3>';
+                }
+              } else {
+                echo '<h3>0</h3>';
+              }
+              ?>
+
+              <p>Pending</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+          </div>
+        </div>
+        <div class="col-lg-3 col-6">
+          <div class="small-box bg-success">
+            <div class="inner">
+              <?php
+              require '../../process/conn.php';
+              $approver_id = $_SESSION['emp_id'];
+
+              // $sql = "SELECT COUNT(serial_no) as total FROM t_training_record WHERE checker_status = 'Approved' AND uploader_name = :uploader_name";
+              // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'approved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
+              $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE approver_status = 'Approved' AND approver_id = :approver_id";
+              $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+              $stmt->bindParam(':approver_id', $approver_id, PDO::PARAM_STR);
+              $stmt->execute();
+
+              if ($stmt->rowCount() > 0) {
+                // Output data of each row
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                // Output data of each row
+                foreach ($rows as $row) {
+                  echo '<h3>' . $row['total'] . '</h3>';
+                }
+              } else {
+                echo '<h3>No Record.</h3>';
+              }
+              ?>
+              <p>Approved</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-thumbs-up"></i>
+            </div>
+            <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+          </div>
+        </div>
+        <div class="col-lg-3 col-6">
+          <div class="small-box bg-danger">
+            <div class="inner">
+              <?php
+              require '../../process/conn.php';
+              $approver_id = $_SESSION['emp_id'];
+
+              $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE approver_status = 'Disapproved' AND approver_id = :approver_id";
+              // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'disapproved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
+              $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+              $stmt->bindParam(':approver_id', $approver_id, PDO::PARAM_STR);
+              $stmt->execute();
+
+              if ($stmt->rowCount() > 0) {
+                // Output data of each row
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                // Output data of each row
+                foreach ($rows as $row) {
+                  echo '<h3>' . $row['total'] . '</h3>';
+                }
+              } else {
+                echo '<h3>No Record.</h3>';
+              }
+              ?>
+              <p>Disapproved</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-thumbs-down"></i>
+            </div>
+            <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+          </div>
+        </div>
+      </div>
 
       <!-- end of alert -->
       <div class="row mb-2">
@@ -67,19 +169,18 @@
                             <label for="">To:</label>
                             <input type="date" class="form-control" name="" id="search_by_date_to">
                           </div>
-
                         </div>
                         <div class="row">
-                          <div class="col-md-3">
+                          <div class="col-md-3 ml-auto">
                             <label for="">&nbsp;</label>
                             <button class="form-control btn_check_refresh" onclick="load_data();">
                               <i class="fas fa-search"></i>&nbsp;
                               Search
                             </button>
                           </div>
-                          <div class="col-md-2">
+                          <div class="col-md-3">
                             <label for="">&nbsp;</label>
-                            <button class="form-control btn-secondary" onclick="location.reload();">
+                            <button class="form-control btn-secondary btn_check" onclick="location.reload();">
                               <i class="fas fa-sync-alt"></i>&nbsp;
                               Refresh
                             </button>

@@ -43,6 +43,7 @@
             },
             success: function(response) {
                 document.getElementById('checker_table').innerHTML = response;
+                // setTimeout(load_data, 5000);
             },
             error: function() {
                 console.log("Error loading data");
@@ -128,8 +129,7 @@
                         if (result.isConfirmed) {
                             window.close();
                             history.back();
-                            load_data();
-                            checker();
+                            
                         }
                     });
 
@@ -138,6 +138,7 @@
                     $('#approver_select').val('');
                     $('#comment_checker').val('');
                     $('#checked_by').val('');
+                    $('#checker_modal').modal('hide');
 
                     // Reload data after submission if needed
                     load_data();
@@ -190,6 +191,8 @@
             },
             success: function(response) {
                 document.getElementById('checker_modal_table').innerHTML = response;
+                $('#checker_modal').modal('hide');
+                load_data();
             },
             error: function() {
                 console.log("Error loading data");
@@ -197,13 +200,4 @@
         });
     }
 
-    // const update_approver = () => {
-    //     var selectElement = document.getElementById('approver_select');
-    //     var selectedOption = selectElement.options[selectElement.selectedIndex];
-    //     var approver_id = selectedOption.getAttribute('data-emp-id');
-    //     var approver_name = selectedOption.textContent || selectedOption.innerText;
-    //     var approver_email = selectedOption.value;
-    //     var approver_status = 'Pending';
-    //     var approver_comment = $('#approver_comment').val();
-    // }
 </script>

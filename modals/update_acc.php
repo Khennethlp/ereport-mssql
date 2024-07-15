@@ -20,10 +20,10 @@
                         <span><b>Full Name:</b></span>
                         <input type="text" id="fullname_edit" class="form-control" placeholder="" autocomplete="off">
                     </div>
-                    <div class="col-sm-4 mb-2">
+                    <!-- <div class="col-sm-4 mb-2">
                         <span><b>Email:</b></span>
                         <input type="email" id="email_edit" class="form-control" placeholder="" autocomplete="off">
-                    </div>
+                    </div> -->
                     <div class="col-sm-4 mb-2">
                         <span><b>Username:</b></span>
                         <input type="text" id="username_edit" class="form-control" autocomplete="off">

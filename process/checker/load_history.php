@@ -67,7 +67,7 @@ if ($method == 'history_checker_table') {
             $data .= '<td>' . $c . '</td>';
             $data .= '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['filenames']) . '</td>';
-            $data .= '<td>' . htmlspecialchars($k['checked_date']) . '</td>';
+            $data .= '<td>' . date('Y/m/d', strtotime($k['checked_date'])) . '</td>';
             if (file_exists($file_path)) {
                 $data .= '<td style="cursor: pointer;"><a href="' . $file_path . '" download><i class="fas fa-download"></i></a></td>';
             } else {

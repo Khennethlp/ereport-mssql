@@ -16,7 +16,7 @@ if (!isset($_SESSION['username'])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><?= $title; ?> - Admin</title>
+  <title><?= $title; ?> - UPLOADER</title>
 
   <link rel="icon" href="../../dist/img/e-report-icon.png" type="image/x-icon" />
   <!-- Google Font: Source Sans Pro -->
@@ -252,15 +252,22 @@ if (!isset($_SESSION['username'])) {
       cursor: pointer;
 
       &:hover {
-        background-color: #F57029;
+        background-color: #bbb;
         border-radius: 10px;
       }
 
-      &>span {
+      /* &>span {
         transform: rotate(45deg);
-      }
+      } */
     }
 
+    input[type=date], 
+    input[type=search], 
+    input[type=date],
+    #status
+    {
+      height: 40px
+    }
     /* .nav-link.no-caret::after {
       display: block;
     } */

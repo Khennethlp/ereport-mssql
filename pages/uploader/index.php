@@ -52,7 +52,7 @@
 
                 // $sql = "SELECT COUNT(serial_no) as total FROM t_training_record WHERE checker_status = 'Approved' AND uploader_name = :uploader_name";
                 // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'approved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
-                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Approved' AND uploader_name = :uploader_name";
+                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Approved' AND approver_status = 'Approved' AND uploader_name = :uploader_name";
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
                 $stmt->execute();
@@ -84,7 +84,7 @@
                 require '../../process/conn.php';
                 $uploader_name = $_SESSION['name'];
 
-                $sql = "SELECT COUNT(checker_status) as total FROM t_training_record WHERE checker_status = 'Disapproved' AND uploader_name = :uploader_name";
+                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Disapproved' OR approver_status = 'Disapproved' AND uploader_name = :uploader_name";
                 // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'disapproved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
@@ -124,38 +124,38 @@
                   <div class="col-md-12 mb-0">
                     <div class="row">
                       <div class="row col-12 mb-0">
-                        <div class="col-md-3">
-                          <div class="col-md-12 mb-2">
-                            <label for="">Date To:</label>
-                            <input type="date" id="search_date" class="form-control">
-                          </div>
-                        </div>
-                        <div class="col-md-3">
-                          <div class="col-md-12 mb-2">
-                            <label for="">Date From:</label>
-                            <input type="date" id="search_date" class="form-control">
-                          </div>
-                        </div>
-                        <div class="col-md-3">
+                      <div class="col-md-3">
                           <div class="col-md-12 mb-2">
                             <label for="">Batch No:</label>
-                            <input type="text" id="search_batch" class="form-control">
+                            <input type="search" id="search_batch" class="form-control">
                           </div>
                         </div>
-                        <div class="col-md-3">
-                          <div class="col-md-12 mb-2">
+                       
+                      <div class="col-md-3">
+                          <!-- <div class="col-md-12 mb-2"> -->
                             <label for="">Status:</label>
                             <select name="status" id="status" class="form-control">
                               <option value="pending">Pending</option>
                               <option value="approved">Approved</option>
                               <option value="disapproved">Disapproved</option>
                             </select>
-                          </div>
+                          <!-- </div> -->
                         </div>
-
+                        <div class="col-md-3">
+                          <!-- <div class="col-md-12 mb-2"> -->
+                            <label for="">Date From:</label>
+                            <input type="date" id="search_date_from" class="form-control">
+                          <!-- </div> -->
+                        </div>
+                        <div class="col-md-3">
+                          <!-- <div class="col-md-12 mb-2"> -->
+                            <label for="">Date To:</label>
+                            <input type="date" id="search_date_to" class="form-control">
+                          <!-- </div> -->
+                        </div>
+                
                         <div class="col-md-12">
-                          <div class="row ml-auto">
-
+                          <div class="row">
                             <div class="col-md-3 mb-1">
                               <label for="">&nbsp;</label>
                               <button class="form-control btn btn-danger" onclick="load_data();">
@@ -172,7 +172,7 @@
                             </div>
                             <div class="col-md-3 mb-1">
                               <label for="">&nbsp;</label>
-                              <button class="form-control btn btn-secondary" onclick="refresh();">
+                              <button class="form-control btn btn-warning" onclick="refresh();">
                                 <i class="fas fa-sync-alt"></i>&nbsp;
                                 Refresh
                               </button>
@@ -199,9 +199,12 @@
                           <th>Training Group</th>
                           <th>Checked By</th>
                           <th>Checked Date</th>
+                          <th>Checker Comment</th>
                           <th>Approver Status</th>
                           <th>Approved By</th>
                           <th>Approved Date</th>
+                          <th>Approver Comment</th>
+                          <th>Disapproved By</th>
                         </tr>
                       </thead>
                       <tbody id="t_table"></tbody>

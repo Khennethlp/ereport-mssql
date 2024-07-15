@@ -25,7 +25,7 @@
                     class: 'name',
                     text: inputElement.files.item(i).name
                 });
-            fileBloc.append('<span class="file-delete" title="remove"><span>&times</span></span>')
+            fileBloc.append('<span class="file-delete" title="remove"><span><i class="fas fa-times"></i></span></span>')
                 .append(fileName);
             $(fileListSelector).append(fileBloc);
         };
@@ -117,19 +117,23 @@
             page = 1; // Reset page number for initial load
         }
 
-        var date = $('#search_date').val();
         var status = $('#status').val();
+        var search_batch = $('#search_batch').val(); 
+        var date_from = $('#search_date_from').val();
+        var date_to = $('#search_date_to').val(); 
         var uploader_name = $('#uploader_name').val();
 
-        // sessionStorage.setItem('status', status);
+       sessionStorage.setItem('status', status);
         $.ajax({
             type: "POST",
             url: '../../process/uploader/load_data.php',
             cache: false,
             data: {
                 method: 'load_data',
-                date: date,
                 status: status,
+                search_batch: search_batch,
+                date_from: date_from,
+                date_to: date_to,
                 uploader_name: uploader_name,
                 page: page,
                 rows_per_page: rowsPerPage
@@ -247,8 +251,9 @@
                             timer: 1000
                         });
 
-                        load_data(); // Example function to load data after successful upload
+                        load_data();
                         clear_all();
+                        del();
 
                     } else if (response == 'exist') {
                         Swal.fire({
@@ -317,7 +322,7 @@
 
         console.log(param);
         sessionStorage.setItem('serial_no', serial_no);
-        // var status = sessionStorage.getItem('status'); // Correctly retrieve the status
+        var status = sessionStorage.getItem('status'); // Correctly retrieve the status
 
         $.ajax({
             type: "POST",

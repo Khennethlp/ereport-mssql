@@ -124,36 +124,36 @@
                   <div class="col-md-12 mb-0">
                     <div class="row">
                       <div class="row col-12 mb-0">
-                      <div class="col-md-3">
+                        <div class="col-md-3">
                           <div class="col-md-12 mb-2">
                             <label for="">Batch No:</label>
                             <input type="search" id="search_batch" class="form-control">
                           </div>
                         </div>
-                       
-                      <div class="col-md-3">
+
+                        <div class="col-md-3">
                           <!-- <div class="col-md-12 mb-2"> -->
-                            <label for="">Status:</label>
-                            <select name="status" id="status" class="form-control">
-                              <option value="pending">Pending</option>
-                              <option value="approved">Approved</option>
-                              <option value="disapproved">Disapproved</option>
-                            </select>
+                          <label for="">Status:</label>
+                          <select name="status" id="status" class="form-control">
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="disapproved">Disapproved</option>
+                          </select>
                           <!-- </div> -->
                         </div>
                         <div class="col-md-3">
                           <!-- <div class="col-md-12 mb-2"> -->
-                            <label for="">Date From:</label>
-                            <input type="date" id="search_date_from" class="form-control">
+                          <label for="">Date From:</label>
+                          <input type="date" id="search_date_from" class="form-control">
                           <!-- </div> -->
                         </div>
                         <div class="col-md-3">
                           <!-- <div class="col-md-12 mb-2"> -->
-                            <label for="">Date To:</label>
-                            <input type="date" id="search_date_to" class="form-control">
+                          <label for="">Date To:</label>
+                          <input type="date" id="search_date_to" class="form-control">
                           <!-- </div> -->
                         </div>
-                
+
                         <div class="col-md-12">
                           <div class="row">
                             <div class="col-md-3 mb-1">
@@ -188,7 +188,7 @@
               <div class="row">
                 <div class="col-12">
                   <div class="card-body table-responsive p-0" id="table_container" style="height: 600px; overflow: auto;">
-                    <table class="table table-head-fixed text-nowrap text-center table-hover" id="table">
+                    <table class="table table-head-fixed text-nowrap  table-hover" id="table">
                       <thead>
                         <tr>
                           <th>#</th>
@@ -207,7 +207,15 @@
                           <th>Disapproved By</th>
                         </tr>
                       </thead>
-                      <tbody id="t_table"></tbody>
+                      <tbody id="t_table">
+                        <!-- <tr>
+                          <td colspan="6" style="text-align: center;">
+                            <div class="spinner-border text-dark" role="status">
+                              <span class="sr-only">Loading...</span>
+                            </div>
+                          </td>
+                        </tr> -->
+                      </tbody>
                     </table>
                     <div id="load_more" class="text-center" style="display: none;">
                       <p class="badge badge-dark border border-outline p-2 mt-3 " style="cursor: pointer;">Load More...</p>

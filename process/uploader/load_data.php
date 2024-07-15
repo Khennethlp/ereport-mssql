@@ -143,7 +143,7 @@ if ($method == 'load_data') {
             $c++;
         }
     } else {
-        $data .= '<tr><td colspan="11">No records found.</td></tr>';
+        $data .= '<tr style="text-align:center;"><td colspan="12">No records found.</td></tr>';
     }
 
     // Check if there are more rows beyond the current page

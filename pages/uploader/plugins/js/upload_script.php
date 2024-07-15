@@ -116,14 +116,14 @@
         if (!isPagination) {
             page = 1; // Reset page number for initial load
         }
-
+        $('#spinner').css('display', 'block');
         var status = $('#status').val();
-        var search_batch = $('#search_batch').val(); 
+        var search_batch = $('#search_batch').val();
         var date_from = $('#search_date_from').val();
-        var date_to = $('#search_date_to').val(); 
+        var date_to = $('#search_date_to').val();
         var uploader_name = $('#uploader_name').val();
 
-       sessionStorage.setItem('status', status);
+        sessionStorage.setItem('status', status);
         $.ajax({
             type: "POST",
             url: '../../process/uploader/load_data.php',
@@ -138,7 +138,12 @@
                 page: page,
                 rows_per_page: rowsPerPage
             },
+            beforeSend: function() {
+                // Show spinner before AJAX request is sent
+                $('#spinner').fadeIn();
+            },
             success: function(response) {
+                $('#spinner').fadeOut(function() {});
                 const responseData = JSON.parse(response);
                 if (isPagination) {
                     if (responseData.html.trim() !== '') {

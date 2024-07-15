@@ -192,7 +192,7 @@
             success: function(response) {
                 document.getElementById('checker_modal_table').innerHTML = response;
                 $('#checker_modal').modal('hide');
-                load_data();
+                
             },
             error: function() {
                 console.log("Error loading data");

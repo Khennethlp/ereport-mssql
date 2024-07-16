@@ -26,7 +26,7 @@ include '../../modals/update_training.php';
 
 
 ?>
-<script src="plugins/js/custom.js"></script>
+<!-- <script src="plugins/js/custom.js"></script> -->
 <!-- jQuery -->
 <script src="../../plugins/jquery/dist/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->

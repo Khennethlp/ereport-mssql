@@ -126,7 +126,7 @@
       <div class="row">
         <div class="col-sm-12">
           <!-- STORE IN -->
-          <div class="card card-danger card-outline">
+          <div class="card card-secondary card-outline">
             <div class="card-header">
               <h3 class="card-title text-uppercase"><i class="fa fa-user-check"></i>&nbsp; admin dashboard</h3>
               <div class="card-tools">

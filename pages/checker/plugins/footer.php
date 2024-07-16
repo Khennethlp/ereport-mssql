@@ -35,7 +35,7 @@ include '../../modals/checker.php';
 <script src="../../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.js"></script>
-<script src="plugins/js/custom.js"></script>
+<!-- <script src="plugins/js/custom.js"></script> -->
 
 </body>
 </html>

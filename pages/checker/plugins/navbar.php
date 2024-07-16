@@ -51,16 +51,16 @@ if (!isset($_SESSION['username'])) {
     }
 
     .active {
-      background-color: #267D5F !important;
+      background-color: #306BAC !important;
       /* border-bottom: 2px solid #ffffff !important; */
     }
 
     .b-border {
-      border-bottom: 2px solid #267D5F !important;
+      border-bottom: 2px solid #306BAC !important;
     }
 
     .btn_check_refresh{
-      background-color: #267D5F !important;
+      background-color: #306BAC !important;
       color: #ffffff;
     }
 
@@ -112,12 +112,12 @@ if (!isset($_SESSION['username'])) {
     </div>
 
     <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand" id="navbar">
+    <nav class="main-header navbar navbar-expand navbar-light" id="navbar" style="background-color: #306BAC;">
       <!-- Left navbar links -->
 
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+          <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
       </ul>
 

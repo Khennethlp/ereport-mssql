@@ -65,8 +65,29 @@ if ($method == 'checker_table') {
         while ($k = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $c++;
             $serial_no = htmlspecialchars($k['b_serial_no']);
+            $status_text = strtoupper(htmlspecialchars($k['checker_status']));
+            $status_bg_color = '';
+            // $status_badge_color = '';
+                switch ($status_text) {
+                    case 'APPROVED':
+                        $status_bg_color = 'background-color: var(--success); color: #fff;';
+                        // $status_badge_color = 'badge-success';
+                        break;
+                    case 'PENDING':
+                        $status_bg_color = 'background-color: var(--warning);';
+                        // $status_badge_color = 'badge-secondary';
+                        break;
+                    case 'DISAPPROVED':
+                        $status_bg_color = 'background-color: var(--danger); color: #fff;';
+                        // $status_badge_color = 'badge-danger';
+                        break;
+                    default:
+                        $status_bg_color = 'background-color: var(--primary);';
+                        // $status_badge_color = 'badge-primary';
+                        break;
+                }
 
-            echo '<tr style="cursor:pointer" data-toggle="modal" data-target="#checker_modal"  onclick="checker(&quot;' . $k['id'] . '~!~' . $k['b_serial_no'] . '&quot;)">';
+            echo '<tr style="cursor:pointer; ' . $status_bg_color . ' " data-toggle="modal" data-target="#checker_modal"  onclick="checker(&quot;' . $k['id'] . '~!~' . $k['b_serial_no'] . '&quot;)">';
             echo '<td>' . $c . '</td>';
             echo '<td><span>' . strtoupper(htmlspecialchars($k['checker_status'])) . '</span></td>';
             echo '<td>' . htmlspecialchars($k['b_serial_no']) . '</td>';

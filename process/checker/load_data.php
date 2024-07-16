@@ -132,7 +132,11 @@ if ($method == 'checker_modal_table') {
 
             // Check if file exists and display link
             if (file_exists($file_path)) {
-                echo '<td><a href="../../pages/checker/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . urlencode($file_path) . '&checker=' . htmlspecialchars($c_id) . '" target="_blank">' . htmlspecialchars($k['file_name']) . '</a></td>';
+                if ($status == 'approved' || $status == 'disapproved') {
+                    echo '<td>' . htmlspecialchars($k['file_name']) . '</td>';
+                } else{
+                    echo '<td><a href="../../pages/checker/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . urlencode($file_path) . '&checker=' . htmlspecialchars($c_id) . '" target="_blank">' . htmlspecialchars($k['file_name']) . '</a></td>';
+                }
             } else {
                 echo '<td>File not found</td>';
             }

@@ -124,6 +124,7 @@ if ($method == 'load_data') {
             $data .= '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['group_no']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['training_group']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['file_name']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
             $data .= '<td>' . htmlspecialchars($checked_date) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['checker_comment']) . '</td>';
@@ -213,7 +214,6 @@ if ($method == 'uploads_modal_table') {
             }
 
             $file_path .= htmlspecialchars($k['file_name']);
-
             $serial_no = htmlspecialchars($k['serial_no']);
             $c_name = htmlspecialchars($k['c_name']);
             $c_status = htmlspecialchars($k['c_status']);

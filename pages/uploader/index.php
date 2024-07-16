@@ -197,6 +197,7 @@
                           <th>Batch No.</th>
                           <th>Group No</th>
                           <th>Training Group</th>
+                          <th>Filename</th>
                           <th>Checked By</th>
                           <th>Checked Date</th>
                           <th>Checker Comment</th>

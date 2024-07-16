@@ -49,10 +49,32 @@ if ($method == 'approver_table') {
         while ($k = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $c++;
             $serial_no = htmlspecialchars($k['serial_no']);
+            $status_text = strtoupper(htmlspecialchars($k['approver_status']));
 
-            echo '<tr style="cursor:pointer" data-toggle="modal" data-target="#approver_modal"  onclick="approver(&quot;' . $k['id'] . '~!~' . $k['serial_no'] . '&quot;)">';
+            $status_bg_color = '';
+            // $status_badge_color = '';
+                switch ($status_text) {
+                    case 'APPROVED':
+                        $status_bg_color = 'background-color: var(--success); color: #fff;';
+                        // $status_badge_color = 'badge-success';
+                        break;
+                    case 'PENDING':
+                        $status_bg_color = 'background-color: var(--warning);';
+                        // $status_badge_color = 'badge-secondary';
+                        break;
+                    case 'DISAPPROVED':
+                        $status_bg_color = 'background-color: var(--danger); color: #fff;';
+                        // $status_badge_color = 'badge-danger';
+                        break;
+                    default:
+                        $status_bg_color = 'background-color: var(--primary);';
+                        // $status_badge_color = 'badge-primary';
+                        break;
+                }
+
+            echo '<tr style="cursor:pointer;  ' . $status_bg_color . ' " data-toggle="modal" data-target="#approver_modal"  onclick="approver(&quot;' . $k['id'] . '~!~' . $k['serial_no'] . '&quot;)">';
             echo '<td>' . $c . '</td>';
-            echo '<td><span>' . htmlspecialchars($k['approver_status']) . '</span></td>';
+            echo '<td><span>' . strtoupper(htmlspecialchars($k['approver_status'])) . '</span></td>';
             echo '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
             // echo '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
             echo '<td>' . htmlspecialchars($k['checker_name']) . '</td>';

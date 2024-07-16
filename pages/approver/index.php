@@ -125,7 +125,7 @@
       <div class="row">
         <div class="col-sm-12">
           <!-- STORE IN -->
-          <div class="card card-danger card-outline">
+          <div class="card card-secondary card-outline">
             <div class="card-header">
               <h3 class="card-title text-uppercase"><i class="fa fa-user-check"></i>&nbsp; Approver</h3>
               <div class="card-tools">
@@ -181,7 +181,7 @@
                           </div>
                           <div class="col-md-3">
                             <label for="">&nbsp;</label>
-                            <button class="form-control btn_check" style="background-color: var(--gray);" onclick="location.reload();">
+                            <button class="form-control btn_check" style="background-color: var(--gray); color:#fff;" onclick="location.reload();">
                               <i class="fas fa-sync-alt"></i>&nbsp;
                               Refresh
                             </button>

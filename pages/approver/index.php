@@ -149,6 +149,10 @@
                         <div class="row">
                           <input type="hidden" name="approver_id" id="approver_id" value="<?php echo $_SESSION['emp_id']; ?>">
                           <div class="col-md-3">
+                            <label for="">Search:</label>
+                            <input type="search" class="form-control" name="" id="search_by" placeholder="search by serial no.">
+                          </div>
+                          <div class="col-md-3">
                             <label for="">Status:</label>
                             <select name="status" id="approver_status" class="form-control">
                               <!-- <option value="">--All--</option> -->
@@ -157,10 +161,7 @@
                               <option value="disapproved">Disapproved</option>
                             </select>
                           </div>
-                          <div class="col-md-3">
-                            <label for="">Search:</label>
-                            <input type="search" class="form-control" name="" id="search_by" placeholder="search by serial no.">
-                          </div>
+                          
                           <div class="col-md-3">
                             <label for="">From:</label>
                             <input type="date" class="form-control" name="" id="search_by_date_from">
@@ -180,7 +181,7 @@
                           </div>
                           <div class="col-md-3">
                             <label for="">&nbsp;</label>
-                            <button class="form-control btn-secondary btn_check" onclick="location.reload();">
+                            <button class="form-control btn_check" style="background-color: var(--gray);" onclick="location.reload();">
                               <i class="fas fa-sync-alt"></i>&nbsp;
                               Refresh
                             </button>

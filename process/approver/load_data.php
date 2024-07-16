@@ -56,7 +56,7 @@ if ($method == 'approver_table') {
             echo '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
             // echo '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
             echo '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
-            echo '<td>' . htmlspecialchars($k['checked_date']) . '</td>';
+            echo '<td>' . date('Y/m/d', strtotime($k['checked_date'])) . '</td>';
             echo '</tr>';
         }
     } else {
@@ -118,7 +118,7 @@ if ($method == 'approver_modal_table') {
 
             // Check if file exists and display link
             if (file_exists($file_path)) {
-                if ($status == 'approved') {
+                if ($status == 'approved' || $status == 'disapproved') {
                     echo '<td>' . htmlspecialchars($k['file_name']) . '</td>';
                 } else {
                     echo '<td><a href="../../pages/approver/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . urlencode($file_path) . '&approver=' . htmlspecialchars($a_id) . '" target="_blank">' . htmlspecialchars($k['file_name']) . '</a></td>';

@@ -126,8 +126,8 @@
                       <div class="row col-12 mb-0">
                         <div class="col-md-3">
                           <div class="col-md-12 mb-2">
-                            <label for="">Batch No:</label>
-                            <input type="search" id="search_batch" class="form-control">
+                            <label for="">Search:</label>
+                            <input type="search" id="search" class="form-control">
                           </div>
                         </div>
 
@@ -156,14 +156,14 @@
 
                         <div class="col-md-12">
                           <div class="row">
-                            <div class="col-md-3 mb-1">
+                            <div class="col-md-3 mb-1 ml-auto">
                               <label for="">&nbsp;</label>
-                              <button class="form-control btn btn-danger" onclick="load_data();">
+                              <button class="form-control" style="background-color: var(--danger);" onclick="load_data();">
                                 <i class="fas fa-search"></i>&nbsp;
                                 Search
                               </button>
                             </div>
-                            <div class="col-md-6 mb-1">
+                            <div class="col-md-3 mb-1">
                               <label for="">&nbsp;</label>
                               <button class="form-control btn_Submit" id="" data-toggle="modal" data-target="#upload">
                                 <i class="fas fa-upload"></i>&nbsp;
@@ -172,7 +172,7 @@
                             </div>
                             <div class="col-md-3 mb-1">
                               <label for="">&nbsp;</label>
-                              <button class="form-control btn btn-warning" onclick="refresh();">
+                              <button class="form-control" style="background-color: var(--gray);" onclick="refresh();">
                                 <i class="fas fa-sync-alt"></i>&nbsp;
                                 Refresh
                               </button>

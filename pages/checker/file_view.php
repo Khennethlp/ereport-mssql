@@ -2,7 +2,7 @@
 $title = "E-REPORT SYSTEM";
 $file_path = $_GET['file_path'];
 $checker = $_GET['checker'];
-$seriesNo = $_GET['serial_no'];
+$serial_no = $_GET['serial_no'];
 $id = $_GET['id'];
 $_SERVER['SERVER_ADDR'];
 $_SERVER['SERVER_PORT'];
@@ -104,8 +104,8 @@ $_SERVER['SERVER_PORT'];
                           
                                 <input type="hidden" id="checked_by" value="<?php echo $checker; ?>">
                                 <input type="hidden" id="c_id" value="<?php echo $id; ?>">
-                                <label for="series_no_label" class="d-inline-block mb-0 text-lg">Series no:&nbsp;&nbsp;</label>
-                                <p id="series_no_label" class="d-inline-block mb-0 text-lg"><?= $seriesNo; ?></p>
+                                <label for="series_no_label" class="d-inline-block mb-0 text-lg">Serial no:&nbsp;&nbsp;</label>
+                                <p id="series_no_label" class="d-inline-block mb-0 text-lg"><?= $serial_no; ?></p>
                             </div>
                             <hr>
 

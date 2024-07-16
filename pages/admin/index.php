@@ -6,15 +6,114 @@
   <!-- Content Header (Page header) -->
   <div class="content-header">
     <div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3 col-6">
+          <input type="hidden" id="admin_name" value="<?= $_SESSION['name']; ?>">
+          <input type="hidden" id="admin_id" value="<?= $_SESSION['emp_id']; ?>">
+          <div class="small-box bg-info">
+            <div class="inner">
+              <?php
+              require '../../process/conn.php';
+              // $approver_id = $_SESSION['emp_id'];
+
+              $sql = "SELECT DISTINCT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Pending'";
+              // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'pending' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
+              $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+              $stmt->bindParam(':approver_id', $approver_id, PDO::PARAM_STR);
+              $stmt->execute();
+
+              if ($stmt->rowCount() > 0) {
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($rows as $row) {
+                  echo '<h3>' . $row['total'] . '</h3>';
+                }
+              } else {
+                echo '<h3>0</h3>';
+              }
+              ?>
+
+              <p>Pending</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+          </div>
+        </div>
+        <div class="col-lg-3 col-6">
+          <div class="small-box bg-success">
+            <div class="inner">
+              <?php
+              require '../../process/conn.php';
+              $approver_id = $_SESSION['emp_id'];
+
+              // $sql = "SELECT COUNT(serial_no) as total FROM t_training_record WHERE checker_status = 'Approved' AND uploader_name = :uploader_name";
+              // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'approved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
+              $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE approver_status = 'Approved' AND checker_status = 'Approved'";
+              $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+              $stmt->bindParam(':approver_id', $approver_id, PDO::PARAM_STR);
+              $stmt->execute();
+
+              if ($stmt->rowCount() > 0) {
+                // Output data of each row
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                // Output data of each row
+                foreach ($rows as $row) {
+                  echo '<h3>' . $row['total'] . '</h3>';
+                }
+              } else {
+                echo '<h3>No Record.</h3>';
+              }
+              ?>
+              <p>Approved</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-thumbs-up"></i>
+            </div>
+            <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+          </div>
+        </div>
+        <div class="col-lg-3 col-6">
+          <div class="small-box bg-danger">
+            <div class="inner">
+              <?php
+              require '../../process/conn.php';
+              $approver_id = $_SESSION['emp_id'];
+
+              $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE approver_status = 'Disapproved' ";
+              // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'disapproved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
+              $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+              $stmt->bindParam(':approver_id', $approver_id, PDO::PARAM_STR);
+              $stmt->execute();
+
+              if ($stmt->rowCount() > 0) {
+                // Output data of each row
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                // Output data of each row
+                foreach ($rows as $row) {
+                  echo '<h3>' . $row['total'] . '</h3>';
+                }
+              } else {
+                echo '<h3>No Record.</h3>';
+              }
+              ?>
+              <p>Disapproved</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-thumbs-down"></i>
+            </div>
+            <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+          </div>
+        </div>
+      </div>
+
+      <!-- end of alert -->
       <div class="row mb-2">
         <div class="col-sm-6">
-          <!-- <h1 class="m-0"><i class="fas fa-download"></i> STORE IN</h1> -->
-        </div><!-- /.col -->
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-            <li class="breadcrumb-item ">Dashboard</li>
-          </ol>
+          <!-- <h1 class="m-0">Tube Making Inventory</h1> -->
         </div><!-- /.col -->
       </div><!-- /.row -->
     </div><!-- /.container-fluid -->
@@ -24,148 +123,110 @@
   <!-- Main content -->
   <section class="content">
     <div class="container-fluid">
-    <div class="row">
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-info">
-              <div class="inner">
-                <?php
-                require '../../process/conn.php';
-
-                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'pending'";
-                $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-                $stmt->execute();
-
-                if ($stmt->rowCount() > 0) {
-                  // Output data of each row
-                  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                  // Output data of each row
-                  foreach ($rows as $row) {
-                    echo '<h3>'.$row['total'].'</h3>';
-                  }
-                } else {
-                  echo '<h3>No Record.</h3>';
-                }
-                ?>
-                
-                <p>Pending</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-clock"></i>
-              </div>
-              <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
-            </div>
-          </div>
-          
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-success">
-              <div class="inner">
-              <?php
-                require '../../process/conn.php';
-
-                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE approver_status = 'approved'";
-                $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-                $stmt->execute();
-
-                if ($stmt->rowCount() > 0) {
-                  // Output data of each row
-                  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                  // Output data of each row
-                  foreach ($rows as $row) {
-                    echo '<h3>'.$row['total'].'</h3>';
-                  }
-                } else {
-                  echo '<h3>No Record.</h3>';
-                }
-                ?>
-                <p>Approved</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-thumbs-up"></i>
-              </div>
-              <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
-            </div>
-          </div>
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-danger">
-              <div class="inner">
-              <?php
-                require '../../process/conn.php';
-
-                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE approver_status = 'disapproved'";
-                $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-                $stmt->execute();
-
-                if ($stmt->rowCount() > 0) {
-                  // Output data of each row
-                  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                  // Output data of each row
-                  foreach ($rows as $row) {
-                    echo '<h3>'.$row['total'].'</h3>';
-                  }
-                } else {
-                  echo '<h3>No Record.</h3>';
-                }
-                ?>
-                <p>Disapproved</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-thumbs-down"></i>
-              </div>
-              <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
-            </div>
-          </div>
-
-        </div>
-      <!-- <div class="row">
+      <div class="row">
         <div class="col-sm-12">
-          <div class="card card-primary card-outline">
+          <!-- STORE IN -->
+          <div class="card card-danger card-outline">
             <div class="card-header">
-              <h3 class="card-title"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard</h3>
+              <h3 class="card-title text-uppercase"><i class="fa fa-user-check"></i>&nbsp; admin dashboard</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                  <i class="fas fa-expand"></i>
+                </button>
+              </div>
             </div>
-
+            <!-- /.card-header -->
             <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col-md-12 mb-4">
-                  <div class="col-12 col-md-6 col-lg-3 float-right">
-                    <div class="input-group input-group-sm" style="margin: 8px;">
-                      <input type="search" name="table_search" id="partsin_search" style="height: 40px;" class="form-control float-right" placeholder="Search" autocomplete="off">
-                      <div class="input-group-append">
-                        <button type="button" class="btn btn-default" id="searchReqBtn" onclick="search(1)">
-                          <i class="fas fa-search"></i>
-                        </button>
+              <!-- <h6>content here...</h6> -->
+              <div class="row">
+                <div class="col-12">
+
+                  <div class="card">
+                    <div class="card-header">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <input type="hidden" name="approver_id" id="approver_id" value="<?php echo $_SESSION['emp_id']; ?>">
+                          <div class="col-md-3">
+                            <label for="">Search:</label>
+                            <input type="search" class="form-control" name="" id="search_by" placeholder="">
+                          </div>
+                          <!-- <div class="col-md-3">
+                            <label for="">Status:</label>
+                            <select name="status" id="_status" class="form-control">
+                              <option value="pending">Pending</option>
+                              <option value="approved">Approved</option>
+                              <option value="disapproved">Disapproved</option>
+                            </select>
+                          </div> -->
+                          <div class="col-md-3">
+                            <label for="">From:</label>
+                            <input type="date" class="form-control" name="" id="search_by_date_from">
+                          </div>
+                          <div class="col-md-3">
+                            <label for="">To:</label>
+                            <input type="date" class="form-control" name="" id="search_by_date_to">
+                          </div>
+                          <div class="col-md-3">
+                            <label for="">&nbsp;</label>
+                            <button class="form-control active" onclick="load_data();">
+                              <i class="fas fa-search"></i>&nbsp;
+                              Search
+                            </button>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-3 ml-auto">
+                            <label for="">&nbsp;</label>
+                            <button class="form-control btn-secondary btn_check" style="background-color: var(--gray);" onclick="location.reload();">
+                              <i class="fas fa-sync-alt"></i>&nbsp;
+                              Refresh
+                            </button>
+                          </div>
+                        </div>
                       </div>
+                    </div>
+                  </div>
+                  <div class="card-body table-responsive p-0" style="height: 600px;">
+                    <table class="table table-head-fixed text-nowrap table-hover" id="table">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Status</th>
+                          <th>Serial No.</th>
+                          <th>Batch No.</th>
+                          <th>Group No.</th>
+                          <th>Training Group</th>
+                          <th>Filename</th>
+                          <th>Approved Date</th>
+                          <!-- <th>Action</th> -->
+                        </tr>
+                      </thead>
+                      <tbody id="admin_dashboard_table"> </tbody>
+                    </table>
+                    <div id="a_load_more" class="text-center" style="display: none;">
+                      <p class="badge badge-dark border border-outline p-2 mt-3 " style="cursor: pointer;">Load More...</p>
                     </div>
                   </div>
                 </div>
               </div>
-
-              <div class="row">
-                <div class="col-12">
-                  <div class="card-body table-responsive p-0" style="height: 350px;">
-                    <table class="table table-head-fixed text-nowrap" id="table">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Fullname</th>
-                          <th>Username</th>
-                          <th>Address</th>
-                        </tr>
-                      </thead>
-                      <tbody id="table"></tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
             </div>
-            <hr>
           </div>
+          <!-- /.card-body -->
         </div>
-      </div> -->
+        <!-- /.card end-->
+
+
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
     </div>
-  </section>
+    <!-- /.row -->
+</div>
+</section>
 </div>
 
+<?php include 'plugins/js/dashboard_script.php'; ?>
 <?php include 'plugins/footer.php'; ?>

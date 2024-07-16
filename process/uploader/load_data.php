@@ -7,7 +7,7 @@ if ($method == 'load_data') {
 
     $uploader_name = isset($_POST['uploader_name']) ? $_POST['uploader_name'] : '';
     $status = isset($_POST['status']) ? $_POST['status'] : '';
-    $search_batch = isset($_POST['search_batch']) ? $_POST['search_batch'] : '';
+    $search = isset($_POST['search']) ? $_POST['search'] : '';
     $date_from = isset($_POST['date_from']) ? $_POST['date_from'] : '';
     $date_to = isset($_POST['date_to']) ? $_POST['date_to'] : '';
 
@@ -56,8 +56,8 @@ if ($method == 'load_data') {
         $conditions[] = "a.upload_date BETWEEN :date_from AND :date_to";
     }
 
-    if (!empty($search_batch)) {
-        $conditions[] = "a.batch_no = :search_batch";
+    if (!empty($search)) {
+        $conditions[] = "a.batch_no = :search OR a.group_no = :search OR a.serial_no = :search OR a.training_group = :search OR a.checker_name = :search OR a.approver_name = :search";
     }
 
     if (!empty($conditions)) {
@@ -80,8 +80,8 @@ if ($method == 'load_data') {
         $stmt->bindParam(':date_to', $date_to, PDO::PARAM_STR);
     }
 
-    if (!empty($search_batch)) {
-        $stmt->bindParam(':search_batch', $search_batch, PDO::PARAM_STR);
+    if (!empty($search)) {
+        $stmt->bindParam(':search', $search, PDO::PARAM_STR);
     }
 
     $stmt->execute();
@@ -117,7 +117,7 @@ if ($method == 'load_data') {
                         break;
                 }
             
-            $data .= '<tr style="cursor:pointer;' . $status_bg_color . ' " data-toggle="modal" data-target="#view_upload" onclick="get_uploads_details(&quot;' . $k['id'] . '~!~' . $k['serial_no'] . '~!~' . $k['approver_status'] . '&quot;)">';
+            $data .= '<tr style="cursor:pointer;' . $status_bg_color . ' " data-toggle="modal" data-target="#view_upload" onclick="get_uploads_details(&quot;' . $k['id'] . '~!~' . $k['serial_no'] . '~!~' . $status_text . '&quot;)">';
             $data .= '<td>' . $c . '</td>';
             $data .= '<td ><span>' . $status_text . '</span></td>';
             $data .= '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
@@ -192,7 +192,7 @@ if ($method == 'uploads_modal_table') {
             FROM t_upload_file a 
             LEFT JOIN t_training_record b 
             ON a.serial_no = b.serial_no AND a.id = b.id 
-            WHERE a.serial_no = :serial_no AND (b.checker_status = :status OR b.approver_status = :status)";
+            WHERE a.serial_no = :serial_no AND b.approver_status = :status";
 
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':serial_no', $serial_no, PDO::PARAM_STR);

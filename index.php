@@ -102,7 +102,7 @@ if (isset($_SESSION['username'])) {
           </div>
           <div class="row mb-2">
             <div class="col">
-              <!-- <button type="button" href="#" target="_blank" class="btn bg-danger btn-block" id="wi">Work Instruction</button> -->
+              <a type="button" href="pages/viewer/index.php" class="btn bg-danger btn-block" id="wi">Viewer Page</a>
             </div>
           </div>
           <div class="row">

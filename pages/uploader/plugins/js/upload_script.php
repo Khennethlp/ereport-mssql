@@ -1,16 +1,14 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        // Call the function to initialize file input handling
         initializeFileInput("#files", "#filesList > #files-names");
-        // document.getElementById('sub_doc_container').style.display = 'none';
         load_data();
-        // fetch_sub_doc();
+     
     });
 
-    const dt = new DataTransfer(); // Permet de manipuler les fichiers de l'input file
-    function initializeFileInput(selector, fileListSelector) {
+    const dt = new DataTransfer();
 
+    function initializeFileInput(selector, fileListSelector) {
         $(selector).on('change', function(e) {
             handleFileSelection(this, dt, fileListSelector);
         });
@@ -35,7 +33,6 @@
         }
 
         inputElement.files = dt.files;
-
         attachDeleteEvent(fileListSelector, dt);
     }
 
@@ -116,14 +113,14 @@
         if (!isPagination) {
             page = 1; // Reset page number for initial load
         }
-        $('#spinner').css('display', 'block');
+        
         var status = $('#status').val();
-        var search_batch = $('#search_batch').val();
+        var search = $('#search').val();
         var date_from = $('#search_date_from').val();
         var date_to = $('#search_date_to').val();
         var uploader_name = $('#uploader_name').val();
 
-        sessionStorage.setItem('status', status);
+        // sessionStorage.setItem('status', status);
         $.ajax({
             type: "POST",
             url: '../../process/uploader/load_data.php',
@@ -131,7 +128,7 @@
             data: {
                 method: 'load_data',
                 status: status,
-                search_batch: search_batch,
+                search: search,
                 date_from: date_from,
                 date_to: date_to,
                 uploader_name: uploader_name,
@@ -326,8 +323,9 @@
         $('#u_serial_no').val(serial_no);
 
         console.log(param);
+        sessionStorage.setItem('status', status);
         sessionStorage.setItem('serial_no', serial_no);
-        var status = sessionStorage.getItem('status'); // Correctly retrieve the status
+        var status = sessionStorage.getItem('status'); 
 
         $.ajax({
             type: "POST",

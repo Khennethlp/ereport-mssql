@@ -3,6 +3,50 @@ include '../../process/conn.php';
 
 $method = $_POST['method'];
 
+if($method == 'load_data'){
+    $search = $_POST['search'];
+    // $status = $_POST['status'];
+    $date_from = $_POST['date_from'];
+    $date_to = $_POST['date_to'];
+
+    $sql = "SELECT a.*, b.* FROM t_training_record a LEFT JOIN (SELECT * FROM t_upload_file) b ON a.serial_no=b.serial_no WHERE approver_status = 'APPROVED'";
+    
+    if (!empty($search)) {
+        $sql .= " AND a.serial_no LIKE :search OR a.batch_no LIKE :search OR a.group_no LIKE :search OR b.file_name LIKE :search";
+    }
+    if (!empty($date_from) && !empty($date_to)) {
+        $sql .= " AND approved_date BETWEEN :date_from AND :date_to";
+    }
+
+    $stmt = $conn->prepare($sql);
+    if (!empty($search)) {
+        $search = "%$search%";
+        $stmt->bindParam(':search', $search, PDO::PARAM_STR);
+    }
+    if (!empty($date_from) && !empty($date_to)) {
+        $stmt->bindParam(':date_from', $date_from, PDO::PARAM_STR);
+        $stmt->bindParam(':date_to', $date_to, PDO::PARAM_STR);
+    }
+    $stmt->execute();
+    
+    $c = 0;
+    if ($stmt->rowCount()) {
+        while ($k = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $c++;
+            echo '<tr >';
+            echo '<td>' . $c . '</td>';
+            echo '<td>' . strtoupper($k['approver_status']) . '</td>';
+            echo '<td>' . $k['serial_no'] . '</td>';
+            echo '<td>' . $k['batch_no'] . '</td>';
+            echo '<td>' . $k['group_no'] . '</td>';
+            echo '<td>' . $k['training_group'] . '</td>';
+            echo '<td>' . $k['file_name'] . '</td>';
+            echo '<td>' . date('Y/m/d' , strtotime($k['approved_date'])) . '</td>';
+            echo '</tr>';
+        }
+    }
+}
+
 if ($method == 'load_docs') {
 
     $sql = "SELECT * FROM m_report_title";

@@ -14,7 +14,7 @@ if ($method == 'history_checker_table') {
     $rowsPerPage = isset($_POST['rows_per_page']) ? (int)$_POST['rows_per_page'] : 10;
     $offset = ($page - 1) * $rowsPerPage;
 
-    $sql = "SELECT DISTINCT a.serial_no AS serial_no, a.id AS id, a.checker_status as checker_status, a.checker_name as checker_name, a.checked_date as checked_date, b.serial_no AS b_serial_no, b.main_doc, b.sub_doc, b.file_name AS filenames 
+    $sql = "SELECT DISTINCT a.serial_no AS serial_no, a.id AS id, a.checker_status as checker_status, a.batch_no AS batch_no, a.checker_name as checker_name, a.checked_date as checked_date, b.serial_no AS b_serial_no, b.main_doc, b.sub_doc, b.file_name AS filenames 
             FROM t_training_record a 
             RIGHT JOIN (SELECT id, serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no AND a.id = b.id 
             WHERE a.checker_status = 'Approved' AND a.checker_name = :checker_name";
@@ -66,6 +66,7 @@ if ($method == 'history_checker_table') {
             $data .= '<tr>';
             $data .= '<td>' . $c . '</td>';
             $data .= '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['filenames']) . '</td>';
             $data .= '<td>' . date('Y/m/d', strtotime($k['checked_date'])) . '</td>';
             if (file_exists($file_path)) {

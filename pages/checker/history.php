@@ -55,31 +55,31 @@
                               <option value="disapproved">Disapproved</option>
                             </select>
                           </div> -->
-                          <div class="col-md-2">
+                          <div class="col-md-3">
                             <label for="">Search:</label>
                             <input type="search" class="form-control" name="search_by" id="search_by" placeholder="serial no.">
                           </div>
-                          <div class="col-md-2">
+                          <div class="col-md-3">
                             <label for="">From:</label>
                             <input type="date" class="form-control" name="search_by_date_from" id="search_by_date_from">
                           </div>
-                          <div class="col-md-2">
+                          <div class="col-md-3">
                             <label for="">To:</label>
                             <input type="date" class="form-control" name="search_by_date_to" id="search_by_date_to">
                           </div>
 
-                          <div class="col-md-3">
+                          <div class="col-md-2">
                             <label for="">&nbsp;</label>
                             <button class="form-control btn_check_refresh" onclick="load_data();">
                               <i class="fas fa-search"></i>&nbsp;
                               Search
                             </button>
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-1">
                             <label for="">&nbsp;</label>
-                            <button class="form-control btn-secondary" onclick="location.reload();">
+                            <button class="form-control btn-secondary" style="background-color: var(--secondary);" onclick="location.reload();">
                               <i class="fas fa-sync-alt"></i>&nbsp;
-                              Refresh
+                              <!-- Refresh -->
                             </button>
                           </div>
                         </div>
@@ -94,12 +94,11 @@
                       <thead>
                         <tr>
                           <th>#</th>
-                          <!-- <th>Status</th> -->
                           <th>Serial No.</th>
+                          <th>Batch No</th>
                           <th>Files</th>
                           <th>Date</th>
                           <th></th>
-                        
                         </tr>
                       </thead>
                       <tbody id="history_checker_table"> </tbody>

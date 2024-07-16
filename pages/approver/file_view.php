@@ -110,8 +110,8 @@ $id = $_GET['id'];
                                 <label for="">Status:</label>
                                 <select class="form-control" name="status_approver" id="status_approver">
                                     <option value="">---Status---</option>
-                                    <option value="approved">Approve</option>
-                                    <option value="disapproved">Disapprove</option>
+                                    <option value="Approved">Approve</option>
+                                    <option value="Disapproved">Disapprove</option>
                                 </select>
 
                             </div>

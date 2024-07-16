@@ -4,13 +4,11 @@
         initializeFileInput("#files", "#filesList > #files-names");
         load_data();
      
-        document.addEventListener('keypress', ()=>{
-            load_data();
-        });
-        document.addEventListener('onchange', ()=>{
-            load_data();
-        });
     });
+    
+    // document.addEventListener('keypress', ()=>{
+    //     load_data();
+    // });
 
     const dt = new DataTransfer();
 

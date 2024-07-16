@@ -114,8 +114,8 @@ $_SERVER['SERVER_PORT'];
                                 <label for="">Status:</label>
                                 <select class="form-control" name="checker_status" id="checker_status">
                                     <option value="">---Status---</option>
-                                    <option value="approved">Approve</option>
-                                    <option value="disapproved">Disapprove</option>
+                                    <option value="Approved">Approve</option>
+                                    <option value="Disapproved">Disapprove</option>
                                 </select>
 
                             </div>

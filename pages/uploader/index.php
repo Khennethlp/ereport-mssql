@@ -158,7 +158,7 @@
                           <div class="row">
                             <div class="col-md-3 mb-1 ml-auto">
                               <label for="">&nbsp;</label>
-                              <button class="form-control" style="background-color: var(--danger);" onclick="load_data();">
+                              <button class="form-control" style="background-color: var(--danger); color: #fff;" onclick="load_data();">
                                 <i class="fas fa-search"></i>&nbsp;
                                 Search
                               </button>
@@ -172,7 +172,7 @@
                             </div>
                             <div class="col-md-3 mb-1">
                               <label for="">&nbsp;</label>
-                              <button class="form-control" style="background-color: var(--gray);" onclick="refresh();">
+                              <button class="form-control" style="background-color: var(--gray); color: #fff;" onclick="refresh();">
                                 <i class="fas fa-sync-alt"></i>&nbsp;
                                 Refresh
                               </button>

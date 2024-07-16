@@ -1,5 +1,5 @@
 <footer class="main-footer text-sm">
-    Developed by: <em>Khennethlp</em> 🍔
+    Developed by: <em>Khennethlp</em>
     <div class="float-right d-none d-sm-inline-block">
       <strong>Copyright &copy;
         <script>   
@@ -21,7 +21,7 @@ include '../../modals/upload_data.php';
 include '../../modals/update_uploads.php';
 ?>
 
-<script src="plugins/js/custom.js"></script>
+<!-- <script src="plugins/js/custom.js"></script> -->
 <!-- jQuery -->
 <script src="../../plugins/jquery/dist/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->

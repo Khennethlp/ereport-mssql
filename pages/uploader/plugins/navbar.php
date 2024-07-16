@@ -74,14 +74,6 @@ if (!isset($_SESSION['username'])) {
       }
     }
 
-    body.light-mode {
-      color: black;
-    }
-
-    body.dark-mode {
-      color: white;
-    }
-
     .active {
       background-color: #275DAD !important;
       /*#000EA4*/
@@ -124,46 +116,6 @@ if (!isset($_SESSION['username'])) {
 
     .nav-link {
       cursor: pointer;
-    }
-
-    .custom-switch {
-      display: flex;
-      align-items: center;
-
-    }
-
-    .custom-control-label {
-      cursor: pointer;
-    }
-
-    .theme-active {
-      background-color: #4A6670;
-    }
-
-    .btn-theme {
-      width: 100% !important;
-    }
-
-    .btn-theme:hover {
-      background-color: #5A7B87;
-      color: #fff !important;
-      transition: ease-in-out .3s;
-    }
-
-    .btn-theme:hover .fas {
-      color: #f5f5f5 !important;
-      transition: ease-in-out .3s;
-    }
-
-    .fa-sort {
-      font-size: 24px;
-      color: #333;
-    }
-
-    .fa-sort-down {
-      font-size: 24px;
-      color: #333;
-      transform: rotate(180deg);
     }
 
     .btn_Submit {
@@ -261,6 +213,7 @@ if (!isset($_SESSION['username'])) {
       } */
     }
 
+
     input[type=date], 
     input[type=search], 
     input[type=date],
@@ -279,38 +232,17 @@ if (!isset($_SESSION['username'])) {
   <div class="wrapper">
 
     <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand " id="navbar">
+    <nav class="main-header navbar navbar-expand navbar-light" id="navbar" style="background-color: #306BAC;">
       <!-- Left navbar links -->
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+          <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
       </ul>
 
       <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
         <div class="row">
-          <li class="nav-item dropdown">
-            <!-- <a class="nav-link dropdown-toggle no-caret" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Theme
-            </a> -->
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <!-- <a class="dropdown-item">
-          <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" id="customSwitch1">
-            <label class="custom-control-label " id="theme_label" for="customSwitch1">Dark Mode</label>
-          </div>
-        </a> -->
-
-              <!-- <a class="dropdown-item ">
-                <button class="btn btn-theme" id="dark-btn"> <i class="fas fa-moon text-secondary mr-2"></i> Dark</button>
-              </a>
-              <a class="dropdown-item">
-                <button class="btn btn-theme " id="light-btn"> <i class="fas fa-sun text-warning mr-2"></i> Light</button>
-              </a> -->
-
-            </div>
-          </li>
           <!-- <li class="nav-item">
             <a class="nav-link" data-widget="fullscreen" href="#" role="button">
               <i class="fas fa-expand-arrows-alt"></i>

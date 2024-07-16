@@ -100,15 +100,15 @@ if ($method == 'load_data') {
             // $status_badge_color = '';
                 switch ($status_text) {
                     case 'APPROVED':
-                        $status_bg_color = 'background-color: var(--success);';
+                        $status_bg_color = 'background-color: var(--success); color: #fff;';
                         // $status_badge_color = 'badge-success';
                         break;
                     case 'PENDING':
-                        $status_bg_color = 'background-color: var(--secondary);';
+                        $status_bg_color = 'background-color: var(--warning);';
                         // $status_badge_color = 'badge-secondary';
                         break;
                     case 'DISAPPROVED':
-                        $status_bg_color = 'background-color: var(--danger);';
+                        $status_bg_color = 'background-color: var(--danger); color: #fff;';
                         // $status_badge_color = 'badge-danger';
                         break;
                     default:

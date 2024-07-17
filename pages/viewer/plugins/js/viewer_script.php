@@ -1,21 +1,17 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        load_data(); 
+        load_data(); // Initial load
     });
-
-    // document.addEventListener("keyup", function(){
-    //     load_data(); 
-    // });
 
     let page = 1; // Initial page number
     const rowsPerPage = 20; // Number of rows to fetch per request
-    
+
     const load_data = (isPagination = false) => {
         if (!isPagination) {
             page = 1; // Reset page number for initial load
         }
 
-        // var search_by_serial = $('#search_by_serial').val();
+        // Retrieve search parameters
         var search_by_serial = document.getElementById('search_by_serial').value;
         var search_by_batch = document.getElementById('search_by_batch').value;
         var search_by_group = document.getElementById('search_by_group').value;
@@ -24,6 +20,7 @@
         var date_from = document.getElementById('search_by_date_from').value;
         var date_to = document.getElementById('search_by_date_to').value;
 
+        // AJAX request to load data
         $.ajax({
             type: "POST",
             url: "../../process/viewer/load_data.php",
@@ -37,10 +34,11 @@
                 search_by_filename: search_by_filename,
                 date_from: date_from,
                 date_to: date_to,
+                page: page,
+                rows_per_page: rowsPerPage
             },
             success: function(response) {
                 const responseData = JSON.parse(response);
-                // document.getElementById('viewer_table').innerHTML = response;
                 if (isPagination) {
                     if (responseData.html.trim() !== '') {
                         document.getElementById('viewer_table').innerHTML += responseData.html;
@@ -62,12 +60,14 @@
                         document.getElementById('viewer_load_more').style.display = 'none';
                     }
                 }
-            },  error: function() {
+            },
+            error: function() {
                 console.log("Error loading data");
             }
         });
     }
+
     document.getElementById('viewer_load_more').addEventListener('click', function() {
-        load_data(true); // Pass true to indicate pagination
+        load_data(true); // Trigger pagination
     });
 </script>

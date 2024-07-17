@@ -197,6 +197,7 @@
                           <th>#</th>
                           <th>Status</th>
                           <th>Serial No.</th>
+                          <th>Filename</th>
                           <th>Checked By</th>
                           <th>Checked Date</th>
                         </tr>

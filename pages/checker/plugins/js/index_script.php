@@ -78,7 +78,7 @@
             return;
         }
 
-        if (status === 'disapproved' && comment === '') {
+        if (status === 'disapprove' && comment === '') {
             Swal.fire({
                 icon: 'info',
                 title: 'Please provide a comment for disapproval.',
@@ -88,16 +88,16 @@
             return;
         }
 
-        if (status !== 'disapproved' && approver === '') {
-            Swal.fire({
-                icon: 'info',
-                title: 'Please Select Approver.',
-                text: 'Information',
-                showConfirmButton: false,
-                timer: 1000
-            });
-            return;
-        }
+        // if (status !== 'disapprove' && approver === '') {
+        //     Swal.fire({
+        //         icon: 'info',
+        //         title: 'Please Select Approver.',
+        //         text: 'Information',
+        //         showConfirmButton: false,
+        //         timer: 1000
+        //     });
+        //     return;
+        // }
 
         $.ajax({
             type: "POST",

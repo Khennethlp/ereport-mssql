@@ -21,35 +21,40 @@ if ($method == 'load_data') {
                 b.sub_doc, 
                 b.file_name,
                 CASE 
-                    WHEN a.checker_status = 'Approved' AND a.approver_status = 'Approved' THEN 'Approved'
-                    WHEN a.checker_status = 'Disapproved' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
-                    WHEN a.checker_status = 'Approved' AND a.approver_status = 'Pending' THEN 'Approved'
-                    WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
                     WHEN a.checker_status = 'Pending' THEN 'Pending'
+                    WHEN a.checker_status = 'Disapproved' THEN 'Disapproved'
+                    WHEN a.checker_status = 'Approved' AND a.approver_status = 'Pending' THEN 'Approved'
+                    WHEN a.checker_status = 'Disapproved' AND a.approver_status = 'Pending' THEN 'Disapproved'
+                    WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
+                    WHEN a.checker_status = 'Disapproved' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
+                    WHEN a.checker_status = 'Approved' AND a.approver_status = 'Approved' THEN 'Approved'
                 END AS global_status, 
                 CASE 
-                    WHEN a.approver_status = 'Disapproved' THEN a.approver_name
+                    WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN a.approver_name
+                    -- WHEN a.checker_status = 'Disapproved' AND a.approver_status = 'Disapproved' THEN a.checker_name
                     WHEN a.checker_status = 'Disapproved' THEN a.checker_name
-                    ELSE ''
+                    -- ELSE 'a.checker_name'
                 END AS disapprover_name
             FROM 
                 t_training_record a 
             RIGHT JOIN 
-                (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file GROUP BY serial_no) b 
+                (SELECT id, serial_no, main_doc, sub_doc, file_name FROM t_upload_file ) b 
             ON 
-                a.serial_no = b.serial_no 
+                a.serial_no = b.serial_no AND a.id=b.id
             WHERE 
                 uploader_name = :uploader_name";
 
     $conditions = [];
     if (!empty($status)) {
         $conditions[] = "(
-                            (a.checker_status = 'Pending' AND :status = 'Pending') OR
-                            (a.checker_status = 'Approved' AND a.approver_status = 'Pending' AND :status = 'Pending') OR
-                            (a.checker_status = 'Approved' AND a.approver_status = 'Approved' AND :status = 'Approved') OR
-                            (a.checker_status = 'Disapproved' AND a.approver_status = 'Disapproved' AND :status = 'Disapproved') OR
-                            (a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' AND :status = 'Disapproved')
-                        )";
+            (a.checker_status = 'Pending' AND :status = 'Pending') OR
+            (a.checker_status = 'Disapproved' AND :status = 'Disapproved') OR
+            (a.checker_status = 'Approved' AND a.approver_status = 'Pending' AND :status = 'Pending') OR
+            (a.checker_status = 'Approved' AND a.approver_status = 'Approved' AND :status = 'Approved') OR
+            (a.checker_status = 'Disapproved' AND a.approver_status = 'Disapproved' AND :status = 'Disapproved') OR
+            (a.checker_status = 'Disapproved' AND a.approver_status = 'Pending' AND :status = 'Disapproved') OR
+            (a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' AND :status = 'Disapproved')
+        )";
     }
 
     if (!empty($date_from) && !empty($date_to)) {
@@ -64,7 +69,7 @@ if ($method == 'load_data') {
         $sql .= " AND " . implode(" AND ", $conditions);
     }
 
-    $sql .= " GROUP BY a.serial_no ORDER BY a.id ASC LIMIT :limit OFFSET :offset";
+    $sql .= " ORDER BY a.id ASC LIMIT :limit OFFSET :offset";
 
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
@@ -98,33 +103,52 @@ if ($method == 'load_data') {
             // Set background color based on status
             $status_bg_color = '';
             // $status_badge_color = '';
-                switch ($status_text) {
-                    case 'APPROVED':
-                        $status_bg_color = 'background-color: var(--success); color: #fff;';
-                        // $status_badge_color = 'badge-success';
-                        break;
-                    case 'PENDING':
-                        $status_bg_color = 'background-color: var(--warning);';
-                        // $status_badge_color = 'badge-secondary';
-                        break;
-                    case 'DISAPPROVED':
-                        $status_bg_color = 'background-color: var(--danger); color: #fff;';
-                        // $status_badge_color = 'badge-danger';
-                        break;
-                    default:
-                        $status_bg_color = 'background-color: var(--primary);';
-                        // $status_badge_color = 'badge-primary';
-                        break;
-                }
-            
-            $data .= '<tr style="cursor:pointer;' . $status_bg_color . ' " data-toggle="modal" data-target="#view_upload" onclick="get_uploads_details(&quot;' . $k['id'] . '~!~' . $k['serial_no'] . '~!~' . $status_text . '&quot;)">';
+            switch ($status_text) {
+                case 'APPROVED':
+                    $status_bg_color = 'background-color: var(--success); color: #fff;';
+                    // $status_badge_color = 'badge-success';
+                    break;
+                case 'PENDING':
+                    $status_bg_color = 'background-color: var(--warning);';
+                    // $status_badge_color = 'badge-secondary';
+                    break;
+                case 'DISAPPROVED':
+                    $status_bg_color = 'background-color: var(--danger); color: #fff;';
+                    // $status_badge_color = 'badge-danger';
+                    break;
+                default:
+                    $status_bg_color = 'background-color: var(--primary);';
+                    // $status_badge_color = 'badge-primary';
+                    break;
+            }
+
+            $file_path = '../../../uploads/ereport/' . htmlspecialchars($k['serial_no']) . '/';
+            $file_path .= htmlspecialchars($k['main_doc']) . '/';
+            if (!empty($k['sub_doc'])) {
+                $file_path .= htmlspecialchars($k['sub_doc']) . '/';
+            }
+            $file_path .= htmlspecialchars($k['file_name']);
+            $filename = htmlspecialchars($k['file_name']);
+
+            $data .= '<tr style="cursor:pointer;' . $status_bg_color . ' " data-toggle="" data-target="#view_upload" onclick="get_uploads_details(&quot;' . $k['id'] . '~!~' . $k['serial_no'] . '~!~' . $status_text . '&quot;)">';
             $data .= '<td>' . $c . '</td>';
             $data .= '<td ><span>' . $status_text . '</span></td>';
             $data .= '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['group_no']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['training_group']) . '</td>';
-            $data .= '<td>' . htmlspecialchars($k['file_name']) . '</td>';
+            // $data .= '<td>' . htmlspecialchars($k['file_name']) . '</td>';
+
+            if ($status_text == 'DISAPPROVED'){
+                if (file_exists($file_path)) {
+                    $data .= '<td style="cursor: pointer; color: #ffffff;"><a class="text-warning" href="' . $file_path . '" download>' . $filename . '</a></td>';
+                } else {
+                    $data .= '<td>File not found</td>';
+                }
+            }else{
+                $data .= '<td style="cur sor: pointer; ;">' . $filename . '</td>';
+
+            }
             $data .= '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
             $data .= '<td>' . htmlspecialchars($checked_date) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['checker_comment']) . '</td>';
@@ -133,8 +157,8 @@ if ($method == 'load_data') {
             $data .= '<td>' . htmlspecialchars($approved_date) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['approver_comment']) . '</td>';
 
-              // Display disapprover name if approver status is 'Disapproved'
-              if ($status_text == 'DISAPPROVED') {
+            // Display disapprover name if approver status is 'Disapproved'
+            if ($status_text == 'DISAPPROVED') {
                 $data .= '<td>' . htmlspecialchars($k['disapprover_name']) . '</td>';
             } else {
                 $data .= '<td></td>';
@@ -160,8 +184,8 @@ if ($method == 'load_data') {
         $stmt->bindParam(':date_to', $date_to, PDO::PARAM_STR);
     }
 
-    if (!empty($search_batch)) {
-        $stmt->bindParam(':search_batch', $search_batch, PDO::PARAM_STR);
+    if (!empty($search)) {
+        $stmt->bindParam(':search', $search, PDO::PARAM_STR);
     }
 
     $stmt->execute();
@@ -193,11 +217,23 @@ if ($method == 'uploads_modal_table') {
             FROM t_upload_file a 
             LEFT JOIN t_training_record b 
             ON a.serial_no = b.serial_no AND a.id = b.id 
-            WHERE a.serial_no = :serial_no AND b.approver_status = :status";
+            WHERE a.serial_no = :serial_no AND b.checker_status = :status";
+
+    // Modify the query based on the status filter
+    // if ($status === 'PENDING') {
+    //     $sql .= " AND b.checker_status = :status";
+    // } elseif ($status === 'APPROVED' || $status === 'DISAPPROVED') {
+    //     $sql .= " AND b.approver_status = :status";
+    // }
 
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':serial_no', $serial_no, PDO::PARAM_STR);
-    $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+    // $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+
+    // Bind the status parameter if necessary
+    if ($status === 'APPROVED' || $status === 'DISAPPROVED' || $status === 'PENDING') {
+        $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+    }
 
     $stmt->execute();
     $c = 0;

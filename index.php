@@ -63,10 +63,10 @@ if (isset($_SESSION['username'])) {
               <!-- <input type="text" > -->
               <select class="form-control" id="users" name="users" autocomplete="off" required>
                 <option disabled selected>--- Choose User ---</option>
-                <option value="admin">Admin</option>
-                <option value="uploader">Uploader</option>
-                <option value="checker">Checker</option>
-                <option value="approver">Approver</option>
+                <option value="Admin">Admin</option>
+                <option value="Approver">Approver</option>
+                <option value="Checker">Checker</option>
+                <option value="Uploader">Uploader</option>
               </select>
               <div class="input-group-append">
                 <div class="input-group-text">
@@ -100,10 +100,10 @@ if (isset($_SESSION['username'])) {
               <button type="submit" class="btn btn-block" name="Login" style="background-color: #306BAC; color: #fff;">Login</button>
             </div>
           </div>
-          <div class="row mb-2">
+          <!-- <div class="row mb-2">
             <div class="col">
               <a type="button" href="pages/viewer/index.php" class="btn bg-danger btn-block" id="wi">Viewer Page</a>
-            </div>
+            </div> -->
           </div>
           <div class="row">
             <!-- <div class="col">

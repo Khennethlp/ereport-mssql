@@ -80,6 +80,7 @@
         $('#batch_no').val('');
         $('#training_group').val('');
         $('#search_date').val('');
+        $('#check_by').val('');
         del();
     }
 
@@ -177,15 +178,15 @@
     document.getElementById('load_more').addEventListener('click', () => load_data(true));
 
     const clear_all = () => {
-        // Clear form inputs or hide modal
+        // Clear form inputs & hide modal
         $('#main_doc').val('');
         $('#sub_doc').val('');
         $('#training_group').val('');
         $('#batch_no').val('');
         $('#group_no').val('');
         $('#check_by').val('');
-        $('#fileDropArea p').text('Click or Drop file here');
         $('#upload').modal('hide');
+        $('#fileDropArea p').text('Click or Drop file here');
     }
 
     // document.getElementById('uploadBtn').addEventListener('click', function()

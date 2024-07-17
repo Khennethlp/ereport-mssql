@@ -61,7 +61,7 @@
                                         <label for="main_doc">Document:</label>
                                         <!-- <input type="text" class="form-control"> -->
                                         <select class="form-control" name="main_doc" id="main_doc" onchange="fetch_sub_doc();">
-                                            <option value="">--SELECT DOCUMENT--</option>
+                                            <option value="" selected>--SELECT DOCUMENT--</option>
                                             <?php
                                             require '../../process/conn.php';
 

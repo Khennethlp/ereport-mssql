@@ -14,7 +14,7 @@ if ($method == 'update_check_uploader') {
     $approver_id = $_POST['approver_id'];
     $approver_email = $_POST['approver_email'];
     // $approver_status = 'Pending';
-    $approver_status = ($status == 'disapproved') ? '' : 'Pending';
+    $approver_status = ($status === 'Disapproved') ? '' : 'Disapproved';
 
     $acc_sql = "SELECT emp_id, email, fullname FROM m_accounts WHERE emp_id = :checker_id";
     $acc_stmt = $conn->prepare($acc_sql);

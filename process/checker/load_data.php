@@ -119,6 +119,7 @@ if ($method == 'checker_table') {
                     echo '<td>' . htmlspecialchars($k['file_name']) . '</td>';
                 } else {
                     echo '<td><a href="../../pages/checker/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . urlencode($file_path) . '&checker=' . htmlspecialchars($c_id) . '" target="_blank">' . htmlspecialchars($k['file_name']) . '</a></td>';
+                    // echo '<td><a href="#" onclick="downloadAndViewFile(\'' . htmlspecialchars($id) . '\', \'' . htmlspecialchars($serial_no) . '\', \'' . urlencode($file_path) . '\', \'' . htmlspecialchars($c_id) . '\', \'' . urlencode($k['file_name']) . '\')">' . htmlspecialchars($k['file_name']) . '</a></td>';
                 }
             } else {
                 echo '<td>File not found</td>';

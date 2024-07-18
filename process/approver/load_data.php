@@ -92,6 +92,8 @@ if ($method == 'approver_table') {
                     echo '<td>' . htmlspecialchars($k['filenames']) . '</td>';
                 } else {
                     echo '<td><a href="../../pages/approver/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . urlencode($file_path) . '&approver=' . htmlspecialchars($a_id) . '" target="_blank">' . htmlspecialchars($k['filenames']) . '</a></td>';
+                    // echo '<td><a href="#" onclick="downloadAndViewFile(\'' . htmlspecialchars($id) . '\', \'' . htmlspecialchars($serial_no) . '\', \'' . urlencode($file_path) . '\', \'' . htmlspecialchars($a_id) . '\', \'' . urlencode($k['filenames']) . '\')">' . htmlspecialchars($k['filenames']) . '</a></td>';
+
                 }
             } else {
                 echo '<td>File not found</td>';

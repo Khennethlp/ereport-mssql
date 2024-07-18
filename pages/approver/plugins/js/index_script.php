@@ -8,7 +8,6 @@
         load_data();
     });
 
-
     const load_data = () => {
 
         const status = document.getElementById('approver_status').value;

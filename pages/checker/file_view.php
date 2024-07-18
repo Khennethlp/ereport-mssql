@@ -353,7 +353,7 @@ $_SERVER['SERVER_PORT'];
     <!-- <script src="plugins/js/custom.js"></script> -->
     <script>
         $(document).ready(function() {
-            initializeFileInput("#files", "#filesList > #files-names");
+            //initializeFileInput("#files", "#filesList > #files-names");
         });
 
         const dt = new DataTransfer(); // Allows manipulation of the files of the input file
@@ -449,4 +449,4 @@ $_SERVER['SERVER_PORT'];
 </body>
 
 </html>
-<?php include 'plugins/js/index_script.php' ?>;
+<?php //include 'plugins/js/index_script.php' ?>;

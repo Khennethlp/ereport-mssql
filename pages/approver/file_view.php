@@ -362,7 +362,7 @@ $id = $_GET['id'];
 
     <script>
         $(document).ready(function() {
-            initializeFileInput("#files", "#filesList > #files-names");
+           // initializeFileInput("#files", "#filesList > #files-names");
         });
 
         const dt = new DataTransfer(); // Allows manipulation of the files of the input file
@@ -468,4 +468,4 @@ $id = $_GET['id'];
 </body>
 
 </html>
-<?php include 'plugins/js/index_script.php' ?>;
+<?php //include 'plugins/js/index_script.php' ?>;

@@ -21,9 +21,9 @@ if ($method == 'load_data') {
                 b.sub_doc, 
                 b.file_name,
                 CASE 
-                    WHEN a.checker_status = 'Pending' THEN 'Pending'
+                    WHEN a.checker_status = 'Pending' THEN 'FOR CHECKING' 
                     WHEN a.checker_status = 'Disapproved' THEN 'Disapproved'
-                    WHEN a.checker_status = 'Approved' AND a.approver_status = 'Pending' THEN 'Approved'
+                    WHEN a.checker_status = 'Approved' AND a.approver_status = 'Pending' THEN 'For Approval'
                     WHEN a.checker_status = 'Disapproved' AND a.approver_status = 'Pending' THEN 'Disapproved'
                     WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
                     WHEN a.checker_status = 'Disapproved' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
@@ -108,7 +108,7 @@ if ($method == 'load_data') {
                     $status_bg_color = 'background-color: var(--success); color: #fff;';
                     // $status_badge_color = 'badge-success';
                     break;
-                case 'PENDING':
+                case 'FOR CHECKING': //PENDING
                     $status_bg_color = 'background-color: var(--warning);';
                     // $status_badge_color = 'badge-secondary';
                     break;
@@ -116,8 +116,12 @@ if ($method == 'load_data') {
                     $status_bg_color = 'background-color: var(--danger); color: #fff;';
                     // $status_badge_color = 'badge-danger';
                     break;
+                case 'FOR APPROVAL':
+                    $status_bg_color = 'background-color: var(--primary); color: #fff;';
+                    // $status_badge_color = 'badge-danger';
+                    break;
                 default:
-                    $status_bg_color = 'background-color: var(--primary);';
+                    $status_bg_color = 'background-color: var(--secondary);';
                     // $status_badge_color = 'badge-primary';
                     break;
             }

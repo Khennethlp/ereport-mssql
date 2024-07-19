@@ -81,7 +81,7 @@
               require '../../process/conn.php';
               $checker_id = $_SESSION['emp_id'];
 
-              $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Disapproved' OR approver_status = 'Disapproved' AND checker_id = :checker_id";
+              $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Disapproved' AND approver_status = '' AND checker_id = :checker_id";
               // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'disapproved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
               $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
               $stmt->bindParam(':checker_id', $checker_id, PDO::PARAM_STR);
@@ -112,7 +112,7 @@
       <!-- end of alert -->
       <div class="row mb-2">
         <div class="col-sm-6">
-          <!-- <h1 class="m-0">Tube Making Inventory</h1> -->
+          <h1 class="m-0">FOR CHECKING</h1>
         </div><!-- /.col -->
       </div><!-- /.row -->
     </div><!-- /.container-fluid -->
@@ -125,9 +125,9 @@
       <div class="row">
         <div class="col-sm-12">
           <!-- STORE IN -->
-          <div class="card card-info card-outline">
+          <div class="card card-secondary card-outline">
             <div class="card-header">
-              <h3 class="card-title text-uppercase"><i class="fa fa-user-check"></i>&nbsp; Checker</h3>
+              <h3 class="card-title text-uppercase"><i class="fa fa-user-check"></i>&nbsp; </h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                   <i class="fas fa-minus"></i>

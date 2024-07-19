@@ -53,34 +53,4 @@
         });
     }
 
-    const checker = param => {
-        var data = param.split('~!~');
-        var id = data[0];
-        var serial_no = data[1];
-        $('#id_no').val(id);
-        $('#serial_label').text(serial_no);
-        $('#serial_no').val(serial_no);
-
-        var serial = sessionStorage.setItem('serial_no', serial_no);
-        var stats = sessionStorage.getItem('status', status);
-        $.ajax({
-            type: "POST",
-            url: '../../process/checker/load_data.php',
-            cache: false,
-            data: {
-                method: 'checker_modal_table',
-                serial_no: serial_no,
-                id: id,
-                status: stats
-            },
-            success: function(response) {
-                document.getElementById('checker_modal_table').innerHTML = response;
-                $('#checker_modal').modal('hide');
-
-            },
-            error: function() {
-                console.log("Error loading data");
-            }
-        });
-    }
 </script>

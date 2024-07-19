@@ -134,7 +134,7 @@ if ($method == 'load_data') {
             $file_path .= htmlspecialchars($k['file_name']);
             $filename = htmlspecialchars($k['file_name']);
 
-            $data .= '<tr style="cursor:pointer;' . $status_bg_color . ' " data-toggle="" data-target="#view_upload" onclick="get_uploads_details(&quot;' . $k['id'] . '~!~' . $k['serial_no'] . '~!~' . $status_text . '&quot;)">';
+            $data .= '<tr style="' . $status_bg_color . ' ">';
             $data .= '<td>' . $c . '</td>';
             $data .= '<td ><span>' . $status_text . '</span></td>';
             $data .= '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
@@ -196,91 +196,4 @@ if ($method == 'load_data') {
     $has_more = $stmt->rowCount() > 0;
 
     echo json_encode(['html' => $data, 'has_more' => $has_more]);
-}
-
-
-
-if ($method == 'uploads_modal_table') {
-
-    $id = isset($_POST['id']) ? $_POST['id'] : '';
-    $serial_no = isset($_POST['serial_no']) ? $_POST['serial_no'] : '';
-    $status = isset($_POST['status']) ? $_POST['status'] : '';
-
-    $sql = "SELECT 
-                a.id AS id, 
-                a.serial_no AS serial_no, 
-                a.main_doc AS main_doc, 
-                a.sub_doc AS sub_doc, 
-                a.file_name AS file_name, 
-                b.checker_status AS c_status, 
-                b.approver_status AS a_status, 
-                b.checker_name AS c_name, 
-                b.approver_name AS a_name, 
-                b.checker_comment AS c_comment,
-                b.approver_comment AS a_comment 
-            FROM t_upload_file a 
-            LEFT JOIN t_training_record b 
-            ON a.serial_no = b.serial_no AND a.id = b.id 
-            WHERE a.serial_no = :serial_no AND b.checker_status = :status";
-
-    // Modify the query based on the status filter
-    // if ($status === 'PENDING') {
-    //     $sql .= " AND b.checker_status = :status";
-    // } elseif ($status === 'APPROVED' || $status === 'DISAPPROVED') {
-    //     $sql .= " AND b.approver_status = :status";
-    // }
-
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':serial_no', $serial_no, PDO::PARAM_STR);
-    // $stmt->bindParam(':status', $status, PDO::PARAM_STR);
-
-    // Bind the status parameter if necessary
-    if ($status === 'APPROVED' || $status === 'DISAPPROVED' || $status === 'PENDING') {
-        $stmt->bindParam(':status', $status, PDO::PARAM_STR);
-    }
-
-    $stmt->execute();
-    $c = 0;
-
-    if ($stmt->rowCount() > 0) {
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $k) {
-            $c++;
-            // Construct file path
-            $file_path = '../../../uploads/ereport/' . htmlspecialchars($k['serial_no']) . '/';
-            $file_path .= htmlspecialchars($k['main_doc']) . '/';
-
-            if (!empty($k['sub_doc'])) {
-                $file_path .= htmlspecialchars($k['sub_doc']) . '/';
-            }
-
-            $file_path .= htmlspecialchars($k['file_name']);
-            $serial_no = htmlspecialchars($k['serial_no']);
-            $c_name = htmlspecialchars($k['c_name']);
-            $c_status = htmlspecialchars($k['c_status']);
-            $a_name = htmlspecialchars($k['a_name']);
-            $a_status = htmlspecialchars($k['a_status']);
-            $id = htmlspecialchars($k['id']);
-
-            echo '<tr>';
-            echo '<td>' . $c . '</td>';
-
-            if (file_exists($file_path)) {
-                echo '<td><p href="#">' . htmlspecialchars($k['file_name']) . '</p></td>';
-            } else {
-                echo '<td>File not found</td>';
-            }
-
-            // $checker_stats = ($c_status == 'Pending') ? 'For Checking':'For Approval';
-            // $approver_status = ($a_status == 'Pending') ? 'For Checking':'Approved';
-
-            if ($k['a_status'] == 'DISAPPROVED') {
-                echo '<td style="cursor: pointer;" data-toggle="modal" data-target="#update_upload" onclick="get_disapprovedDetails(&quot; ' . $k['id'] . '~!~' .  $k['serial_no'] . '~!~' . $k['a_comment'] . '&quot;)"><i class="fas fa-ellipsis-h"></i></td>';
-            } else {
-                echo '<td></td>';
-            }
-            echo '</tr>';
-        }
-    } else {
-        echo '<tr><td colspan="5">No records found.</td></tr>';
-    }
 }

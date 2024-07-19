@@ -3,13 +3,10 @@
 
         initializeFileInput("#files", "#filesList > #files-names");
         load_data();
-     
-    });
-    
-    // document.addEventListener('keypress', ()=>{
-    //     load_data();
-    // });
 
+    });
+
+    //File Selection and Displaying
     const dt = new DataTransfer();
 
     function initializeFileInput(selector, fileListSelector) {
@@ -118,7 +115,7 @@
         if (!isPagination) {
             page = 1; // Reset page number for initial load
         }
-        
+
         var status = $('#status').val();
         var search = $('#search').val();
         var date_from = $('#search_date_from').val();
@@ -189,7 +186,6 @@
         $('#fileDropArea p').text('Click or Drop file here');
     }
 
-    // document.getElementById('uploadBtn').addEventListener('click', function()
     const upload = () => {
 
         var batch_no = document.getElementById('batch_no').value;
@@ -201,9 +197,7 @@
         var selectElement = document.getElementById('check_by');
         var selectedOption = selectElement.options[selectElement.selectedIndex];
         var checker_id = selectedOption.getAttribute('data-emp-id');
-        // var checker_name = selectedOption.textContent || selectedOption.innerText;
         var checker_email = selectedOption.value;
-        // var checker_email = document.getElementById('check_by').value;
         var checker_status = 'Pending';
 
         var main_doc = document.getElementById('main_doc').value;
@@ -317,52 +311,6 @@
         }
 
     };
-
-    const get_uploads_details = param => {
-        var data = param.split('~!~');
-        var id = data[0];
-        var serial_no = data[1];
-        var status = data[2];
-        $('#u_id_no').val(id);
-        $('#u_serial_label').text(serial_no);
-        $('#u_serial_no').val(serial_no);
-
-        console.log(param);
-        sessionStorage.setItem('status', status);
-        sessionStorage.setItem('serial_no', serial_no);
-        var status = sessionStorage.getItem('status'); 
-
-        $.ajax({
-            type: "POST",
-            url: '../../process/uploader/load_data.php',
-            cache: false,
-            data: {
-                method: 'uploads_modal_table',
-                id: id,
-                serial_no: serial_no,
-                status: status
-            },
-            success: function(response) {
-                document.getElementById('uploads_modal_table').innerHTML = response;
-            },
-            error: function() {
-                console.log("Error loading data");
-            }
-        });
-    }
-
-    //get details for selected disapproved file
-    const get_disapprovedDetails = (param) => {
-        var data = param.split('~!~');
-        var id = data[0];
-        var serial_no = data[1];
-        var comment = data[2];
-
-        $('#updateFile_id').val(id);
-        $('#updateFile_serialNo').val(serial_no);
-        $('#disapproved_comment').val(comment);
-        console.log(param);
-    }
 
     const updateUpload = () => {
         var updateFile_id = document.getElementById('updateFile_id').value;

@@ -25,8 +25,9 @@ if ($method == 'checker_table') {
                 a.checker_id AS c_id, 
                  CASE 
                 WHEN a.checker_status = 'Pending' THEN 'Pending'
+                WHEN a.checker_status = 'Disapproved' THEN 'Disapproved'
                 WHEN a.checker_status = 'Approved' AND a.approver_status = 'Approved' THEN 'Approved'
-                WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
+                
                     ELSE a.checker_status
                 END AS checker_status,
                 a.checker_name, 
@@ -42,10 +43,12 @@ if ($method == 'checker_table') {
     if (!empty($status)) {
         $sql .=  " AND (
                        (a.checker_status = 'Pending' AND :status = 'Pending') OR
-                       (a.checker_status = 'Approved' AND a.approver_status = 'Approved' AND :status = 'Approved') OR
-                       (a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' AND :status = 'Disapproved')
+                       (a.checker_status = 'Disapproved' AND :status = 'Disapproved') OR
+                       (a.checker_status = 'Approved' AND a.approver_status = 'Approved' AND :status = 'Approved')
                     )";
     }
+    // (a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' AND :status = 'Disapproved')
+    // WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
     if (!empty($search_by)) {
         $sql .= " AND a.serial_no LIKE :search_by";
     }
@@ -107,7 +110,6 @@ if ($method == 'checker_table') {
             $c_id = htmlspecialchars($k['c_id']);
             $id = htmlspecialchars($k['id']);
 
-            // echo '<tr style="cursor:pointer; ' . $status_bg_color . ' " data-toggle="modal" data-target="#checker_modal"  onclick="checker(&quot;' . $k['id'] . '~!~' . $k['b_serial_no'] . '&quot;)">';
             echo '<tr style="' . $status_bg_color . '">';
             echo '<td>' . $c . '</td>';
             echo '<td><span>' . strtoupper(htmlspecialchars($k['checker_status'])) . '</span></td>';
@@ -134,70 +136,3 @@ if ($method == 'checker_table') {
     }
 }
 
-if ($method == 'checker_modal_table') {
-
-    $serial_no = isset($_POST['serial_no']) ? $_POST['serial_no'] : '';
-    $id = isset($_POST['id']) ? $_POST['id'] : '';
-    $status = isset($_POST['status']) ? $_POST['status'] : '';
-
-    // $sql = "SELECT a.id as id, a.serial_no AS serial_no, a.main_doc AS main_doc, a.sub_doc AS sub_doc, a.file_name AS file_name, b.checker_status AS c_status, b.checker_name AS c_name FROM t_upload_file a RIGHT JOIN (SELECT serial_no, uploader_name, checker_status, checker_name FROM t_training_record GROUP BY serial_no) b ON a.serial_no = b.serial_no WHERE a.serial_no = :serial_no";
-    // $sql = "SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file WHERE serial_no = :serial_no";
-
-    $sql = "SELECT 
-    a.id AS id, 
-    a.serial_no AS serial_no, 
-    a.main_doc AS main_doc, 
-    a.sub_doc AS sub_doc, 
-    a.file_name AS file_name, 
-    b.checker_status AS c_status, 
-    b.checker_id AS c_id, 
-    b.checker_name AS c_name 
-    FROM t_upload_file a 
-    LEFT JOIN t_training_record b 
-    ON a.serial_no = b.serial_no AND a.id = b.id 
-    WHERE a.serial_no = :serial_no AND b.checker_status = '$status' ORDER BY id ASC";
-
-    $stmt = $conn->prepare($sql);
-    // $stmt->bindParam(':id', $id, PDO::PARAM_STR);
-    $stmt->bindParam(':serial_no', $serial_no, PDO::PARAM_STR);
-
-    $stmt->execute();
-    $c = 0;
-
-    if ($stmt->rowCount() > 0) {
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $k) {
-            $c++;
-            // Construct file path
-            $file_path = '../../../uploads/ereport/' . htmlspecialchars($k['serial_no']) . '/';
-            $file_path .= htmlspecialchars($k['main_doc']) . '/';
-            if (!empty($k['sub_doc'])) {
-                $file_path .= htmlspecialchars($k['sub_doc']) . '/';
-            }
-            $file_path .= htmlspecialchars($k['file_name']);
-            $serial_no = htmlspecialchars($k['serial_no']);
-            $c_name = htmlspecialchars($k['c_name']);
-            $c_id = htmlspecialchars($k['c_id']);
-            $id = htmlspecialchars($k['id']);
-
-            echo '<tr>';
-            echo '<td>' . $c . '</td>';
-            // echo '<td>' . $serial_no . '</td>';
-
-            // Check if file exists and display link
-            if (file_exists($file_path)) {
-                if ($status == 'approved' || $status == 'disapproved') {
-                    echo '<td>' . htmlspecialchars($k['file_name']) . '</td>';
-                } else {
-                    echo '<td><a href="../../pages/checker/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . urlencode($file_path) . '&checker=' . htmlspecialchars($c_id) . '" target="_blank">' . htmlspecialchars($k['file_name']) . '</a></td>';
-                }
-            } else {
-                echo '<td>File not found</td>';
-            }
-
-            // echo '<td><span>' . htmlspecialchars($k['c_status']) . '</span></td>';
-            // echo '<td>' . htmlspecialchars($k['sub_doc']) . '</td>';
-            // echo '<td>' . htmlspecialchars($k['file_name']) . '</td>';
-            echo '</tr>';
-        }
-    }
-}

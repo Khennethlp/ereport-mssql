@@ -105,12 +105,13 @@ if ($method == 'checker_table') {
                     break;
             }
 
-            $file_path = '../../../uploads/ereport/' . htmlspecialchars($k['serial_no']) . '/';
-            $file_path .= htmlspecialchars($k['main_doc']) . '/';
+            $file_path = '../../../uploads/ereport/' . $k['serial_no'] . '/';
+            $file_path .= $k['main_doc'] . '/';
             if (!empty($k['sub_doc'])) {
-                $file_path .= htmlspecialchars($k['sub_doc']) . '/';
+             $file_path .= $k['sub_doc'] . '/';
             }
-            $file_path .= htmlspecialchars($k['file_name']);
+            $file_path .= $k['file_name'];
+
             $c_id = htmlspecialchars($k['c_id']);
             $id = htmlspecialchars($k['id']);
 

@@ -15,13 +15,14 @@ if ($method == 'update_check_uploader') {
     $approver_email = $_POST['approver_email'];
     $approver_status = ($status === 'Disapproved') ? '' : 'Pending';
 
+    $acc_sql = "SELECT emp_id, email, fullname FROM m_accounts WHERE emp_id = :checker_id";
+    $acc_stmt = $conn->prepare($acc_sql);
+    $acc_stmt->bindParam(':checker_id', $checker_id, PDO::PARAM_STR);
+    $acc_stmt->execute();
+    $account = $acc_stmt->fetch(PDO::FETCH_ASSOC);
+    $checker_name = $account['fullname'];
+    
     if ($status === 'Disapproved' && isset($_FILES['file_attached'])) {
-        $acc_sql = "SELECT emp_id, email, fullname FROM m_accounts WHERE emp_id = :checker_id";
-        $acc_stmt = $conn->prepare($acc_sql);
-        $acc_stmt->bindParam(':checker_id', $checker_id, PDO::PARAM_STR);
-        $acc_stmt->execute();
-        $account = $acc_stmt->fetch(PDO::FETCH_ASSOC);
-        $checker_name = $account['fullname'];
 
         $file = $_FILES['file_attached']['name'];
         $tmp_name = $_FILES['file_attached']['tmp_name'];

@@ -27,9 +27,13 @@ if ($method == 'checker_table') {
                 WHEN a.checker_status = 'Pending' THEN 'Pending'
                 WHEN a.checker_status = 'Disapproved' THEN 'Disapproved'
                 WHEN a.checker_status = 'Approved' AND a.approver_status = 'Approved' THEN 'Approved'
-                
                     ELSE a.checker_status
                 END AS checker_status,
+                CASE
+                    WHEN a.checker_status = 'Pending' THEN a.upload_date
+                    WHEN a.checker_status = 'Approved' THEN a.checked_date
+                    WHEN a.checker_status = 'Disapproved' THEN a.checked_date
+                END AS checked_date,
                 a.checker_name, 
                 a.checker_email, 
                 a.upload_date, 
@@ -115,24 +119,24 @@ if ($method == 'checker_table') {
             echo '<td><span>' . strtoupper(htmlspecialchars($k['checker_status'])) . '</span></td>';
             echo '<td>' . htmlspecialchars($k['b_serial_no']) . '</td>';
             echo '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
-            // echo '<td>' . htmlspecialchars($k['filenames']) . '</td>';
+
             if (file_exists($file_path)) {
                 if ($status == 'approved' || $status == 'disapproved') {
                     echo '<td>' . htmlspecialchars($k['file_name']) . '</td>';
                 } else {
                     echo '<td><a href="../../pages/checker/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . urlencode($file_path) . '&checker=' . htmlspecialchars($c_id) . '" target="_blank">' . htmlspecialchars($k['file_name']) . '</a></td>';
-                    // echo '<td><a href="#" onclick="downloadAndViewFile(\'' . htmlspecialchars($id) . '\', \'' . htmlspecialchars($serial_no) . '\', \'' . urlencode($file_path) . '\', \'' . htmlspecialchars($c_id) . '\', \'' . urlencode($k['file_name']) . '\')">' . htmlspecialchars($k['file_name']) . '</a></td>';
                 }
             } else {
                 echo '<td>File not found</td>';
             }
+
             echo '<td>' . htmlspecialchars($k['uploader_name']) . '</td>';
+            echo '<td>' . date('Y/m/d', strtotime($k['checked_date'])) . '</td>';
             echo '</tr>';
         }
     } else {
         echo '<tr >';
-        echo '<td colspan="5" class="text-center">No records found.</td>';
+        echo '<td colspan="7" class="text-center">No records found.</td>';
         echo '</tr>';
     }
 }
-

@@ -10,8 +10,41 @@ if ($method == 'approver_table') {
     $date_to = isset($_POST['date_to']) ? $_POST['date_to'] : '';
     $approver_id = isset($_POST['approver_id']) ? $_POST['approver_id'] : '';
 
-    $sql = "SELECT DISTINCT a.id AS id, a.serial_no AS serial_no, a.batch_no As batch_no, a.checked_date AS checked_date, a.checker_name AS checker_name, a.approver_status AS approver_status, a.approver_name AS approver_name, approver_id AS a_id, a.approver_email AS approver_email, b.serial_no, b.main_doc AS main_doc, b.sub_doc AS sub_doc, b.file_name AS filenames FROM t_training_record a RIGHT JOIN (SELECT id, serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no AND a.id=b.id WHERE a.approver_id = :approver_id AND a.approver_status = :status ";
+    $sql = "SELECT DISTINCT a.id AS id, 
+    a.serial_no AS serial_no, 
+    a.batch_no As batch_no, 
+    a.checked_date AS checked_date, 
+    a.checker_name AS checker_name, 
+    a.approver_name AS approver_name, 
+    CASE 
+        WHEN a.approver_status = 'Pending' THEN 'Pending'
+        WHEN a.approver_status = 'Disapproved' THEN 'Disapproved'
+        WHEN a.approver_status = 'Approved' THEN 'Approved'
+            ELSE a.approver_status
+        END AS approver_status,
+        CASE
+            WHEN a.approver_status = 'Pending' THEN a.checked_date
+            WHEN a.approver_status = 'Approved' THEN a.approved_date
+            WHEN a.approver_status = 'Disapproved' THEN a.approved_date
+        END AS approved_date,
+    a.approver_id AS a_id, 
+    a.approver_email AS approver_email, 
+    b.serial_no, 
+    b.main_doc AS main_doc,
+    b.sub_doc AS sub_doc, 
+    b.file_name AS filenames 
+    FROM t_training_record a 
+    RIGHT JOIN (SELECT id, serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b 
+    ON a.serial_no = b.serial_no AND a.id=b.id 
+    WHERE a.approver_id = :approver_id AND a.approver_status = :status ";
 
+    if (!empty($status)) {
+        $sql .=  " AND (
+                   (a.approver_status = 'Pending' AND :status = 'Pending') OR
+                   (a.approver_status = 'Disapproved' AND :status = 'Disapproved') OR
+                   (a.approver_status = 'Approved' AND :status = 'Approved')
+                )";
+    }
     if (!empty($search_by)) {
         $sql .= " AND a.serial_no LIKE :search_by";
     }
@@ -79,7 +112,7 @@ if ($method == 'approver_table') {
             echo '<td><span>' . strtoupper(htmlspecialchars($k['approver_status'])) . '</span></td>';
             echo '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
             echo '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
-            // echo '<td>' . htmlspecialchars($k['filenames']) . '</td>';
+
             if (file_exists($file_path)) {
                 if ($status == 'approved' || $status == 'disapproved') {
                     echo '<td>' . htmlspecialchars($k['filenames']) . '</td>';
@@ -89,13 +122,14 @@ if ($method == 'approver_table') {
             } else {
                 echo '<td>File not found</td>';
             }
+
             echo '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
-            echo '<td>' . date('Y/m/d', strtotime($k['checked_date'])) . '</td>';
+            echo '<td>' . date('Y/m/d h:i', strtotime($k['approved_date'])) . '</td>';
             echo '</tr>';
         }
     } else {
         echo '<tr>';
-        echo '<td colspan="5" class="text-center">No records found.</td>';
+        echo '<td colspan="7" class="text-center">No records found.</td>';
         echo '</tr>';
     }
 }

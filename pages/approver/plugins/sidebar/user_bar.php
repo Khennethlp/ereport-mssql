@@ -28,7 +28,7 @@
           <?php } ?>
             <i class="nav-icon fas fa-user-check"></i>
             <p>
-              Approver
+              APPROVAL
             </p>
           </a>
         </li> 
@@ -40,7 +40,7 @@
           <?php } ?>
             <i class="nav-icon fas fa-history"></i>
             <p>
-              History
+              HISTORY
             </p>
           </a>
         </li> 

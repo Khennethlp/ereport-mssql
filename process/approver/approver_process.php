@@ -8,15 +8,28 @@ if ($method == 'update_approved_uploader') {
     $serial_no = isset($_POST['serial_no']) ? $_POST['serial_no'] : '';
     $status = isset($_POST['status']) ? $_POST['status'] : '';
     $comment = isset($_POST['comment']) ? $_POST['comment'] : '';
-    $approver_id = isset($_POST['approved_id']) ? $_POST['approved_id'] : '';
+    $approver_id = isset($_POST['approver_id']) ? $_POST['approver_id'] : '';
+
+       // Fetch the approver's name
+       $approver_name = '';
+       try {
+           $acc_sql = "SELECT emp_id, email, fullname FROM m_accounts WHERE emp_id = :approver_id";
+           $acc_stmt = $conn->prepare($acc_sql);
+           $acc_stmt->bindParam(':approver_id', $approver_id, PDO::PARAM_STR);
+           $acc_stmt->execute();
+           $account = $acc_stmt->fetch(PDO::FETCH_ASSOC);
+           if ($account) {
+               $approver_name = $account['fullname'];
+           } else {
+            //    throw new Exception('Approver not found');
+            echo 'approver not found';
+           }
+       } catch (Exception $e) {
+           echo 'error: ' . $e->getMessage();
+           exit;
+       }
 
     if ($status === 'Disapproved' && isset($_FILES['file_attached'])) {
-        $acc_sql = "SELECT emp_id, email, fullname FROM m_accounts WHERE emp_id = :approver_id";
-        $acc_stmt = $conn->prepare($acc_sql);
-        $acc_stmt->bindParam(':approver_id', $approver_id, PDO::PARAM_STR);
-        $acc_stmt->execute();
-        $account = $acc_stmt->fetch(PDO::FETCH_ASSOC);
-        $approver_name = $account['fullname'];
 
         $file = $_FILES['file_attached']['name'];
         $tmp_name = $_FILES['file_attached']['tmp_name'];

@@ -16,7 +16,7 @@
         const id = $('#a_id').val();
         const status = $('#status_approver').val();
         const comment = $('#comment_approver').val();
-        const approved_id = $('#approved_id').val();
+        const approver_id = $('#approved_id').val();
         const serial_no = $('#series_no_label').text().trim();
         const fileInput = $('#attachment')[0];
         const file_attached = fileInput.files[0]; // Changed to access the file correctly
@@ -58,7 +58,7 @@
         formData.append('serial_no', serial_no);
         formData.append('status', status);
         formData.append('comment', comment);
-        formData.append('approved_id', approved_id);
+        formData.append('approver_id', approver_id);
 
         // Only append the file if it's provided
         if (file_attached) {
@@ -85,17 +85,23 @@
                         if (result.isConfirmed) {
                             window.close();
                             history.back();
-                            
+
                         }
                     });
 
                     $('#checker_status').val('');
                     $('#comment_checker').val('');
-                    load_data();
                 } else if (response == 'error') {
                     Swal.fire({
-                        icon: 'info',
+                        icon: 'warning',
                         title: 'An error occurred during submission. Please try again.',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+                } else if (response == 'approver not found') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Approver not found',
                         showConfirmButton: false,
                         timer: 1000
                     });

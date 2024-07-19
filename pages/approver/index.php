@@ -110,11 +110,11 @@
       </div>
 
       <!-- end of alert -->
-      <div class="row mb-2">
+      <!-- <div class="row mb-2">
         <div class="col-sm-6">
           <h1 class="m-0">FOR APPROVAL</h1>
-        </div><!-- /.col -->
-      </div><!-- /.row -->
+        </div>
+      </div> -->
     </div><!-- /.container-fluid -->
   </div>
   <!-- /.content-header -->
@@ -127,7 +127,7 @@
           <!-- STORE IN -->
           <div class="card card-secondary card-outline">
             <div class="card-header">
-              <h3 class="card-title text-uppercase"><i class="fa fa-user-check"></i>&nbsp; Approver</h3>
+              <h3 class="card-title text-uppercase"><i class="fa fa-user-check"></i>&nbsp; request for approval</h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                   <i class="fas fa-minus"></i>
@@ -200,7 +200,7 @@
                           <th>Batch No.</th>
                           <th>Filename</th>
                           <th>Checked By</th>
-                          <th>Checked Date</th>
+                          <th>Date</th>
                         </tr>
                       </thead>
                       <tbody id="approver_table"> </tbody>

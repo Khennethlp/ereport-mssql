@@ -30,12 +30,11 @@
               <?php } ?>
               <i class="nav-icon fa fa-upload"></i>
               <p>
-                Upload
+                UPLOAD
               </p>
               </a>
         </li>
-       
-  
+
         <?php include 'logout.php'; ?>
       </ul>
     </nav>

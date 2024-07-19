@@ -30,7 +30,7 @@
           <?php } ?>
             <i class="nav-icon fas fa-user-check"></i>
             <p>
-              Checker
+              CHECKING
             </p>
           </a>
         </li> 
@@ -42,7 +42,7 @@
           <?php } ?>
             <i class="nav-icon fas fa-history"></i>
             <p>
-              History
+              HISTORY
             </p>
           </a>
         </li> 

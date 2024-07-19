@@ -17,7 +17,7 @@ if ($method == 'history_checker_table') {
     $sql = "SELECT DISTINCT a.serial_no AS serial_no, a.id AS id, a.checker_status as checker_status, a.batch_no AS batch_no, a.checker_name as checker_name, a.checked_date as checked_date, b.serial_no AS b_serial_no, b.main_doc, b.sub_doc, b.file_name AS filenames 
             FROM t_training_record a 
             RIGHT JOIN (SELECT id, serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no AND a.id = b.id 
-            WHERE a.checker_status = 'Approved' AND a.checker_name = :checker_name";
+            WHERE a.checker_status = 'Approved' AND a.approver_status = 'Approved' AND a.checker_name = :checker_name";
 
     $conditions = [];
     if (!empty($date_from) && !empty($date_to)) {

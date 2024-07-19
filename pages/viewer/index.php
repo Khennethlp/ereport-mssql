@@ -60,7 +60,29 @@ include('plugins/navbar/index_navbar.php');
                           </div>
                           <div class="col-md-3">
                             <label for="">Training Group:</label>
-                            <input type="search" class="form-control" name="" id="search_by_training" placeholder="">
+                            <!-- <input type="search" class="form-control" name="" id="search_by_training" placeholder=""> -->
+                            <select class="form-control" name="search_by_training" id="search_by_training">
+                              <option value="" selected>--SELECT TRAINING RECORD--</option>
+                              <?php
+                              require '../../process/conn.php';
+
+                              $sql = "SELECT DISTINCT training_title FROM t_training_group";
+                              $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                              $stmt->execute();
+
+                              if ($stmt->rowCount() > 0) {
+                                // Output data of each row
+                                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                // Output data of each row
+                                foreach ($rows as $row) {
+                                  echo '<option value="' . $row["training_title"] . '">' . $row["training_title"] . '</option>';
+                                }
+                              } else {
+                                echo '<option value="">No data available</option>';
+                              }
+                              ?>
+                            </select>
                           </div>
                           <div class="col-md-3">
                             <label for="">Filename:</label>
@@ -98,12 +120,19 @@ include('plugins/navbar/index_navbar.php');
                               Refresh
                             </button>
                           </div>
+                          <div class="col-md-3">
+                            <label for="">&nbsp;</label>
+                            <button class="form-control" style="background-color: var(--warning);" onclick="">
+                              <i class="fas fa-broom"></i>&nbsp;
+                              Clear
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="card-body table-responsive p-0" style="height: 600px;">
-                    <table class="table table-head-fixed text-nowrap table-hover" id="table">
+                    <table class="table table-head-fixed text-nowrap table-hover table-striped" id="table">
                       <thead>
                         <tr>
                           <th>#</th>

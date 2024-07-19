@@ -9,7 +9,7 @@
         <div class="col-lg-3 col-6">
           <input type="hidden" id="checker_name" value="<?= $_SESSION['name']; ?>">
           <input type="hidden" id="checker_id" value="<?= $_SESSION['emp_id']; ?>">
-          <div class="small-box bg-info">
+          <div class="small-box bg-warning">
             <div class="inner">
               <?php
               require '../../process/conn.php';

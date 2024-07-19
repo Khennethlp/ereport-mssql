@@ -86,6 +86,7 @@ if ($method == 'approver_table') {
             echo '<td>' . $c . '</td>';
             echo '<td><span>' . strtoupper(htmlspecialchars($k['approver_status'])) . '</span></td>';
             echo '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
+            echo '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
             // echo '<td>' . htmlspecialchars($k['filenames']) . '</td>';
             if (file_exists($file_path)) {
                 if ($status == 'approved' || $status == 'disapproved') {

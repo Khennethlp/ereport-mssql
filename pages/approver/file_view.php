@@ -210,12 +210,12 @@ $id = $_GET['id'];
                         if ($rows) {
                             foreach ($rows as $row) {
                                 // Constructing the file path
-                                $file_path = '../../../uploads/ereport/' . htmlspecialchars($row['serial_no']) . '/';
-                                $file_path .= htmlspecialchars($row['main_doc']) . '/';
+                                $file_path = '../../../uploads/ereport/' . $row['serial_no'] . '/';
+                                $file_path .= $row['main_doc'] . '/';
                                 if (!empty($row['sub_doc'])) {
-                                    $file_path .= htmlspecialchars($row['sub_doc']) . '/';
+                                    $file_path .= $row['sub_doc'] . '/';
                                 }
-                                $file_path .= htmlspecialchars($row['file_name']);
+                                $file_path .= $row['file_name'];
 
                                 // Check if the file exists
                                 if (file_exists($file_path)) {

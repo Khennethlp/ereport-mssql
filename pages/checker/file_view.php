@@ -1,6 +1,6 @@
 <?php
 $title = "E-REPORT SYSTEM";
-$file_path = $_GET['file_path'];
+$file_path = htmlspecialchars($_GET['file_path']);
 $checker = $_GET['checker'];
 $serial_no = $_GET['serial_no'];
 $id = $_GET['id'];
@@ -209,12 +209,12 @@ $_SERVER['SERVER_PORT'];
                         if ($rows) {
                             foreach ($rows as $row) {
                                 // Constructing the file path
-                                $file_path = '../../../uploads/ereport/' . htmlspecialchars($row['serial_no']) . '/';
-                                $file_path .= htmlspecialchars($row['main_doc']) . '/';
+                                $file_path = '../../../uploads/ereport/' . $row['serial_no'] . '/';
+                                $file_path .= $row['main_doc'] . '/';
                                 if (!empty($row['sub_doc'])) {
-                                    $file_path .= htmlspecialchars($row['sub_doc']) . '/';
+                                    $file_path .= $row['sub_doc'] . '/';
                                 }
-                                $file_path .= htmlspecialchars($row['file_name']);
+                                $file_path .= $row['file_name'];
 
                                 // Check if the file exists
                                 if (file_exists($file_path)) {
@@ -235,7 +235,7 @@ $_SERVER['SERVER_PORT'];
                     </div>
                     <!-- <a href="#" onclick="downloadAndViewFile(\'' . htmlspecialchars($id) . '\', \'' . htmlspecialchars($serial_no) . '\', \'' . urlencode($file_path) . '\', \'' . htmlspecialchars($c_id) . '\', \'' . urlencode($k['file_name']) . '\')">' . htmlspecialchars($k['file_name']) . '</a>; -->
                     <div id="iframe-container">
-                        <iframe class="w-100" id="my-iframe" src="<?= htmlspecialchars($file_path) ? htmlspecialchars($file_path) : "No file to preview." ?>" frameborder="0" height="650" width="100%"></iframe>
+                        <iframe class="w-100" id="my-iframe" src="<?php echo $file_path ? $file_path : "No file to preview." ?>" frameborder="0" height="650" width="100%"></iframe>
                     </div>
                 </div>
             </div>
@@ -247,6 +247,7 @@ $_SERVER['SERVER_PORT'];
                         <div class="row">
                             <input type="hidden" id="checked_by" value="<?php echo $checker; ?>">
                             <input type="hidden" id="c_id" value="<?php echo $id; ?>">
+                            <input type="hidden" id="c_id" value="<?php echo htmlspecialchars($file_path); ?>">
                             <label for="series_no_label" class="d-inline-block mb-0 text-lg">Serial no:&nbsp;&nbsp;</label>
                             <p id="series_no_label" class="d-inline-block mb-0 text-lg"><?= $serial_no; ?></p>
                         </div>

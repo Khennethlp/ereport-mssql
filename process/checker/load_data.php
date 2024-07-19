@@ -125,7 +125,7 @@ if ($method == 'checker_table') {
                 if ($status == 'approved' || $status == 'disapproved') {
                     echo '<td>' . htmlspecialchars($k['file_name']) . '</td>';
                 } else {
-                    echo '<td><a href="../../pages/checker/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . urlencode($file_path) . '&checker=' . htmlspecialchars($c_id) . '" target="_blank">' . htmlspecialchars($k['file_name']) . '</a></td>';
+                    echo '<td><a href="../../pages/checker/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . $file_path . '&checker=' . htmlspecialchars($c_id) . '" target="_blank">' . htmlspecialchars($k['file_name']) . '</a></td>';
                 }
             } else {
                 echo '<td>File not found</td>';

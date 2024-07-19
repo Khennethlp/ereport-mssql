@@ -156,7 +156,7 @@ if ($method == 'load_data') {
             $data .= '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
             $data .= '<td>' . htmlspecialchars($checked_date) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['checker_comment']) . '</td>';
-            $data .= '<td><span>' . strtoupper(htmlspecialchars($k['approver_status'])) . '</span></td>';
+                     '<td><span>' . strtoupper(htmlspecialchars($k['approver_status'])) . '</span></td>'; // hidden to table
             $data .= '<td>' . htmlspecialchars($k['approver_name']) . '</td>';
             $data .= '<td>' . htmlspecialchars($approved_date) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['approver_comment']) . '</td>';

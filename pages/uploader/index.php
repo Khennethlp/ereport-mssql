@@ -201,7 +201,7 @@
                           <th>Checked By</th>
                           <th>Checked Date</th>
                           <th>Checker Comment</th>
-                          <th>Approver Status</th>
+                          <!-- <th>Approver Status</th> -->
                           <th>Approved By</th>
                           <th>Approved Date</th>
                           <th>Approver Comment</th>

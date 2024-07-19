@@ -12,13 +12,14 @@
         });
     });
 
-
     const upload_approved = () => {
         const id = $('#a_id').val();
         const status = $('#status_approver').val();
         const comment = $('#comment_approver').val();
         const approved_id = $('#approved_id').val();
         const serial_no = $('#series_no_label').text().trim();
+        const fileInput = $('#attachment')[0];
+        const file_attached = fileInput.files[0]; // Changed to access the file correctly
 
         if (status === '') {
             Swal.fire({
@@ -40,22 +41,36 @@
             });
             return;
         }
-        if (status === 'Disapproved') {
-            document.getElementById('approve_upload_container').style.display = 'block';
+        if (status === 'Disapproved' && file_attached === undefined) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Please upload the disapproved file.',
+                showConfirmButton: false,
+                timer: 1000
+            });
+            return;
         }
 
+        // Prepare the form data
+        let formData = new FormData();
+        formData.append('method', 'update_approved_uploader');
+        formData.append('id', id);
+        formData.append('serial_no', serial_no);
+        formData.append('status', status);
+        formData.append('comment', comment);
+        formData.append('approved_id', approved_id);
+
+        // Only append the file if it's provided
+        if (file_attached) {
+            formData.append('file_attached', file_attached);
+        }
         $.ajax({
             type: "POST",
             url: '../../process/approver/approver_process.php',
             cache: false,
-            data: {
-                method: "update_approved_uploader",
-                id: id,
-                serial_no: serial_no,
-                status: status,
-                comment: comment,
-                approved_id: approved_id,
-            },
+            contentType: false,
+            processData: false,
+            data: formData,
             success: function(response) {
                 if (response == 'success') {
                     Swal.fire({
@@ -70,8 +85,7 @@
                         if (result.isConfirmed) {
                             window.close();
                             history.back();
-                            load_data();
-
+                            
                         }
                     });
 

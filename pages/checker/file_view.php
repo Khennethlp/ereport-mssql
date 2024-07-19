@@ -290,7 +290,7 @@ $_SERVER['SERVER_PORT'];
                                 <label for="">Comment:</label>
                                 <textarea class="form-control" name="comment_checker" id="comment_checker" rows="3" cols="5" maxlength="250"></textarea>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-12" id="check_upload_container">
                                 <div class="row">
                                     <div class="col-md-5">
                                         <label for="attachment">Upload File:</label>
@@ -449,4 +449,4 @@ $_SERVER['SERVER_PORT'];
 </body>
 
 </html>
-<?php //include 'plugins/js/index_script.php' ?>;
+<?php include 'plugins/js/upload_checked_script.php' ?>;

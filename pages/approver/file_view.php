@@ -296,7 +296,7 @@ $id = $_GET['id'];
                                 <label for="">Comment:</label>
                                 <textarea class="form-control" name="comment_approver" id="comment_approver" rows="3" cols="5" maxlength="250"></textarea>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-12" id="approve_upload_container">
                                 <div class="row">
                                     <div class="col-md-5">
                                         <label for="attachment">Upload File:</label>
@@ -468,4 +468,4 @@ $id = $_GET['id'];
 </body>
 
 </html>
-<?php //include 'plugins/js/index_script.php' ?>;
+<?php include 'plugins/js/upload_approved_script.php' ?>;

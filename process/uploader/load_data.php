@@ -20,6 +20,7 @@ if ($method == 'load_data') {
                 b.main_doc, 
                 b.sub_doc, 
                 b.file_name,
+                b.updated_file AS updated_file,
                 CASE 
                     WHEN a.checker_status = 'Pending' THEN 'FOR CHECKING' 
                     WHEN a.checker_status = 'Disapproved' THEN 'Disapproved'
@@ -38,7 +39,7 @@ if ($method == 'load_data') {
             FROM 
                 t_training_record a 
             RIGHT JOIN 
-                (SELECT id, serial_no, main_doc, sub_doc, file_name FROM t_upload_file ) b 
+                (SELECT id, serial_no, main_doc, sub_doc, file_name, updated_file FROM t_upload_file ) b 
             ON 
                 a.serial_no = b.serial_no AND a.id=b.id
             WHERE 
@@ -126,13 +127,33 @@ if ($method == 'load_data') {
                     break;
             }
 
+           
+
+            // Function to check if a file exists in the specified path
+            if (!function_exists('fileExistsInPath')) {
+                function fileExistsInPath($base_path, $file_name) {
+                    $paths_to_check = [
+                        $base_path . 'for approval/' . $file_name,
+                        $base_path . 'for checking/' . $file_name,
+                        $base_path . $file_name
+                    ];
+                    
+                    foreach ($paths_to_check as $path) {
+                        if (file_exists($path)) {
+                            return $path;
+                        }
+                    }
+                    
+                    return false;
+                }
+            }
+            
             $file_path = '../../../uploads/ereport/' . ($k['serial_no']) . '/';
             $file_path .= ($k['main_doc']) . '/';
-            if (!empty($k['sub_doc'])) {
-                $file_path .= ($k['sub_doc']) . '/';
-            }
-            $file_path .= ($k['file_name']);
-            $filename = htmlspecialchars($k['file_name']);
+
+            // Check if 'for approval' or 'for checking' folders exist and have files
+            $sub_doc_path = !empty($k['sub_doc']) ? $file_path . $k['sub_doc'] . '/' : $file_path;
+            $filename = $k['updated_file'] ? $k['updated_file']:$k['file_name'];
 
             $data .= '<tr style="' . $status_bg_color . ' ">';
             $data .= '<td>' . $c . '</td>';
@@ -143,20 +164,24 @@ if ($method == 'load_data') {
             $data .= '<td>' . htmlspecialchars($k['training_group']) . '</td>';
             // $data .= '<td>' . htmlspecialchars($k['file_name']) . '</td>';
 
-            if ($status_text == 'DISAPPROVED'){
-                if (file_exists($file_path)) {
+            if ($status_text == 'DISAPPROVED') {
+                // Check if 'for approval' or 'for checking' folders exist and have files
+                $file_path = fileExistsInPath($sub_doc_path, $k['file_name']);
+                
+                if ($file_path) {
                     $data .= '<td style="cursor: pointer; color: #ffffff;"><a class="text-warning" href="' . $file_path . '" download>' . $filename . '</a></td>';
                 } else {
                     $data .= '<td>File not found</td>';
                 }
-            }else{
-                $data .= '<td style="cur sor: pointer; ;">' . $filename . '</td>';
-
+            } else {
+                // If status is not 'DISAPPROVED', just show the filename
+                $data .= '<td style="cursor: pointer;">' . $filename . '</td>';
             }
+
             $data .= '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
             $data .= '<td>' . htmlspecialchars($checked_date) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['checker_comment']) . '</td>';
-                     '<td><span>' . strtoupper(htmlspecialchars($k['approver_status'])) . '</span></td>'; // hidden to table
+            '<td><span>' . strtoupper(htmlspecialchars($k['approver_status'])) . '</span></td>'; // hidden to table
             $data .= '<td>' . htmlspecialchars($k['approver_name']) . '</td>';
             $data .= '<td>' . htmlspecialchars($approved_date) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['approver_comment']) . '</td>';

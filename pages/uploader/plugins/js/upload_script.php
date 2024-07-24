@@ -198,7 +198,7 @@
         var selectedOption = selectElement.options[selectElement.selectedIndex];
         var checker_id = selectedOption.getAttribute('data-emp-id');
         var checker_email = selectedOption.value;
-        var checker_status = 'Pending';
+        var checker_status = 'PENDING';
 
         var main_doc = document.getElementById('main_doc').value;
         var sub_doc = document.getElementById('sub_doc').value;
@@ -312,58 +312,5 @@
 
     };
 
-    const updateUpload = () => {
-        var updateFile_id = document.getElementById('updateFile_id').value;
-        var updateFile_serialNo = document.getElementById('updateFile_serialNo').value;
-        var update_files = document.getElementById('file_update').files[0];
-        var updated_status = 'Pending';
-
-        var formData = new FormData();
-        formData.append("method", "update_file_upload");
-        formData.append("updateFile_serialNo", updateFile_serialNo);
-        formData.append("updateFile_id", updateFile_id);
-        formData.append("update_files", update_files);
-        formData.append("updated_status", updated_status);
-
-        $.ajax({
-            type: 'POST',
-            url: "../../process/uploader/file_update.php", //updating disapproved file
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                if (response == 'success') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Updated successfully!',
-                        showConfirmButton: false,
-                        timer: 1000
-                    });
-                    load_data();
-                } else if (response == 'error') {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Failed to update file.',
-                        showConfirmButton: false,
-                        timer: 1000
-                    });
-                } else if (response == 'file error') {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'File not found.',
-                        showConfirmButton: false,
-                        timer: 1000
-                    });
-
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Opps! Something went wrong.',
-                        showConfirmButton: false,
-                        timer: 1000
-                    });
-                }
-            }
-        });
-    }
+    
 </script>

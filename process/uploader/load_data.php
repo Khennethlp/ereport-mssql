@@ -21,6 +21,7 @@ if ($method == 'load_data') {
                 b.sub_doc, 
                 b.file_name,
                 b.updated_file AS updated_file,
+                b.uploader_updated_file AS uploader_updated_file,
                 CASE 
                     WHEN a.checker_status = 'Pending' THEN 'FOR CHECKING' 
                     WHEN a.checker_status = 'Disapproved' THEN 'Disapproved'
@@ -39,7 +40,7 @@ if ($method == 'load_data') {
             FROM 
                 t_training_record a 
             RIGHT JOIN 
-                (SELECT id, serial_no, main_doc, sub_doc, file_name, updated_file FROM t_upload_file ) b 
+                (SELECT id, serial_no, main_doc, sub_doc, file_name, updated_file, uploader_updated_file  FROM t_upload_file ) b 
             ON 
                 a.serial_no = b.serial_no AND a.id=b.id
             WHERE 
@@ -100,6 +101,9 @@ if ($method == 'load_data') {
             $status_text = strtoupper(htmlspecialchars($k['global_status']));
             $checked_date = !empty($k['checked_date']) ? date('Y/m/d', strtotime($k['checked_date'])) : '';
             $approved_date = !empty($k['approved_date']) ? date('Y/m/d', strtotime($k['approved_date'])) : '';
+            $uploader_id = $k['uploader_id'];
+            $serial_no = $k['serial_no'];
+            $id = $k['id'];
 
             // Set background color based on status
             $status_bg_color = '';
@@ -127,33 +131,36 @@ if ($method == 'load_data') {
                     break;
             }
 
-           
-
             // Function to check if a file exists in the specified path
             if (!function_exists('fileExistsInPath')) {
-                function fileExistsInPath($base_path, $file_name) {
+                function fileExistsInPath($base_path, $file_name)
+                {
                     $paths_to_check = [
+                        $base_path . 'updated file/' . $file_name,
                         $base_path . 'for approval/' . $file_name,
                         $base_path . 'for checking/' . $file_name,
                         $base_path . $file_name
                     ];
-                    
+
                     foreach ($paths_to_check as $path) {
                         if (file_exists($path)) {
                             return $path;
                         }
                     }
-                    
+
                     return false;
                 }
             }
-            
+
             $file_path = '../../../uploads/ereport/' . ($k['serial_no']) . '/';
             $file_path .= ($k['main_doc']) . '/';
 
             // Check if 'for approval' or 'for checking' folders exist and have files
             $sub_doc_path = !empty($k['sub_doc']) ? $file_path . $k['sub_doc'] . '/' : $file_path;
-            $filename = $k['updated_file'] ? $k['updated_file']:$k['file_name'];
+            // Determine the filename to use based on the availability of fields
+            // $filename = !empty($k['uploader_updated_file']) ? $k['uploader_updated_file'] : (!empty($k['updated_file']) ? $k['updated_file'] : $k['file_name']);
+            $filename = !empty($k['updated_file']) ? $k['updated_file'] : $k['file_name'];
+            $filenames = $k['file_name'];
 
             $data .= '<tr style="' . $status_bg_color . ' ">';
             $data .= '<td>' . $c . '</td>';
@@ -166,16 +173,17 @@ if ($method == 'load_data') {
 
             if ($status_text == 'DISAPPROVED') {
                 // Check if 'for approval' or 'for checking' folders exist and have files
-                $file_path = fileExistsInPath($sub_doc_path, $k['file_name']);
-                
+                $file_path = fileExistsInPath($sub_doc_path, $k['updated_file']);
+
                 if ($file_path) {
-                    $data .= '<td style="cursor: pointer; color: #ffffff;"><a class="text-warning" href="' . $file_path . '" download>' . $filename . '</a></td>';
+                    // $data .= '<td style="cursor: pointer; color: #ffffff;"><a class="text-warning" href="' . $file_path . '" download>' . $filename . '</a></td>';
+                    $data .= '<td><a class="text-warning" href="../../pages/uploader/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . $file_path . '&uploader=' . $uploader_id . '" target="_blank">' . $filename . '</a></td>';
                 } else {
                     $data .= '<td>File not found</td>';
                 }
             } else {
                 // If status is not 'DISAPPROVED', just show the filename
-                $data .= '<td style="cursor: pointer;">' . $filename . '</td>';
+                $data .= '<td>' . $filenames . '</td>';
             }
 
             $data .= '<td>' . htmlspecialchars($k['checker_name']) . '</td>';

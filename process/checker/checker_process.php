@@ -14,7 +14,7 @@ if ($method == 'update_check_uploader') {
     // Check if approver_id and approver_email are set
     $approver_id = isset($_POST['approver_id']) ? $_POST['approver_id'] : '';
     $approver_email = isset($_POST['approver_email']) ? $_POST['approver_email'] : null;
-    $approver_status = ($status === 'Disapproved') ? '' : 'Pending';
+    $approver_status = ($status === 'DISAPPROVED') ? '' : 'PENDING';
 
     if ($status === 'Disapproved' && isset($_FILES['file_attached'])) {
         $acc_sql = "SELECT emp_id, email, fullname FROM m_accounts WHERE emp_id = :checker_id";

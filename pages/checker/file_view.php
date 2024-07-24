@@ -1,11 +1,11 @@
 <?php
 $title = "E-REPORT SYSTEM";
-$file_path = htmlspecialchars($_GET['file_path']);
+$file_path = $_GET['file_path'];
 $checker = $_GET['checker'];
 $serial_no = $_GET['serial_no'];
 $id = $_GET['id'];
-$_SERVER['SERVER_ADDR'];
-$_SERVER['SERVER_PORT'];
+// $_SERVER['SERVER_ADDR'];
+// $_SERVER['SERVER_PORT'];
 
 
 ?>
@@ -213,6 +213,13 @@ $_SERVER['SERVER_PORT'];
                                 $file_path .= $row['main_doc'] . '/';
                                 if (!empty($row['sub_doc'])) {
                                     $file_path .= $row['sub_doc'] . '/';
+                                    // Check if the 'updated file' folder exists within 'sub_doc'
+                                    if (file_exists($file_path . 'updated file/')) {
+                                        // Use the 'updated file' folder path
+                                        $file_path = $file_path . 'updated file/';
+                                    } else {
+                                        $file_path = $file_path;
+                                    }
                                 }
                                 $file_path .= $row['file_name'];
 
@@ -247,7 +254,7 @@ $_SERVER['SERVER_PORT'];
                         <div class="row">
                             <input type="hidden" id="checked_by" value="<?php echo $checker; ?>">
                             <input type="hidden" id="c_id" value="<?php echo $id; ?>">
-                            <input type="hidden" id="c_id" value="<?php echo htmlspecialchars($file_path); ?>">
+                            <input type="hidden" id="" value="<?= $file_path; ?>">
                             <label for="series_no_label" class="d-inline-block mb-0 text-lg">Serial no:&nbsp;&nbsp;</label>
                             <p id="series_no_label" class="d-inline-block mb-0 text-lg"><?= $serial_no; ?></p>
                         </div>
@@ -257,8 +264,8 @@ $_SERVER['SERVER_PORT'];
                                 <label for="">Status:</label>
                                 <select class="form-control" name="checker_status" id="checker_status">
                                     <option value="">---Status---</option>
-                                    <option value="Approved">Approve</option>
-                                    <option value="Disapproved">Disapprove</option>
+                                    <option value="APPROVED">Approve</option>
+                                    <option value="DISAPPROVED">Disapprove</option>
                                 </select>
 
                             </div>

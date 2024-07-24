@@ -4,13 +4,12 @@ include '../../process/conn.php';
 $response = ''; // Initialize an empty response variable
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['method'] == 'update_file_upload') {
-    $id = $_POST['updateFile_id'];
-    $serial_no = $_POST['updateFile_serialNo'];
+    $id = $_POST['update_id'];
+    $serial_no = $_POST['update_serialNo'];
     $status = $_POST['updated_status'];
     $approver_status = '';
-
-    $file = $_FILES['update_files']['name'];
-    $tmp_name = $_FILES['update_files']['tmp_name'];
+    $file = $_FILES['file_attached']['name'];
+    $tmp_name = $_FILES['file_attached']['tmp_name'];
 
     // Define the base directory for uploads
     $uploadDir = __DIR__ . '/../../../uploads/ereport/' . $serial_no . '/';
@@ -22,36 +21,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
 
     try {
         // Fetch the current file name from the database
-        $sql_fetch_file = "SELECT file_name, main_doc, sub_doc FROM t_upload_file WHERE serial_no = :serial_no AND id = :id";
+        $sql_fetch_file = "SELECT * FROM t_upload_file WHERE serial_no = :serial_no AND id = :id";
         $stmt_fetch_file = $conn->prepare($sql_fetch_file);
         $stmt_fetch_file->bindParam(':serial_no', $serial_no, PDO::PARAM_STR);
         $stmt_fetch_file->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt_fetch_file->execute();
         $file_info = $stmt_fetch_file->fetch(PDO::FETCH_ASSOC);
-
+        
         if ($file_info) {
-            $current_file = $file_info['file_name'];
             $main_doc = $file_info['main_doc'];
             $sub_doc = $file_info['sub_doc'];
 
-            // Define the path to the current file
-            $current_file_path = $uploadDir . $main_doc . '/' . ($sub_doc ? $sub_doc . '/' : '') . $current_file;
+            // Define the path to the "updated file" folder
+            if ($sub_doc) {
+                $updatedFileFolder = $uploadDir . $main_doc . '/' . $sub_doc . '/updated file/';
+            } else {
+                $updatedFileFolder = $uploadDir . $main_doc . '/updated file/';
+            }
 
-            // Check if the current file exists and delete it
-            if (file_exists($current_file_path)) {
-                unlink($current_file_path);
+            // Ensure the "updated file" folder exists
+            if (!is_dir($updatedFileFolder)) {
+                mkdir($updatedFileFolder, 0777, true);
             }
 
             // Define the path to the new file
-            $new_file_path = $uploadDir . $main_doc . '/' . ($sub_doc ? $sub_doc . '/' : '') . $file;
-
-            // Ensure the directories exist
-            if (!is_dir($uploadDir . $main_doc)) {
-                mkdir($uploadDir . $main_doc, 0777, true);
-            }
-            if ($sub_doc && !is_dir($uploadDir . $main_doc . '/' . $sub_doc)) {
-                mkdir($uploadDir . $main_doc . '/' . $sub_doc, 0777, true);
-            }
+            $new_file_path = $updatedFileFolder . $file;
 
             // Move the new file to the correct location
             if (move_uploaded_file($tmp_name, $new_file_path)) {
@@ -64,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
                 $stmt_upload_file->execute();
 
                 // Update t_training_record
-                $sql_training_record = "UPDATE t_training_record SET checker_status = :status, approver_status = :approver_status WHERE serial_no = :serial_no AND id = :id";
+                $sql_training_record = "UPDATE t_training_record SET update_upload_date = NOW(), checker_status = :status, checker_name = '', checked_date = '', checker_comment = '', approver_id = '', approver_name = '', approver_email = '', approved_date = '', approver_status = :approver_status, approver_comment = '' WHERE serial_no = :serial_no AND id = :id";
                 $stmt_training_record = $conn->prepare($sql_training_record);
                 $stmt_training_record->bindParam(':status', $status, PDO::PARAM_STR);
                 $stmt_training_record->bindParam(':approver_status', $approver_status, PDO::PARAM_STR);
@@ -77,10 +71,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
                 echo 'error';
             }
         } else {
-            echo 'file error';
+            echo 'File information not found in the database.';
         }
     } catch (PDOException $e) {
-        echo 'error: ' . $e->getMessage(); // Output error message for debugging
+        echo 'Database error: ' . $e->getMessage(); // Output error message for debugging
     }
+} else {
+    echo 'Invalid request method or missing parameters.';
 }
 ?>

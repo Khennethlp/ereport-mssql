@@ -32,9 +32,10 @@ if ($method == 'approver_table') {
     b.serial_no, 
     b.main_doc AS main_doc,
     b.sub_doc AS sub_doc, 
+    b.updated_file AS updated_file, 
     b.file_name AS filenames 
     FROM t_training_record a 
-    RIGHT JOIN (SELECT id, serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b 
+    RIGHT JOIN (SELECT id, serial_no, main_doc, sub_doc, updated_file, file_name FROM t_upload_file) b 
     ON a.serial_no = b.serial_no AND a.id=b.id 
     WHERE a.approver_id = :approver_id AND a.approver_status = :status ";
 
@@ -98,12 +99,28 @@ if ($method == 'approver_table') {
                     break;
             }
 
-            $file_path = '../../../uploads/ereport/' . ($k['serial_no']) . '/';
-            $file_path .= ($k['main_doc']) . '/';
+            // $file_path = '../../../uploads/ereport/' . ($k['serial_no']) . '/';
+                // $file_path .= ($k['main_doc']) . '/';
+                // if (!empty($k['sub_doc'])) {
+                //     $file_path .= ($k['sub_doc']) . '/';
+                // }
+            // $file_path .= ($k['filenames']);
+
+            $file_path = '../../../uploads/ereport/' . $k['serial_no'] . '/' . $k['main_doc'] . '/';
             if (!empty($k['sub_doc'])) {
-                $file_path .= ($k['sub_doc']) . '/';
+                $sub_doc_path = $file_path . $k['sub_doc'] . '/';
+
+                // Check if the 'updated file' folder exists within 'sub_doc'
+                if (file_exists($sub_doc_path . 'updated file/')) {
+                    // Use the 'updated file' folder path
+                    $file_path = $sub_doc_path . 'updated file/';
+                } else {
+                    // Use the 'sub_doc' folder path
+                    $file_path = $sub_doc_path;
+                }
             }
-            $file_path .= ($k['filenames']);
+            $file_path .= $k['filenames'];
+
             $a_id = htmlspecialchars($k['a_id']);
             $id = htmlspecialchars($k['id']);
 
@@ -117,7 +134,7 @@ if ($method == 'approver_table') {
                 if ($status == 'approved' || $status == 'disapproved') {
                     echo '<td>' . htmlspecialchars($k['filenames']) . '</td>';
                 } else {
-                    echo '<td><a href="../../pages/approver/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . urlencode($file_path) . '&approver=' . htmlspecialchars($a_id) . '" target="_blank">' . htmlspecialchars($k['filenames']) . '</a></td>';
+                    echo '<td><a href="../../pages/approver/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . $file_path . '&approver=' . htmlspecialchars($a_id) . '" target="_blank">' . htmlspecialchars($k['filenames']) . '</a></td>';
                 }
             } else {
                 echo '<td>File not found</td>';

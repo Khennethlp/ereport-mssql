@@ -1,8 +1,8 @@
 <?php
 $title = "E-REPORT SYSTEM";
 $file_path = $_GET['file_path'];
-$approver = $_GET['approver'];
-$serial_no = $_GET['serial_no'];
+$uploader = $_GET['uploader'];
+$serial_no = $_GET['serial_no'] . '<br>';
 $id = $_GET['id'];
 ?>
 <!DOCTYPE html>
@@ -212,19 +212,37 @@ $id = $_GET['id'];
                                 // Constructing the file path
                                 $file_path = '../../../uploads/ereport/' . $row['serial_no'] . '/';
                                 $file_path .= $row['main_doc'] . '/';
+                                // $base_path = '../../../uploads/ereport/' . $row['serial_no'] . '/' . $row['main_doc'] . '/';
+                                // $file_path = $base_path;
+                                // if (!empty($row['sub_doc'])) {
+                                //     $file_path .= $row['sub_doc'] . '/';
+                                // }
                                 if (!empty($row['sub_doc'])) {
                                     $file_path .= $row['sub_doc'] . '/';
-                                     // Check if the 'updated file' folder exists within 'sub_doc'
-                                     if (file_exists($file_path . 'updated file/')) {
-                                        // Use the 'updated file' folder path
-                                        $file_path = $file_path . 'updated file/';
+                                    // Check if the 'updated file' folder exists within 'sub_doc'
+                                    $for_checking_path = $file_path . 'for checking/';
+                                    $for_approval_path = $file_path . 'for approval/';
+
+                                    if (file_exists($for_approval_path)) {
+                                        $file_path = $for_approval_path;
+                                    } elseif (file_exists($for_checking_path)) {
+                                        $file_path = $for_checking_path;
                                     } else {
                                         $file_path = $file_path;
                                     }
                                 }
-                                
-                                $file_path .= $row['file_name'];
 
+                                $file_path .= !empty($row['updated_file']) ? $row['updated_file'] : $row['file_name'];
+
+                                // If 'updated_file' is empty, adjust the path to the base path with the file name
+                                if (empty($row['updated_file'])) {
+                                    if (!empty($row['sub_doc'])) {
+                                        $file_path = $file_path . $row['file_name'];
+                                    } else {
+                                        $file_path = $file_path . $row['file_name'];
+                                    }
+                                }
+                            
                                 // Check if the file exists
                                 if (file_exists($file_path)) {
                         ?>
@@ -241,7 +259,7 @@ $id = $_GET['id'];
                         ?>
                         <div class="col-md-12">
                             <div id="iframe-container">
-                                <iframe class="w-100" id="my-iframe" src="<?= htmlspecialchars($file_path) ? htmlspecialchars($file_path) : "No file to preview." ?>" frameborder="0" height="650" width="100%"></iframe>
+                                <iframe class="w-100" id="my-iframe" src="<?= $file_path ? $file_path : "No file to preview." ?>" frameborder="0" height="650" width="100%"></iframe>
                             </div>
 
                         </div>
@@ -256,58 +274,19 @@ $id = $_GET['id'];
                         <div class="row">
 
                             <div class="">
-                                <input type="hidden" id="a_id" value="<?php echo $id; ?>">
-                                <input type="hidden" id="approved_id" value="<?php echo $approver; ?>">
+                                <input type="hidden" id="update_id" value="<?php echo $id; ?>">
+                                <input type="hidden" id="update_uploader_id" value="<?php echo $uploader; ?>">
                                 <label for="series_no_label" class="d-inline-block mb-0 text-lg">Serial no:&nbsp;&nbsp;</label>
-                                <p id="series_no_label" class="d-inline-block mb-0 text-lg"><?= $serial_no; ?></p>
-                                <label for="series_no_label" class="d-inline-block mb-0 text-lg">
+                                <p id="series_no_label" class="d-inline-block mb-0 text-lg"><?php echo $serial_no; ?></p>
+                                <label for="series_no_label" class="d-inline-block mb-0z text-lg">
                             </div>
                         </div>
                         <hr>
                         <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label for="">Status:</label>
-                                <select class="form-control" name="status_approver" id="status_approver">
-                                    <option value="">---Status---</option>
-                                    <option value="APPROVED">Approve</option>
-                                    <option value="DISAPPROVED">Disapprove</option>
-                                </select>
-
-                            </div>
-
-                            <!-- <div class="col-md-6 mb-5">
-                                <label for="">Approval by:</label>
-                                <select class="form-control" name="approver_select" id="approver_select">
-                                    <option value="">---Choose Approver---</option>
-                                    <?php
-                                    require '../../process/conn.php';
-
-                                    $sql = "SELECT fullname, email FROM m_accounts WHERE role = 'approver'";
-                                    $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-                                    $stmt->execute();
-
-                                    if ($stmt->rowCount() > 0) {
-                                        // Output data of each row
-                                        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                                        // Output data of each row
-                                        foreach ($rows as $row) {
-                                            echo '<option value="' . $row["email"] . '">' . $row["fullname"] . '</option>';
-                                        }
-                                    } else {
-                                        echo '<option value="">No data available</option>';
-                                    }
-                                    ?>
-                                </select>
-                            </div> -->
-                            <div class="col-md-12 mb-3">
-                                <label for="">Comment:</label>
-                                <textarea class="form-control" name="comment_approver" id="comment_approver" rows="3" cols="5" maxlength="250"></textarea>
-                            </div>
-                            <div class="col-md-12" id="approve_upload_container">
+                            <div class="col-md-12" id="update_upload_container">
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <label for="attachment">Upload File:</label>
+                                        <label for="attachment">Upload Updated File:</label>
                                         <!-- <input type="file" id="files" class="form-control" style="height: 112px;"> -->
                                         <p class=" text-center">
                                         <div class="form-group fileDropArea" id="fileDropArea">
@@ -332,7 +311,7 @@ $id = $_GET['id'];
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <button class="form-control btn_submit mb-2" id="submit_upload_btn" onclick="upload_approved();">
+                                        <button class="form-control btn_submit mb-2" id="submit_upload_btn" onclick="updateUpload();">
                                             <i class="fas fa-paper-plane"></i>&nbsp;
                                             Submit</button>
                                     </div>
@@ -369,9 +348,9 @@ $id = $_GET['id'];
     <!-- <script src="plugins/js/custom.js"></script> -->
 
     <script>
-        $(document).ready(function() {
-           // initializeFileInput("#files", "#filesList > #files-names");
-        });
+        // $(document).ready(function() {
+        //    // initializeFileInput("#files", "#filesList > #files-names");
+        // });
 
         const dt = new DataTransfer(); // Allows manipulation of the files of the input file
 
@@ -476,4 +455,4 @@ $id = $_GET['id'];
 </body>
 
 </html>
-<?php include 'plugins/js/upload_approved_script.php' ?>;
+<?php include 'plugins/js/update_upload_script.php' ?>;

@@ -264,8 +264,8 @@ $id = $_GET['id'];
                                 <label for="">Status:</label>
                                 <select class="form-control" name="checker_status" id="checker_status">
                                     <option value="">---Status---</option>
-                                    <option value="APPROVED">Approve</option>
-                                    <option value="DISAPPROVED">Disapprove</option>
+                                    <option value="Approved">Approve</option>
+                                    <option value="Disapproved">Disapprove</option>
                                 </select>
 
                             </div>

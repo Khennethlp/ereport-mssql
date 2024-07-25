@@ -48,7 +48,7 @@
             </div>
             <div class="modal-footer ">
                 <div class="col-sm-3">
-                    <button class="btn btn-block btn-del" onclick="delete_account();" style="color:#111;height:34px;border-radius:.25rem;background: #bbb;font-size:15px;font-weight:normal; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);">Delete </button>
+                    <button class="btn btn-block btn-del" onclick="delete_account();" style="color:#fff;height:34px;border-radius:.25rem;background: var(--danger);font-size:15px;font-weight:normal; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);">Delete </button>
                 </div>
                 <div class="col-sm-3">
                     <button class="btn subBtn btn-block" id="update_btn" onclick="update_account();" style="color:#fff;height:34px;border-radius:.25rem;background: #3765AA;font-size:15px;font-weight:normal; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);">Update </button>

@@ -38,7 +38,7 @@
                                         <input type="search" name="" id="search_account" style="height: 38px;" class="form-control float-right" placeholder="Search" autocomplete="off">
                                     </div>
                                     <div class="col-md-3">
-                                        <button type="button" class="btn btn-danger" id="searchReqBtn" onclick="load_accounts();">
+                                        <button type="button" class="btn " style="background-color: #3765AA; color: #fff;" id="searchReqBtn" onclick="load_accounts();">
                                             <i class="fas fa-search"></i>
                                             Search
                                         </button>

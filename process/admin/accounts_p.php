@@ -7,11 +7,18 @@ if ($method == 'load_accounts') {
 
     $search = isset($_POST['search']) ? $_POST['search'] : '';
 
-    $sql = "SELECT * FROM m_accounts ";
-    if(!empty($search)){
-        $sql .= "WHERE emp_id = '$search' OR fullname = '$search' OR email = '$search' OR username = '$search'";
+    $sql = "SELECT * FROM m_accounts WHERE role != 'admin' ";
+    if (!empty($search)) {
+        // Use placeholders and prepare statement for better security
+        $sql .= "AND (emp_id = :search OR fullname = :search OR email = :search OR username = :search)";
     }
+    
     $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+    
+    if (!empty($search)) {
+        // Bind parameter for each placeholder
+        $stmt->bindParam(':search', $search, PDO::PARAM_STR);
+    }
     $stmt->execute();
 
     $c = 0;
@@ -30,7 +37,7 @@ if ($method == 'load_accounts') {
         }
     } else {
         echo '<tr>';
-        echo '<td colspan="8" style="text-align:center; color:red;">No Result !!!</td>';
+        echo '<td colspan="8" style="text-align:center;">No user found.</td>';
         echo '</tr>';
     }
 }

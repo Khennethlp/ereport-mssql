@@ -16,7 +16,7 @@
               require '../../process/conn.php';
               // $approver_id = $_SESSION['emp_id'];
 
-              $sql = "SELECT DISTINCT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Pending'";
+              $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Pending'";
               // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'pending' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
               $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
               $stmt->bindParam(':approver_id', $approver_id, PDO::PARAM_STR);
@@ -46,13 +46,13 @@
             <div class="inner">
               <?php
               require '../../process/conn.php';
-              $approver_id = $_SESSION['emp_id'];
+              // $approver_id = $_SESSION['emp_id'];
 
               // $sql = "SELECT COUNT(serial_no) as total FROM t_training_record WHERE checker_status = 'Approved' AND uploader_name = :uploader_name";
               // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'approved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
               $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE approver_status = 'Approved' AND checker_status = 'Approved'";
               $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-              $stmt->bindParam(':approver_id', $approver_id, PDO::PARAM_STR);
+              // $stmt->bindParam(':approver_id', $approver_id, PDO::PARAM_STR);
               $stmt->execute();
 
               if ($stmt->rowCount() > 0) {
@@ -150,17 +150,25 @@
                         <div class="row">
                           <input type="hidden" name="approver_id" id="approver_id" value="<?php echo $_SESSION['emp_id']; ?>">
                           <div class="col-md-3">
-                            <label for="">Search:</label>
-                            <input type="search" class="form-control" name="" id="search_by" placeholder="">
+                            <label for="">Search By Serial No:</label>
+                            <input type="search" class="form-control" name="" id="search_by_serialNo" placeholder="">
                           </div>
-                          <!-- <div class="col-md-3">
-                            <label for="">Status:</label>
-                            <select name="status" id="_status" class="form-control">
-                              <option value="pending">Pending</option>
-                              <option value="approved">Approved</option>
-                              <option value="disapproved">Disapproved</option>
-                            </select>
-                          </div> -->
+                          <div class="col-md-3">
+                            <label for="">Search By Batch No:</label>
+                            <input type="search" class="form-control" name="" id="search_by_batchNo" placeholder="">
+                          </div>
+                          <div class="col-md-3">
+                            <label for="">Search By Group No:</label>
+                            <input type="search" class="form-control" name="" id="search_by_groupNo" placeholder="">
+                          </div>
+                          <div class="col-md-3">
+                            <label for="">Search By Training Group:</label>
+                            <input type="search" class="form-control" name="" id="search_by_tgroup" placeholder="">
+                          </div>
+                          <div class="col-md-3">
+                            <label for="">Search By Filename:</label>
+                            <input type="search" class="form-control" name="" id="search_by_filename" placeholder="">
+                          </div>
                           <div class="col-md-3">
                             <label for="">From:</label>
                             <input type="date" class="form-control" name="" id="search_by_date_from">

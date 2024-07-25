@@ -9,8 +9,11 @@
 
     const load_data = () => {
 
-        var search = $('#search_by').val();
-        // var status = $('#_status').val();
+        var serialNo = $('#search_by_serialNo').val();
+        var batchNo = $('#search_by_batchNo').val();
+        var groupNo = $('#search_by_groupNo').val();
+        var trainingGroup = $('#search_by_tgroup').val();
+        var fileName = $('#search_by_filename').val();
         var date_from = $('#search_by_date_from').val();
         var date_to = $('#search_by_date_to').val();
 
@@ -20,8 +23,11 @@
             cache: false,
             data: {
                 method: 'load_data',
-                search: search,
-                // status: status,
+                serialNo: serialNo,
+                batchNo: batchNo,
+                groupNo: groupNo,
+                trainingGroup: trainingGroup,
+                fileName: fileName,
                 date_from: date_from,
                 date_to: date_to,
             },

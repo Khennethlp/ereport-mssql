@@ -4,24 +4,55 @@ include '../../process/conn.php';
 $method = $_POST['method'];
 
 if($method == 'load_data'){
-    $search = $_POST['search'];
-    // $status = $_POST['status'];
+    $serialNo = $_POST['serialNo'];
+    $batchNo = $_POST['batchNo'];
+    $groupNo = $_POST['groupNo'];
+    $trainingGroup = $_POST['trainingGroup'];
+    $fileName = $_POST['fileName'];
     $date_from = $_POST['date_from'];
     $date_to = $_POST['date_to'];
 
-    $sql = "SELECT a.*, b.* FROM t_training_record a LEFT JOIN (SELECT * FROM t_upload_file) b ON a.serial_no=b.serial_no WHERE approver_status = 'APPROVED'";
+    $sql = "SELECT a.*, b.* FROM t_training_record a LEFT JOIN (SELECT * FROM t_upload_file) b ON a.serial_no=b.serial_no WHERE checker_status = 'APPROVED' AND approver_status = 'APPROVED'";
     
-    if (!empty($search)) {
-        $sql .= " AND a.serial_no LIKE :search OR a.batch_no LIKE :search OR a.group_no LIKE :search OR b.file_name LIKE :search";
+    if (!empty($serialNo)) {
+        $sql .= " AND a.serial_no LIKE :search_by_serialNo";
+    }
+    if (!empty($batchNo)) {
+        $sql .= " AND a.batch_no LIKE :search_by_batchNo";
+    }
+    if (!empty($groupNo)) {
+        $sql .= " AND a.group_no LIKE :search_by_groupNo";
+    }
+    if (!empty($trainingGroup)) {
+        $sql .= " AND a.training_group LIKE :search_by_tGroup";
+    }
+    if (!empty($fileName)) {
+        $sql .= " AND b.file_name LIKE :search_by_filename";
     }
     if (!empty($date_from) && !empty($date_to)) {
         $sql .= " AND approved_date BETWEEN :date_from AND :date_to";
     }
 
     $stmt = $conn->prepare($sql);
-    if (!empty($search)) {
-        $search = "%$search%";
-        $stmt->bindParam(':search', $search, PDO::PARAM_STR);
+    if (!empty($serialNo)) {
+        $searserialNoch = "$serialNo%";
+        $stmt->bindParam(':search_by_serialNo', $serialNo, PDO::PARAM_STR);
+    }
+    if (!empty($batchNo)) {
+        $batchNo = "$batchNo%";
+        $stmt->bindParam(':search_by_batchNo', $batchNo, PDO::PARAM_STR);
+    }
+    if (!empty($groupNo)) {
+        $groupNo = "$groupNo%";
+        $stmt->bindParam(':search_by_groupNo', $groupNo, PDO::PARAM_STR);
+    }
+    if (!empty($trainingGroup)) {
+        $trainingGroup = "$trainingGroup%";
+        $stmt->bindParam(':search_by_tGroup', $trainingGroup, PDO::PARAM_STR);
+    }
+    if (!empty($fileName)) {
+        $fileName = "$fileName%";
+        $stmt->bindParam(':search_by_filename', $fileName, PDO::PARAM_STR);
     }
     if (!empty($date_from) && !empty($date_to)) {
         $stmt->bindParam(':date_from', $date_from, PDO::PARAM_STR);
@@ -40,10 +71,12 @@ if($method == 'load_data'){
             echo '<td>' . $k['batch_no'] . '</td>';
             echo '<td>' . $k['group_no'] . '</td>';
             echo '<td>' . $k['training_group'] . '</td>';
-            echo '<td>' . $k['file_name'] . '</td>';
+            echo '<td title="'.$k['file_name'].'">' . (strlen($k['file_name']) > 50 ? substr($k['file_name'], 0, 50) . '...' : $k['file_name']) . '</td>';
             echo '<td>' . date('Y/m/d' , strtotime($k['approved_date'])) . '</td>';
             echo '</tr>';
         }
+    }else{
+        echo '<tr ><td colspan="8" style="text-align:center;">No data found.</td></tr>';
     }
 }
 

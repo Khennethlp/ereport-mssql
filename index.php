@@ -100,11 +100,11 @@ if (isset($_SESSION['username'])) {
               <button type="submit" class="btn btn-block" name="Login" style="background-color: #306BAC; color: #fff;">Login</button>
             </div>
           </div>
-          <div class="row mb-2">
+          <!-- <div class="row mb-2">
             <div class="col">
               <a type="button" href="pages/viewer/index.php" class="btn bg-danger btn-block" id="wi">Viewer Page</a>
             </div>
-          </div>
+          </div> -->
           <div class="row">
             <!-- <div class="col">
               <center style="color: #ccc; font-size: 12px;">

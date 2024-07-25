@@ -32,7 +32,7 @@
             </p>
           </a>
         </li> 
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/approver/history.php") {?>
           <a href="history.php" class="nav-link active">
           <?php } else {?>
@@ -43,7 +43,7 @@
               HISTORY
             </p>
           </a>
-        </li> 
+        </li>  -->
 
         <?php include 'logout.php';?>
       </ul>

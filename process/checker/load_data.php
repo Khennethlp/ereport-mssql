@@ -138,7 +138,8 @@ if ($method == 'checker_table') {
 
             if (file_exists($file_path)) {
                 if ($status == 'approved' || $status == 'disapproved') {
-                    echo '<td>' . htmlspecialchars($k['file_name']) . '</td>';
+                    // echo '<td>' . htmlspecialchars($k['file_name']) . '</td>';
+                    echo '<td title="'.$k['file_name'].'">' . (strlen($k['file_name']) > 50 ? substr($k['file_name'], 0, 50) . '...' : $k['file_name']) . '</td>';
                 } else {
                     echo '<td><a href="../../pages/checker/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . urlencode($file_path) . '&checker=' . htmlspecialchars($c_id) . '" target="_blank">' . $k['file_name'] . '</a></td>';
                 }

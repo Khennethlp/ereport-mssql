@@ -132,7 +132,8 @@ if ($method == 'approver_table') {
 
             if (file_exists($file_path)) {
                 if ($status == 'approved' || $status == 'disapproved') {
-                    echo '<td>' . htmlspecialchars($k['filenames']) . '</td>';
+                    // echo '<td>' . ($k['filenames']) . '</td>';
+                    echo '<td title="'.$k['filenames'].'">' . (strlen($k['filenames']) > 50 ? substr($k['filenames'], 0, 50) . '...' : $k['filenames']) . '</td>';
                 } else {
                     echo '<td><a href="../../pages/approver/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . $file_path . '&approver=' . htmlspecialchars($a_id) . '" target="_blank">' . htmlspecialchars($k['filenames']) . '</a></td>';
                 }
@@ -141,7 +142,7 @@ if ($method == 'approver_table') {
             }
 
             echo '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
-            echo '<td>' . date('Y/m/d h:i', strtotime($k['approved_date'])) . '</td>';
+            echo '<td>' . date('Y/m/d', strtotime($k['approved_date'])) . '</td>';
             echo '</tr>';
         }
     } else {

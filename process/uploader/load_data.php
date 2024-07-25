@@ -183,7 +183,8 @@ if ($method == 'load_data') {
                 }
             } else {
                 // If status is not 'DISAPPROVED', just show the filename
-                $data .= '<td>' . $filenames . '</td>';
+                // $data .= '<td>' . substr($filenames, 0, 50) . '</td>';
+                $data .= '<td title="'.$filenames.'">' . (strlen($filenames) > 50 ? substr($filenames, 0, 50) . '...' : $filenames) . '</td>';
             }
 
             $data .= '<td>' . htmlspecialchars($k['checker_name']) . '</td>';

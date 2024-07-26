@@ -33,10 +33,14 @@ if ($method == 'load_data') {
                 END AS global_status, 
                 CASE 
                     WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN a.approver_name
-                    -- WHEN a.checker_status = 'Disapproved' AND a.approver_status = 'Disapproved' THEN a.checker_name
                     WHEN a.checker_status = 'Disapproved' THEN a.checker_name
-                    -- ELSE 'a.checker_name'
-                END AS disapprover_name
+                END AS disapprover_name,
+                CASE
+                    -- WHEN a.checker_comment != '' THEN a.checker_comment
+                    -- WHEN a.approver_comment != '' THEN a.approver_comment
+                    WHEN a.checker_status = 'Disapproved' THEN a.checker_comment
+                    WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN a.approver_comment
+                END AS global_comment
             FROM 
                 t_training_record a 
             RIGHT JOIN 
@@ -166,11 +170,11 @@ if ($method == 'load_data') {
 
             $data .= '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
             $data .= '<td>' . htmlspecialchars($checked_date) . '</td>';
-            $data .= '<td>' . htmlspecialchars($k['checker_comment']) . '</td>';
+            // $data .= '<td>' . htmlspecialchars($k['checker_comment']) . '</td>';
             '<td><span>' . strtoupper(htmlspecialchars($k['approver_status'])) . '</span></td>'; // hidden to table
             $data .= '<td>' . htmlspecialchars($k['approver_name']) . '</td>';
             $data .= '<td>' . htmlspecialchars($approved_date) . '</td>';
-            $data .= '<td>' . htmlspecialchars($k['approver_comment']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['global_comment']) . '</td>';
 
             // Display disapprover name if approver status is 'Disapproved'
             if ($status_text == 'DISAPPROVED') {

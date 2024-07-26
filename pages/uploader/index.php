@@ -200,11 +200,11 @@
                           <th>Filename</th>
                           <th>Checked By</th>
                           <th>Checked Date</th>
-                          <th>Checker Comment</th>
+                          <!-- <th>Checker Comment</th> -->
                           <!-- <th>Approver Status</th> -->
                           <th>Approved By</th>
                           <th>Approved Date</th>
-                          <th>Approver Comment</th>
+                          <th>Comment</th>
                           <th>Disapproved By</th>
                         </tr>
                       </thead>

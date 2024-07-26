@@ -219,17 +219,7 @@ $id = $_GET['id'];
                                 // }
                                 if (!empty($row['sub_doc'])) {
                                     $file_path .= $row['sub_doc'] . '/';
-                                    // Check if the 'updated file' folder exists within 'sub_doc'
-                                    $for_checking_path = $file_path . 'for checking/';
-                                    $for_approval_path = $file_path . 'for approval/';
-
-                                    if (file_exists($for_approval_path)) {
-                                        $file_path = $for_approval_path;
-                                    } elseif (file_exists($for_checking_path)) {
-                                        $file_path = $for_checking_path;
-                                    } else {
-                                        $file_path = $file_path;
-                                    }
+                                  
                                 }
 
                                 $file_path .= !empty($row['updated_file']) ? $row['updated_file'] : $row['file_name'];
@@ -274,6 +264,7 @@ $id = $_GET['id'];
                         <div class="row">
 
                             <div class="">
+                            
                                 <input type="hidden" id="update_id" value="<?php echo $id; ?>">
                                 <input type="hidden" id="update_uploader_id" value="<?php echo $uploader; ?>">
                                 <label for="series_no_label" class="d-inline-block mb-0 text-lg">Serial no:&nbsp;&nbsp;</label>

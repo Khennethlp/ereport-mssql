@@ -194,10 +194,11 @@
         var uploader_name = document.getElementById('uploader_name').value;
         var uploader_id = document.getElementById('uploader_id').value;
 
-        var selectElement = document.getElementById('check_by');
-        var selectedOption = selectElement.options[selectElement.selectedIndex];
-        var checker_id = selectedOption.getAttribute('data-emp-id');
-        var checker_email = selectedOption.value;
+        // var selectElement = document.getElementById('check_by');
+        // var selectedOption = selectElement.options[selectElement.selectedIndex];
+        // var checker_id = selectedOption.getAttribute('data-emp-id');
+        // var checker_email = selectedOption.value;
+        var checker_id = document.getElementById('check_by').value;
         var checker_status = 'PENDING';
 
         var main_doc = document.getElementById('main_doc').value;
@@ -215,7 +216,7 @@
         formData.append('uploader_name', uploader_name);
         formData.append('checker_id', checker_id);
         // formData.append('checker_name', checker_name);
-        formData.append('checker_email', checker_email);
+        // formData.append('checker_email', checker_email);
         formData.append('checker_status', checker_status);
 
         for (var i = 0; i < files.length; i++) {

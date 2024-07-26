@@ -32,22 +32,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
             $main_doc = $file_info['main_doc'];
             $sub_doc = $file_info['sub_doc'];
 
-            // Define the path to the "updated file" folder
             if ($sub_doc) {
-                $updatedFileFolder = $uploadDir . $main_doc . '/' . $sub_doc . '/updated file/';
+                $updatedFile = $uploadDir . $main_doc . '/' . $sub_doc . '/';
             } else {
-                $updatedFileFolder = $uploadDir . $main_doc . '/updated file/';
+                $updatedFile = $uploadDir . $main_doc . '/';
             }
 
-            // Ensure the "updated file" folder exists
-            if (!is_dir($updatedFileFolder)) {
-                mkdir($updatedFileFolder, 0777, true);
+            if (!is_dir($updatedFile)) {
+                mkdir($updatedFile, 0777, true);
             }
 
-            // Define the path to the new file
-            $new_file_path = $updatedFileFolder . $file;
+            $new_file_path = $updatedFile . $file;
 
-            // Move the new file to the correct location
             if (move_uploaded_file($tmp_name, $new_file_path)) {
                 // Update t_upload_file
                 $sql_upload_file = "UPDATE t_upload_file SET file_name = :file WHERE serial_no = :serial_no AND id = :id";

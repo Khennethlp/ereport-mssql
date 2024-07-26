@@ -131,33 +131,11 @@ if ($method == 'load_data') {
                     break;
             }
 
-            // Function to check if a file exists in the specified path
-            if (!function_exists('fileExistsInPath')) {
-                function fileExistsInPath($base_path, $file_name)
-                {
-                    $paths_to_check = [
-                        $base_path . 'updated file/' . $file_name,
-                        $base_path . 'for approval/' . $file_name,
-                        $base_path . 'for checking/' . $file_name,
-                        $base_path . $file_name
-                    ];
-
-                    foreach ($paths_to_check as $path) {
-                        if (file_exists($path)) {
-                            return $path;
-                        }
-                    }
-
-                    return false;
-                }
-            }
-
             $file_path = '../../../uploads/ereport/' . ($k['serial_no']) . '/';
             $file_path .= ($k['main_doc']) . '/';
 
             // Check if 'for approval' or 'for checking' folders exist and have files
             $sub_doc_path = !empty($k['sub_doc']) ? $file_path . $k['sub_doc'] . '/' : $file_path;
-            // Determine the filename to use based on the availability of fields
             // $filename = !empty($k['uploader_updated_file']) ? $k['uploader_updated_file'] : (!empty($k['updated_file']) ? $k['updated_file'] : $k['file_name']);
             $filename = !empty($k['updated_file']) ? $k['updated_file'] : $k['file_name'];
             $filenames = $k['file_name'];
@@ -173,7 +151,6 @@ if ($method == 'load_data') {
 
             if ($status_text == 'DISAPPROVED') {
                 // Check if 'for approval' or 'for checking' folders exist and have files
-                $file_path = fileExistsInPath($sub_doc_path, $k['updated_file']);
 
                 if ($file_path) {
                     // $data .= '<td style="cursor: pointer; color: #ffffff;"><a class="text-warning" href="' . $file_path . '" download>' . $filename . '</a></td>';

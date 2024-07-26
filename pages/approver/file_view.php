@@ -212,20 +212,12 @@ $id = $_GET['id'];
                                 // Constructing the file path
                                 $file_path = '../../../uploads/ereport/' . $row['serial_no'] . '/';
                                 $file_path .= $row['main_doc'] . '/';
+
                                 if (!empty($row['sub_doc'])) {
                                     $file_path .= $row['sub_doc'] . '/';
-                                     // Check if the 'updated file' folder exists within 'sub_doc'
-                                     if (file_exists($file_path . 'updated file/')) {
-                                        // Use the 'updated file' folder path
-                                        $file_path = $file_path . 'updated file/';
-                                    } else {
-                                        $file_path = $file_path;
-                                    }
                                 }
                                 
                                 $file_path .= $row['file_name'];
-
-                                // Check if the file exists
                                 if (file_exists($file_path)) {
                         ?>
                                     <a class="btn_download mx-2 mb-1 ml-auto" href="<?php echo $file_path; ?>" download>Download</a>

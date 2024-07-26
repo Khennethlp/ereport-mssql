@@ -110,14 +110,7 @@ if ($method == 'approver_table') {
             if (!empty($k['sub_doc'])) {
                 $sub_doc_path = $file_path . $k['sub_doc'] . '/';
 
-                // Check if the 'updated file' folder exists within 'sub_doc'
-                if (file_exists($sub_doc_path . 'updated file/')) {
-                    // Use the 'updated file' folder path
-                    $file_path = $sub_doc_path . 'updated file/';
-                } else {
-                    // Use the 'sub_doc' folder path
-                    $file_path = $sub_doc_path;
-                }
+                $file_path = $sub_doc_path;
             }
             $file_path .= $k['filenames'];
 

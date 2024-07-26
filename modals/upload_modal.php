@@ -107,7 +107,7 @@
                                                 // Output data of each row
                                                 foreach ($rows as $row) {
 
-                                                    echo '<option value="' . $row["email"] . '"  data-emp-id="' . $row["emp_id"] . '">' . $row["fullname"] . '</option>';
+                                                    echo '<option value="' . $row["emp_id"] . '">' . $row["fullname"] . '</option>';
                                                 }
                                             } else {
                                                 echo '<option value="">No data available</option>';

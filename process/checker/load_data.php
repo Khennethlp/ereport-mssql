@@ -107,24 +107,19 @@ if ($method == 'checker_table') {
 
             // $file_path = '../../../uploads/ereport/' . $k['serial_no'] . '/';
             // $file_path .= $k['main_doc'] . '/';
-            $file_path = '../../../uploads/ereport/' . $k['serial_no'] . '/' . $k['main_doc'] . '/';
             // if (!empty($k['sub_doc'])) {
-            //  $file_path .= $k['sub_doc'] . '/';
-            // }
-            // $file_path .= $k['file_name'];
+                //  $file_path .= $k['sub_doc'] . '/';
+                // }
+                // $file_path .= $k['file_name'];
             // Check if 'sub_doc' is provided and adjust the path
+           
+            $file_path = '../../../uploads/ereport/' . $k['serial_no'] . '/' . $k['main_doc'] . '/';
             if (!empty($k['sub_doc'])) {
                 $sub_doc_path = $file_path . $k['sub_doc'] . '/';
 
-                // Check if the 'updated file' folder exists within 'sub_doc'
-                if (file_exists($sub_doc_path . 'updated file/')) {
-                    // Use the 'updated file' folder path
-                    $file_path = $sub_doc_path . 'updated file/';
-                } else {
-                    // Use the 'sub_doc' folder path
-                    $file_path = $sub_doc_path;
-                }
+                $file_path = $sub_doc_path;
             }
+
             $file_path .= !empty($k['updated_file']) ? $k['updated_file'] : $k['file_name'];
 
             $c_id = htmlspecialchars($k['c_id']);
@@ -136,12 +131,13 @@ if ($method == 'checker_table') {
             echo '<td>' . htmlspecialchars($k['b_serial_no']) . '</td>';
             echo '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
 
+            
             if (file_exists($file_path)) {
                 if ($status == 'approved' || $status == 'disapproved') {
                     // echo '<td>' . htmlspecialchars($k['file_name']) . '</td>';
-                    echo '<td title="'.$k['file_name'].'">' . (strlen($k['file_name']) > 50 ? substr($k['file_name'], 0, 50) . '...' : $k['file_name']) . '</td>';
+                    echo '<td title="' . $k['file_name'] . '">' . (strlen($k['file_name']) > 50 ? substr($k['file_name'], 0, 50) . '...' : $k['file_name']) . '</td>';
                 } else {
-                    echo '<td><a href="../../pages/checker/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . urlencode($file_path) . '&checker=' . htmlspecialchars($c_id) . '" target="_blank">' . $k['file_name'] . '</a></td>';
+                    echo '<td><a href="../../pages/checker/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . $file_path . '&checker=' . htmlspecialchars($c_id) . '" target="_blank">' . $k['file_name'] . '</a></td>';
                 }
             } else {
                 echo '<td>File not found</td>';

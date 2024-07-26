@@ -48,7 +48,7 @@ if (isset($_SESSION['username'])) {
       unset($_SESSION['status']); ?>
     </div>
     <!-- /.login-logo -->
-    <div class="card p-3">
+    <div class="card p-3" style="box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.5);">
       <div class="login-logo">
         <img src="dist/img/e-report-bg.png" style="height:200px; width: auto;">
         <!-- <h2><b>Template ni Khenneth</b></h2> -->

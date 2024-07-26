@@ -22,10 +22,10 @@
         const checked_by = $('#checked_by').val();
         const serial_no = $('#series_no_label').text().trim();
 
-        var selectElement = document.getElementById('approver_select');
-        var selectedOption = selectElement.options[selectElement.selectedIndex];
-        var approver_id = selectedOption.getAttribute('data-emp-id');
-        var approver_email = selectedOption.value;
+        // var selectElement = document.getElementById('approver_select');
+        // var selectedOption = selectElement.options[selectElement.selectedIndex];
+        // var approver_id = selectedOption.getAttribute('data-emp-id');
+        var approver_id = $('#approver_select').val();
         var approver_status = 'Pending';
 
         if (status === '') {
@@ -78,7 +78,6 @@
         formData.append('id', id);
         formData.append('serial_no', serial_no);
         formData.append('approver_id', approver_id);
-        formData.append('approver_email', approver_email);
         formData.append('approver_status', approver_status);
 
         // Only append the file if it's provided

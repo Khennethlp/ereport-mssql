@@ -11,13 +11,12 @@ if ($method == 'update_check_uploader') {
     $comment = $_POST['comment'];
     $id = $_POST['id'];
 
-    // Check if approver_id and approver_email are set
+    // Check if approver_id are set
     $approver_id = isset($_POST['approver_id']) ? $_POST['approver_id'] : '';
-    $approver_email = isset($_POST['approver_email']) ? $_POST['approver_email'] : null;
     $approver_status = ($status === 'DISAPPROVED') ? '' : 'PENDING';
 
     if ($status === 'Disapproved' && isset($_FILES['file_attached'])) {
-        $acc_sql = "SELECT emp_id, email, fullname FROM m_accounts WHERE emp_id = :checker_id";
+        $acc_sql = "SELECT emp_id, fullname FROM m_accounts WHERE emp_id = :checker_id";
         $acc_stmt = $conn->prepare($acc_sql);
         $acc_stmt->bindParam(':checker_id', $checker_id, PDO::PARAM_STR);
         $acc_stmt->execute();
@@ -47,20 +46,20 @@ if ($method == 'update_check_uploader') {
                 $main_doc = $file_info['main_doc'];
                 $sub_doc = $file_info['sub_doc'];
 
-                // Define the path to the "for checking" folder
+                // Define the path to folder
                 if ($sub_doc) {
-                    $forCheckingFolder = $uploadDir . $main_doc . '/' . $sub_doc . '/for checking/';
+                    $uploadDir  = $uploadDir . $main_doc . '/' . $sub_doc . '/';
                 } else {
-                    $forCheckingFolder = $uploadDir . $main_doc . '/for checking/';
+                    $uploadDir  = $uploadDir . $main_doc . '/';
                 }
 
                 // Ensure the "for checking" folder exists
-                if (!is_dir($forCheckingFolder)) {
-                    mkdir($forCheckingFolder, 0777, true);
+                if (!is_dir($uploadDir )) {
+                    mkdir($uploadDir , 0777, true);
                 }
 
                 // Define the path to the new file
-                $new_file_path = $forCheckingFolder . $file;
+                $new_file_path = $uploadDir . $file;
 
                 // Move the new file to the "for checking" folder
                 if (move_uploaded_file($tmp_name, $new_file_path)) {
@@ -73,14 +72,13 @@ if ($method == 'update_check_uploader') {
                     $stmt_upload_file->execute();
 
                     // Update t_training_record
-                    $update_sql = "UPDATE t_training_record SET checker_status = :status, checker_name = :checker_name, checked_date = NOW(), checker_comment = :comment, approver_id = :approver_id, approver_email = :approver_email, approver_status = :approver_status WHERE id = :id";
+                    $update_sql = "UPDATE t_training_record SET checker_status = :status, checker_name = :checker_name, checked_date = NOW(), checker_comment = :comment, approver_id = :approver_id, approver_status = :approver_status WHERE id = :id";
                     $stmt_training_record = $conn->prepare($update_sql);
                     $stmt_training_record->bindParam(':id', $id);
                     $stmt_training_record->bindParam(':status', $status);
                     $stmt_training_record->bindParam(':comment', $comment);
                     $stmt_training_record->bindParam(':checker_name', $checker_name);
                     $stmt_training_record->bindParam(':approver_id', $approver_id);
-                    $stmt_training_record->bindParam(':approver_email', $approver_email);
                     $stmt_training_record->bindParam(':approver_status', $approver_status);
                     $stmt_training_record->execute();
 
@@ -106,14 +104,13 @@ if ($method == 'update_check_uploader') {
 
         try {
             // Update t_training_record
-            $update_sql = "UPDATE t_training_record SET checker_status = :status, checker_name = :checker_name, checked_date = NOW(), checker_comment = :comment, approver_id = :approver_id, approver_email = :approver_email, approver_status = :approver_status WHERE id = :id ";
+            $update_sql = "UPDATE t_training_record SET checker_status = :status, checker_name = :checker_name, checked_date = NOW(), checker_comment = :comment, approver_id = :approver_id, approver_status = :approver_status WHERE id = :id ";
             $stmt = $conn->prepare($update_sql);
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':status', $status);
             $stmt->bindParam(':comment', $comment);
             $stmt->bindParam(':checker_name', $checker_name);
             $stmt->bindParam(':approver_id', $approver_id);
-            $stmt->bindParam(':approver_email', $approver_email);
             $stmt->bindParam(':approver_status', $approver_status);
 
             if ($stmt->execute()) {

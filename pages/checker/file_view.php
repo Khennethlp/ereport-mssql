@@ -213,13 +213,6 @@ $id = $_GET['id'];
                                 $file_path .= $row['main_doc'] . '/';
                                 if (!empty($row['sub_doc'])) {
                                     $file_path .= $row['sub_doc'] . '/';
-                                    // Check if the 'updated file' folder exists within 'sub_doc'
-                                    if (file_exists($file_path . 'updated file/')) {
-                                        // Use the 'updated file' folder path
-                                        $file_path = $file_path . 'updated file/';
-                                    } else {
-                                        $file_path = $file_path;
-                                    }
                                 }
                                 $file_path .= $row['file_name'];
 
@@ -286,7 +279,7 @@ $id = $_GET['id'];
 
                                         // Output data of each row
                                         foreach ($rows as $row) {
-                                            echo '<option value="' . $row["email"] . '" data-emp-id="' . $row["emp_id"] . '">' . $row["fullname"] . '</option>';
+                                            echo '<option value="' . $row["emp_id"] . '">' . $row["fullname"] . '</option>';
                                         }
                                     } else {
                                         echo '<option value="">No data available</option>';

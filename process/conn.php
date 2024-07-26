@@ -2,6 +2,7 @@
 $server_month = date('Y-m-d');
 date_default_timezone_set('Asia/Manila');
 $servername = 'localhost'; $username = 'root'; $password = '';
+// $servername = 'localhost'; $username = 'root'; $password = 'trspassword2022';
 
 try {
     $conn = new PDO ("mysql:host=$servername;dbname=e-report",$username,$password);

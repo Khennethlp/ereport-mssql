@@ -55,38 +55,19 @@ if ($method == 'update_approved_uploader') {
                 $main_doc = $file_info['main_doc'];
                 $sub_doc = $file_info['sub_doc'];
 
-                // Define the path to the current file
-                // $current_file_path = $uploadDir . $main_doc . '/' . ($sub_doc ? $sub_doc . '/' : '') . $current_file;
-
-                // Check if the current file exists and delete it
-                // if (file_exists($current_file_path)) {
-                //     unlink($current_file_path);
-                // }
-
-                // Define the path to the new file
-                // $new_file_path = $uploadDir . $main_doc . '/' . ($sub_doc ? $sub_doc . '/' : '') . $file;
-
-                // Ensure the directories exist
-                // if (!is_dir($uploadDir . $main_doc)) {
-                //     mkdir($uploadDir . $main_doc, 0777, true);
-                // }
-                // if ($sub_doc && !is_dir($uploadDir . $main_doc . '/' . $sub_doc)) {
-                //     mkdir($uploadDir . $main_doc . '/' . $sub_doc, 0777, true);
-                // }
-
                 // Define the path to the "for approval" folder
                 if ($sub_doc) {
-                    $forApproverFolder = $uploadDir . $main_doc . '/' . $sub_doc . '/for approval/';
+                    $uploadDir  = $uploadDir . $main_doc . '/' . $sub_doc . '/';
                 } else {
-                    $forApproverFolder = $uploadDir . $main_doc . '/for approval/';
+                    $uploadDir  = $uploadDir . $main_doc . '/';
                 }
 
                 // Ensure the "for approval" folder exists
-                if (!is_dir($forApproverFolder)) {
-                    mkdir($forApproverFolder, 0777, true);
+                if (!is_dir($uploadDir )) {
+                    mkdir($uploadDir , 0777, true);
                 }
 
-                $new_file_path = $forApproverFolder . $file;
+                $new_file_path = $uploadDir  . $file;
 
                 // Move the new file to the correct location
                 if (move_uploaded_file($tmp_name, $new_file_path)) {

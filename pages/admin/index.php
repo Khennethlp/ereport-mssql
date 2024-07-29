@@ -218,6 +218,12 @@
                       <p class="badge badge-dark border border-outline p-2 mt-3 " style="cursor: pointer;">Load More...</p>
                     </div>
                   </div>
+                  <hr>
+                  <div class="col-md-4">
+                    <div class="row">
+                      <span id="approved_count">Count: 0 </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

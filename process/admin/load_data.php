@@ -213,3 +213,14 @@ if ($method == 'del_training') {
     }
 }
 
+if ($method == 'counts') {
+    $sql = "SELECT count(approver_status) as count FROM t_training_record WHERE approver_status = 'APPROVED'";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($result !== false) {
+        echo 'Count: ' . $result['count'];
+    } else {
+        echo 'No records found.';
+    }
+}

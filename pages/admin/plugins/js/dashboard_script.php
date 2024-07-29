@@ -1,10 +1,11 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        load_data(); 
+        load_data();
+        counts();
     });
 
-    document.addEventListener("keyup", function(){
-        load_data(); 
+    document.addEventListener("keyup", function() {
+        load_data();
     });
 
     const load_data = () => {
@@ -33,6 +34,20 @@
             },
             success: function(response) {
                 document.getElementById('admin_dashboard_table').innerHTML = response;
+            }
+        });
+    }
+
+    const counts = () => {
+        $.ajax({
+            type: "POST",
+            url: "../../process/admin/load_data.php",
+            data: {
+                method: 'counts',
+            },
+            success: function(response) {
+                $('#approved_count').html(response);
+
             }
         });
     }

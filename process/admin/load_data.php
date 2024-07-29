@@ -63,6 +63,12 @@ if($method == 'load_data'){
     $c = 0;
     if ($stmt->rowCount()) {
         while ($k = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $file_path = '../../../uploads/ereport/' . htmlspecialchars($k['serial_no']) . '/';
+            $file_path .= htmlspecialchars($k['main_doc']) . '/';
+            if (!empty($k['sub_doc'])) {
+                $file_path .= htmlspecialchars($k['sub_doc']) . '/';
+            }
+            $file_path .= htmlspecialchars($k['file_name']);
             $c++;
             echo '<tr >';
             echo '<td>' . $c . '</td>';
@@ -73,6 +79,10 @@ if($method == 'load_data'){
             echo '<td>' . $k['training_group'] . '</td>';
             echo '<td title="'.$k['file_name'].'">' . (strlen($k['file_name']) > 50 ? substr($k['file_name'], 0, 50) . '...' : $k['file_name']) . '</td>';
             echo '<td>' . date('Y/m/d' , strtotime($k['approved_date'])) . '</td>';
+
+            if (file_exists($file_path)) {
+                echo '<td style="cursor: pointer;"><a href="' . $file_path . '" target="_blank">View</a></td>';
+            }
             echo '</tr>';
         }
     }else{

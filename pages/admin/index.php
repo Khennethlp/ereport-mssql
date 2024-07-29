@@ -209,7 +209,7 @@
                           <th>Training Group</th>
                           <th>Filename</th>
                           <th>Approved Date</th>
-                          <!-- <th>Action</th> -->
+                          <th></th>
                         </tr>
                       </thead>
                       <tbody id="admin_dashboard_table"> </tbody>

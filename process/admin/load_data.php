@@ -12,7 +12,7 @@ if($method == 'load_data'){
     $month = $_POST['month'];
     $year = $_POST['year'];
 
-    $sql = "SELECT a.*, b.* FROM t_training_record a LEFT JOIN (SELECT * FROM t_upload_file) b ON a.serial_no=b.serial_no WHERE approver_status = 'APPROVED'";
+    $sql = "SELECT a.*, b.* FROM t_training_record a LEFT JOIN (SELECT * FROM t_upload_file group by serial_no) b ON a.serial_no=b.serial_no WHERE approver_status = 'APPROVED' ";
     
     if (!empty($serialNo)) {
         $sql .= " AND a.serial_no LIKE :search_by_serialNo";
@@ -257,7 +257,7 @@ if ($method == 'del_training') {
 }
 
 if ($method == 'counts') {
-    $sql = "SELECT count(approver_status) as count FROM t_training_record WHERE approver_status = 'APPROVED'";
+    $sql = "SELECT count(*) as count FROM t_training_record WHERE approver_status = 'APPROVED'";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);

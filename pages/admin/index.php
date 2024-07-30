@@ -6,7 +6,7 @@
   <!-- Content Header (Page header) -->
   <div class="content-header">
     <div class="container-fluid">
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-lg-3 col-6">
           <input type="hidden" id="admin_name" value="<?= $_SESSION['name']; ?>">
           <input type="hidden" id="admin_id" value="<?= $_SESSION['emp_id']; ?>">
@@ -38,7 +38,6 @@
             <div class="icon">
               <i class="fas fa-clock"></i>
             </div>
-            <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
           </div>
         </div>
         <div class="col-lg-3 col-6">
@@ -72,7 +71,6 @@
             <div class="icon">
               <i class="fas fa-thumbs-up"></i>
             </div>
-            <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
           </div>
         </div>
         <div class="col-lg-3 col-6">
@@ -105,10 +103,9 @@
             <div class="icon">
               <i class="fas fa-thumbs-down"></i>
             </div>
-            <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- end of alert -->
       <div class="row mb-2">

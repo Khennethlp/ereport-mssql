@@ -9,10 +9,10 @@ if($method == 'load_data'){
     $groupNo = $_POST['groupNo'];
     $trainingGroup = $_POST['trainingGroup'];
     $fileName = $_POST['fileName'];
-    $date_from = $_POST['date_from'];
-    $date_to = $_POST['date_to'];
+    $month = $_POST['month'];
+    $year = $_POST['year'];
 
-    $sql = "SELECT a.*, b.* FROM t_training_record a LEFT JOIN (SELECT * FROM t_upload_file) b ON a.serial_no=b.serial_no WHERE checker_status = 'APPROVED' AND approver_status = 'APPROVED'";
+    $sql = "SELECT a.*, b.* FROM t_training_record a LEFT JOIN (SELECT * FROM t_upload_file) b ON a.serial_no=b.serial_no WHERE approver_status = 'APPROVED'";
     
     if (!empty($serialNo)) {
         $sql .= " AND a.serial_no LIKE :search_by_serialNo";
@@ -29,8 +29,28 @@ if($method == 'load_data'){
     if (!empty($fileName)) {
         $sql .= " AND b.file_name LIKE :search_by_filename";
     }
-    if (!empty($date_from) && !empty($date_to)) {
-        $sql .= " AND approved_date BETWEEN :date_from AND :date_to";
+    // if (!empty($month)) {
+    //     $sql .= " AND approved_date = :month";
+    // }
+    // if (!empty($year)) {
+    //     $sql .= " AND approved_date = :year";
+    // }
+    // if (!empty($month) && !empty($year)) {
+    //     $sql .= " AND approved_date BETWEEN :month AND :year";
+    // }
+
+    if (!empty($month) && !empty($year)) {
+        // If both month and year are provided
+        $sql .= " AND YEAR(approved_date) = :year AND MONTH(approved_date) = :month";
+    } else {
+        // If only month is provided
+        if (!empty($month)) {
+            $sql .= " AND MONTH(approved_date) = :month";
+        }
+        // If only year is provided
+        if (!empty($year)) {
+            $sql .= " AND YEAR(approved_date) = :year";
+        }
     }
 
     $stmt = $conn->prepare($sql);
@@ -54,10 +74,23 @@ if($method == 'load_data'){
         $fileName = "$fileName%";
         $stmt->bindParam(':search_by_filename', $fileName, PDO::PARAM_STR);
     }
-    if (!empty($date_from) && !empty($date_to)) {
-        $stmt->bindParam(':date_from', $date_from, PDO::PARAM_STR);
-        $stmt->bindParam(':date_to', $date_to, PDO::PARAM_STR);
+    if (!empty($month)) {
+        $stmt->bindParam(':month', $month, PDO::PARAM_INT);
     }
+    if (!empty($year)) {
+        $stmt->bindParam(':year', $year, PDO::PARAM_INT);
+    }
+    // if (!empty($month)) {
+    //     $stmt->bindParam(':month', $month, PDO::PARAM_STR);
+    // }
+    // if (!empty($year)) {
+    //     $stmt->bindParam(':year', $year, PDO::PARAM_STR);
+    // }
+    if (!empty($month) && !empty($year)) {
+        $stmt->bindParam(':month', $month, PDO::PARAM_INT);
+        $stmt->bindParam(':year', $year, PDO::PARAM_INT);
+    }
+
     $stmt->execute();
     
     $c = 0;

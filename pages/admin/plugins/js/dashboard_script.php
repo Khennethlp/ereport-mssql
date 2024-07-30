@@ -4,10 +4,6 @@
         counts();
     });
 
-    document.addEventListener("keyup", function() {
-        load_data();
-    });
-
     const load_data = () => {
 
         var serialNo = $('#search_by_serialNo').val();
@@ -15,8 +11,8 @@
         var groupNo = $('#search_by_groupNo').val();
         var trainingGroup = $('#search_by_tgroup').val();
         var fileName = $('#search_by_filename').val();
-        var date_from = $('#search_by_date_from').val();
-        var date_to = $('#search_by_date_to').val();
+        var month = $('#search_by_month').val();
+        var year = $('#search_by_year').val();
 
         $.ajax({
             type: "POST",
@@ -29,8 +25,8 @@
                 groupNo: groupNo,
                 trainingGroup: trainingGroup,
                 fileName: fileName,
-                date_from: date_from,
-                date_to: date_to,
+                month: month,
+                year: year,
             },
             success: function(response) {
                 document.getElementById('admin_dashboard_table').innerHTML = response;

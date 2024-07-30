@@ -6,7 +6,7 @@
   <!-- Content Header (Page header) -->
   <div class="content-header">
     <div class="container-fluid">
-    <div class="row">
+      <div class="row">
         <div class="col-lg-3 col-6">
           <input type="hidden" id="admin_name" value="<?= $_SESSION['name']; ?>">
           <input type="hidden" id="admin_id" value="<?= $_SESSION['emp_id']; ?>">
@@ -163,19 +163,67 @@
                           </div>
                           <div class="col-md-3">
                             <label for="">Search By Training Group:</label>
-                            <input type="search" class="form-control" name="" id="search_by_tgroup" placeholder="">
+                            <!-- <input type="search" class="form-control" name="" id="search_by_tgroup" placeholder=""> -->
+                            <select class="form-control" name="search_by_tgroup" id="search_by_tgroup">
+                              <option value=""></option>
+                              <?php
+                              require '../../process/conn.php';
+
+                              $sql = "SELECT DISTINCT training_title FROM t_training_group";
+                              $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                              $stmt->execute();
+
+                              if ($stmt->rowCount() > 0) {
+                                // Output data of each row
+                                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                // Output data of each row
+                                foreach ($rows as $row) {
+                                  echo '<option value="' . $row["training_title"] . '">' . $row["training_title"] . '</option>';
+                                }
+                              } else {
+                                echo '<option value="">No data available</option>';
+                              }
+                              ?>
+                            </select>
                           </div>
                           <div class="col-md-3">
                             <label for="">Search By Filename:</label>
                             <input type="search" class="form-control" name="" id="search_by_filename" placeholder="">
                           </div>
                           <div class="col-md-3">
-                            <label for="">From:</label>
-                            <input type="date" class="form-control" name="" id="search_by_date_from">
+                            <!-- <label for="">From:</label> -->
+                            <!-- <input type="date" class="form-control" name="" id="search_by_date_from"> -->
+                            <label for="">Month:</label>
+                            <!-- <input type="date" id="search_date_from" class="form-control"> -->
+                            <select name="search_by_date_from" id="search_by_month" class="form-control">
+                              <option value=""></option>
+                              <option value="01">JAN</option>
+                              <option value="02">FEB</option>
+                              <option value="03">MAR</option>
+                              <option value="04">APR</option>
+                              <option value="05">MAY</option>
+                              <option value="06">JUN</option>
+                              <option value="07">JUL</option>
+                              <option value="08">AUG</option>
+                              <option value="09">SEP</option>
+                              <option value="10">OCT</option>
+                              <option value="11">NOV</option>
+                              <option value="12">DEC</option>
+                            </select>
                           </div>
                           <div class="col-md-3">
-                            <label for="">To:</label>
-                            <input type="date" class="form-control" name="" id="search_by_date_to">
+                            <label for="">Year:</label>
+                            <!-- <input type="date" class="form-control" name="" id="search_by_date_to"> -->
+                            <select name="search_by_date_to" id="search_by_year" class="form-control">
+                              <option value=""></option>
+                              <?php
+                              $currentYear = date('Y');
+                              for ($i = $currentYear; $i <= $currentYear + 10; $i++) {
+                                echo '<option value="' . $i . '"' . ($i == $currentYear ? ' selected' : '') . '>' . $i . '</option>';
+                              }
+                              ?>
+                            </select>
                           </div>
                           <div class="col-md-3">
                             <label for="">&nbsp;</label>

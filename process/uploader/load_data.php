@@ -30,9 +30,13 @@ if ($method == 'load_data') {
                     WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
                     WHEN a.checker_status = 'Disapproved' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
                     WHEN a.checker_status = 'Approved' AND a.approver_status = 'Approved' THEN 'Approved'
+                    WHEN a.checker_status = '' AND a.approver_status = 'Pending' THEN 'For Approval'
+                    WHEN a.checker_status = '' AND a.approver_status = 'Approved' THEN 'Approved'
+                    WHEN a.checker_status = '' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
                 END AS global_status, 
                 CASE 
                     WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN a.approver_name
+                    WHEN a.checker_status = '' AND a.approver_status = 'Disapproved' THEN a.approver_name
                     WHEN a.checker_status = 'Disapproved' THEN a.checker_name
                 END AS disapprover_name,
                 CASE
@@ -40,6 +44,7 @@ if ($method == 'load_data') {
                     -- WHEN a.approver_comment != '' THEN a.approver_comment
                     WHEN a.checker_status = 'Disapproved' THEN a.checker_comment
                     WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN a.approver_comment
+                    WHEN a.checker_status = '' AND a.approver_status = 'Disapproved' THEN a.approver_comment
                 END AS global_comment
             FROM 
                 t_training_record a 
@@ -59,7 +64,10 @@ if ($method == 'load_data') {
             (a.checker_status = 'Approved' AND a.approver_status = 'Approved' AND :status = 'Approved') OR
             (a.checker_status = 'Disapproved' AND a.approver_status = 'Disapproved' AND :status = 'Disapproved') OR
             (a.checker_status = 'Disapproved' AND a.approver_status = 'Pending' AND :status = 'Disapproved') OR
-            (a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' AND :status = 'Disapproved')
+            (a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' AND :status = 'Disapproved') OR
+            (a.checker_status = '' AND a.approver_status = 'Pending' AND :status = 'Pending') OR
+            (a.checker_status = '' AND a.approver_status = 'Approved' AND :status = 'Approved') OR
+            (a.checker_status = '' AND a.approver_status = 'Disapproved' AND :status = 'Disapproved') 
         )";
     }
 

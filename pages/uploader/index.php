@@ -19,7 +19,7 @@
                 $uploader_name = $_SESSION['name'];
 
                 $sql = "SELECT DISTINCT COUNT(checker_status) as total FROM t_training_record WHERE checker_status = 'Pending' AND uploader_name = :uploader_name";
-                // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'pending' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
+               
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
                 $stmt->execute();
@@ -40,7 +40,6 @@
               <div class="icon">
                 <i class="fas fa-clock"></i>
               </div>
-              <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
             </div>
           </div>
           <div class="col-lg-3 col-6">
@@ -50,9 +49,7 @@
                 require '../../process/conn.php';
                 $uploader_name = $_SESSION['name'];
 
-                // $sql = "SELECT COUNT(serial_no) as total FROM t_training_record WHERE checker_status = 'Approved' AND uploader_name = :uploader_name";
-                // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'approved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
-                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Approved' AND approver_status = 'Approved' AND uploader_name = :uploader_name";
+                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE (checker_status = 'Approved' OR checker_status = '')  AND approver_status = 'Approved' AND uploader_name = :uploader_name";
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
                 $stmt->execute();
@@ -74,7 +71,6 @@
               <div class="icon">
                 <i class="fas fa-thumbs-up"></i>
               </div>
-              <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
             </div>
           </div>
           <div class="col-lg-3 col-6">
@@ -85,7 +81,7 @@
                 $uploader_name = $_SESSION['name'];
 
                 $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Disapproved' OR approver_status = 'Disapproved' AND uploader_name = :uploader_name";
-                // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'disapproved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
+              
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
                 $stmt->execute();
@@ -107,7 +103,6 @@
               <div class="icon">
                 <i class="fas fa-thumbs-down"></i>
               </div>
-              <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
             </div>
           </div>
 
@@ -200,8 +195,6 @@
                           <th>Filename</th>
                           <th>Checked By</th>
                           <th>Checked Date</th>
-                          <!-- <th>Checker Comment</th> -->
-                          <!-- <th>Approver Status</th> -->
                           <th>Approved By</th>
                           <th>Approved Date</th>
                           <th>Comment</th>
@@ -209,13 +202,6 @@
                         </tr>
                       </thead>
                       <tbody id="t_table">
-                        <!-- <tr>
-                          <td colspan="6" style="text-align: center;">
-                            <div class="spinner-border text-dark" role="status">
-                              <span class="sr-only">Loading...</span>
-                            </div>
-                          </td>
-                        </tr> -->
                       </tbody>
                     </table>
                     <div id="load_more" class="text-center" style="display: none;">

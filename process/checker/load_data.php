@@ -38,6 +38,8 @@ if ($method == 'checker_table') {
                 a.checker_email, 
                 a.upload_date, 
                 a.batch_no AS batch_no, 
+                a.group_no AS group_no, 
+                a.training_group AS training_group, 
                 b.serial_no AS b_serial_no, 
                 b.main_doc, 
                 b.sub_doc, 
@@ -130,6 +132,8 @@ if ($method == 'checker_table') {
             echo '<td><span>' . strtoupper(htmlspecialchars($k['checker_status'])) . '</span></td>';
             echo '<td>' . htmlspecialchars($k['b_serial_no']) . '</td>';
             echo '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
+            echo '<td>' . htmlspecialchars($k['group_no']) . '</td>';
+            echo '<td>' . htmlspecialchars($k['training_group']) . '</td>';
 
             
             if (file_exists($file_path)) {

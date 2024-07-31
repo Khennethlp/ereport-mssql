@@ -200,8 +200,10 @@
                           <th>Status</th>
                           <th>Serial No.</th>
                           <th>Batch No.</th>
+                          <th>Group No.</th>
+                          <th>Training Group</th>
                           <th>Filenames</th>
-                          <th>Uploaded By</th>
+                          <th>Upload By</th>
                           <th>Date</th>
 
                         </tr>

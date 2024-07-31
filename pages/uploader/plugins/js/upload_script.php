@@ -4,6 +4,23 @@
         initializeFileInput("#files", "#filesList > #files-names");
         load_data();
 
+        // change to approver if selected training group is either MNTT or SEP
+        // hide this code if MNTT and SEP have checkers
+        document.getElementById('approver_container').style.display = 'none';
+        const checkTrainingGroup = () => {
+            const trainingGroup = document.getElementById('training_group').value;
+
+            if (trainingGroup === 'MNTT' || trainingGroup === 'SEP') {
+                document.getElementById('checker_container').style.display = 'none';
+                document.getElementById('approver_container').style.display = 'block';
+            } else {
+                document.getElementById('checker_container').style.display = 'block';
+                document.getElementById('approver_container').style.display = 'none';
+            }
+        };
+
+        checkTrainingGroup();
+        document.getElementById('training_group').addEventListener('change', checkTrainingGroup);
     });
 
     //File Selection and Displaying
@@ -137,12 +154,7 @@
                 page: page,
                 rows_per_page: rowsPerPage
             },
-            beforeSend: function() {
-                // Show spinner before AJAX request is sent
-                $('#spinner').fadeIn();
-            },
             success: function(response) {
-                $('#spinner').fadeOut(function() {});
                 const responseData = JSON.parse(response);
                 if (isPagination) {
                     if (responseData.html.trim() !== '') {
@@ -194,12 +206,12 @@
         var uploader_name = document.getElementById('uploader_name').value;
         var uploader_id = document.getElementById('uploader_id').value;
 
-        // var selectElement = document.getElementById('check_by');
-        // var selectedOption = selectElement.options[selectElement.selectedIndex];
-        // var checker_id = selectedOption.getAttribute('data-emp-id');
-        // var checker_email = selectedOption.value;
-        var checker_id = document.getElementById('check_by').value;
-        var checker_status = 'PENDING';
+        // var checker_id = document.getElementById('check_by').value;
+        if (training_group == 'MNTT' || training_group == 'SEP') {
+            approver_id = document.getElementById('approved_by').value;
+        } else {
+            checker_id = document.getElementById('check_by').value;
+        }
 
         var main_doc = document.getElementById('main_doc').value;
         var sub_doc = document.getElementById('sub_doc').value;
@@ -214,13 +226,16 @@
         formData.append('group_no', group_no);
         formData.append('uploader_id', uploader_id);
         formData.append('uploader_name', uploader_name);
-        formData.append('checker_id', checker_id);
-        // formData.append('checker_name', checker_name);
-        // formData.append('checker_email', checker_email);
-        formData.append('checker_status', checker_status);
+
+        if (training_group == 'MNTT' || training_group == 'SEP') {
+            formData.append('approver_id', approver_id);
+        } else {
+            formData.append('checker_id', checker_id);
+        }
+        // formData.append('checker_status', checker_status);
 
         for (var i = 0; i < files.length; i++) {
-            formData.append('files[]', files[i]); // Append each file to the FormData with the key 'files[]'
+            formData.append('files[]', files[i]);
         }
 
         if (!main_doc || !batch_no || !training_group) {
@@ -242,8 +257,8 @@
                 type: "POST",
                 url: "../../process/uploader/uploads.php",
                 data: formData,
-                processData: false, // Prevent jQuery from processing the data
-                contentType: false, // Set content type to false for FormData
+                processData: false,
+                contentType: false,
                 success: function(response) {
                     if (response == 'success') {
                         Swal.fire({
@@ -312,6 +327,4 @@
         }
 
     };
-
-    
 </script>

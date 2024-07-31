@@ -23,12 +23,25 @@ if ($method == 'approver_table') {
             ELSE a.approver_status
         END AS approver_status,
         CASE
-            WHEN a.approver_status = 'Pending' THEN a.checked_date
+            WHEN a.approver_status = 'Pending' THEN a.upload_date
+            WHEN a.checker_status = 'Approved' AND a.approver_status = 'Pending' THEN a.checked_date
             WHEN a.approver_status = 'Approved' THEN a.approved_date
             WHEN a.approver_status = 'Disapproved' THEN a.approved_date
         END AS approved_date,
+        CASE
+            WHEN a.checker_status = 'Approved' AND a.approver_status = 'Pending' THEN a.checker_name
+            WHEN a.checker_status = 'Approved' AND a.approver_status = 'Approved' THEN a.checker_name
+            WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN a.checker_name
+        END AS checker_name,
+        CASE
+            WHEN a.approver_status = 'Pending' THEN a.uploader_name
+            WHEN a.approver_status = 'Approved' THEN a.uploader_name
+            WHEN a.approver_status = 'Disapproved' THEN a.uploader_name
+        END AS uploader_name,
     a.approver_id AS a_id, 
     a.approver_email AS approver_email, 
+    a.group_no AS group_no, 
+    a.training_group AS training_group, 
     b.serial_no, 
     b.main_doc AS main_doc,
     b.sub_doc AS sub_doc, 
@@ -122,6 +135,8 @@ if ($method == 'approver_table') {
             echo '<td><span>' . strtoupper(htmlspecialchars($k['approver_status'])) . '</span></td>';
             echo '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
             echo '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
+            echo '<td>' . htmlspecialchars($k['group_no']) . '</td>';
+            echo '<td>' . htmlspecialchars($k['training_group']) . '</td>';
 
             if (file_exists($file_path)) {
                 if ($status == 'approved' || $status == 'disapproved') {
@@ -135,6 +150,7 @@ if ($method == 'approver_table') {
             }
 
             echo '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
+            echo '<td>' . htmlspecialchars($k['uploader_name']) . '</td>';
             echo '<td>' . date('Y/m/d', strtotime($k['approved_date'])) . '</td>';
             echo '</tr>';
         }

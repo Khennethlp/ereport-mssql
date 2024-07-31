@@ -89,14 +89,41 @@
                                             <option value="">--Select Sub Document--</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-4 mb-3" id="checker_container">
                                         <label for="">Check by:</label>
                                         <Select class="form-control" id="check_by">
                                             <option value="">---Choose Checker---</option>
                                             <?php
                                             require '../../process/conn.php';
 
-                                            $sql = "SELECT emp_id, fullname, email FROM m_accounts WHERE role = 'checker'";
+                                            $sql = "SELECT emp_id, fullname FROM m_accounts WHERE role = 'checker'";
+                                            $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                                            $stmt->execute();
+
+                                            if ($stmt->rowCount() > 0) {
+                                                // Output data of each row
+                                                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                                // Output data of each row
+                                                foreach ($rows as $row) {
+
+                                                    echo '<option value="' . $row["emp_id"] . '">' . $row["fullname"] . '</option>';
+                                                }
+                                            } else {
+                                                echo '<option value="">No data available</option>';
+                                            }
+                                            ?>
+
+                                        </Select>
+                                    </div>
+                                    <div class="col-md-4 mb-3" id="approver_container">
+                                        <label for="">Approve by:</label>
+                                        <Select class="form-control" id="approved_by">
+                                            <option value="">---Choose Approver---</option>
+                                            <?php
+                                            require '../../process/conn.php';
+
+                                            $sql = "SELECT emp_id, fullname FROM m_accounts WHERE role = 'approver'";
                                             $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                                             $stmt->execute();
 

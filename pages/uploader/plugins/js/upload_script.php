@@ -135,6 +135,7 @@
 
         var status = $('#status').val();
         var search = $('#search').val();
+        var search_by_filename = $('#search_by_filename').val();
         var date_from = $('#search_date_from').val();
         var date_to = $('#search_date_to').val();
         var uploader_name = $('#uploader_name').val();
@@ -148,6 +149,7 @@
                 method: 'load_data',
                 status: status,
                 search: search,
+                search_by_filename: search_by_filename,
                 date_from: date_from,
                 date_to: date_to,
                 uploader_name: uploader_name,

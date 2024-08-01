@@ -11,6 +11,7 @@
         var groupNo = $('#search_by_groupNo').val();
         var trainingGroup = $('#search_by_tgroup').val();
         var fileName = $('#search_by_filename').val();
+        var docs = $('#search_by_docs').val();
         var month = $('#search_by_month').val();
         var year = $('#search_by_year').val();
 
@@ -25,6 +26,7 @@
                 groupNo: groupNo,
                 trainingGroup: trainingGroup,
                 fileName: fileName,
+                docs: docs,
                 month: month,
                 year: year,
             },

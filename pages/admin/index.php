@@ -185,6 +185,32 @@
                             </select>
                           </div>
                           <div class="col-md-3">
+                            <label for="">Search By Document:</label>
+                            <!-- <input type="search" class="form-control" name="" id="search_by_docs" placeholder=""> -->
+                            <select class="form-control" name="search_by_docs" id="search_by_docs">
+                              <option value="" selected></option>
+                              <?php
+                              require '../../process/conn.php';
+
+                              $sql = "SELECT DISTINCT main_doc FROM m_report_title";
+                              $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                              $stmt->execute();
+
+                              if ($stmt->rowCount() > 0) {
+                                // Output data of each row
+                                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                // Output data of each row
+                                foreach ($rows as $row) {
+                                  echo '<option value="' . $row["main_doc"] . '">' . $row["main_doc"] . '</option>';
+                                }
+                              } else {
+                                echo '<option value="">No data available</option>';
+                              }
+                              ?>
+                            </select>
+                          </div>
+                          <div class="col-md-3">
                             <label for="">Search By Filename:</label>
                             <input type="search" class="form-control" name="" id="search_by_filename" placeholder="">
                           </div>
@@ -222,16 +248,14 @@
                               ?>
                             </select>
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-3 ml-auto">
                             <label for="">&nbsp;</label>
                             <button class="form-control active" onclick="load_data();">
                               <i class="fas fa-search"></i>&nbsp;
                               Search
                             </button>
                           </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-3 ml-auto">
+                          <div class="col-md-3 ">
                             <label for="">&nbsp;</label>
                             <button class="form-control btn-secondary btn_check" style="background-color: var(--gray);" onclick="location.reload();">
                               <i class="fas fa-sync-alt"></i>&nbsp;
@@ -239,6 +263,7 @@
                             </button>
                           </div>
                         </div>
+
                       </div>
                     </div>
                   </div>
@@ -247,10 +272,10 @@
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Status</th>
                           <th>Serial No.</th>
                           <th>Batch No.</th>
                           <th>Group No.</th>
+                          <!-- <th>Document</th> -->
                           <th>Training Group</th>
                           <th>Filename</th>
                           <th>Approved Date</th>

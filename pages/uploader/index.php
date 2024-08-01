@@ -19,7 +19,7 @@
                 $uploader_name = $_SESSION['name'];
 
                 $sql = "SELECT DISTINCT COUNT(checker_status) as total FROM t_training_record WHERE checker_status = 'Pending' AND uploader_name = :uploader_name";
-               
+
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
                 $stmt->execute();
@@ -81,7 +81,7 @@
                 $uploader_name = $_SESSION['name'];
 
                 $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Disapproved' OR approver_status = 'Disapproved' AND uploader_name = :uploader_name";
-              
+
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
                 $stmt->execute();
@@ -151,6 +151,12 @@
 
                         <div class="col-md-12">
                           <div class="row">
+                            <div class="col-md-3">
+                              <div class="col-md-12 mb-2">
+                                <label for="">Search by Filename:</label>
+                                <input type="search" id="search_by_filename" class="form-control">
+                              </div>
+                            </div>
                             <div class="col-md-3 mb-1 ml-auto">
                               <label for="">&nbsp;</label>
                               <button class="form-control" style="background-color: var(--danger); color: #fff;" onclick="load_data();">

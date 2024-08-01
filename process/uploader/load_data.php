@@ -8,6 +8,7 @@ if ($method == 'load_data') {
     $uploader_name = isset($_POST['uploader_name']) ? $_POST['uploader_name'] : '';
     $status = isset($_POST['status']) ? $_POST['status'] : '';
     $search = isset($_POST['search']) ? $_POST['search'] : '';
+    $search_by_filename = isset($_POST['search_by_filename']) ? $_POST['search_by_filename'] : '';
     $date_from = isset($_POST['date_from']) ? $_POST['date_from'] : '';
     $date_to = isset($_POST['date_to']) ? $_POST['date_to'] : '';
 
@@ -19,7 +20,7 @@ if ($method == 'load_data') {
                 a.*, 
                 b.main_doc, 
                 b.sub_doc, 
-                b.file_name,
+                b.file_name AS file_name,
                 b.updated_file AS updated_file,
                 b.uploader_updated_file AS uploader_updated_file,
                 CASE 
@@ -79,6 +80,13 @@ if ($method == 'load_data') {
         $conditions[] = "a.batch_no = :search OR a.group_no = :search OR a.serial_no = :search OR a.training_group = :search OR a.checker_name = :search OR a.approver_name = :search";
     }
 
+    if(!empty($search_by_filename)){
+        $conditions[] = "file_name = :search_by_filename";
+    }
+    if(!empty($search_by_filename) && !empty($search)){
+        $conditions[] = "file_name = :search_by_filename AND a.training_group = :search";
+    }
+
     if (!empty($conditions)) {
         $sql .= " AND " . implode(" AND ", $conditions);
     }
@@ -100,6 +108,15 @@ if ($method == 'load_data') {
     }
 
     if (!empty($search)) {
+        $stmt->bindParam(':search', $search, PDO::PARAM_STR);
+    }
+    
+    if (!empty($search_by_filename)) {
+        $stmt->bindParam(':search_by_filename', $search_by_filename, PDO::PARAM_STR);
+    }
+
+    if (!empty($search_by_filename) && !empty($search)) {
+        $stmt->bindParam(':search_by_filename', $search_by_filename, PDO::PARAM_STR);
         $stmt->bindParam(':search', $search, PDO::PARAM_STR);
     }
 

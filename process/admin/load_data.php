@@ -9,6 +9,7 @@ if($method == 'load_data'){
     $groupNo = $_POST['groupNo'];
     $trainingGroup = $_POST['trainingGroup'];
     $fileName = $_POST['fileName'];
+    $docs = $_POST['docs'];
     $month = $_POST['month'];
     $year = $_POST['year'];
 
@@ -29,15 +30,9 @@ if($method == 'load_data'){
     if (!empty($fileName)) {
         $sql .= " AND b.file_name LIKE :search_by_filename";
     }
-    // if (!empty($month)) {
-    //     $sql .= " AND approved_date = :month";
-    // }
-    // if (!empty($year)) {
-    //     $sql .= " AND approved_date = :year";
-    // }
-    // if (!empty($month) && !empty($year)) {
-    //     $sql .= " AND approved_date BETWEEN :month AND :year";
-    // }
+    if (!empty($docs)) {
+        $sql .= " AND b.main_doc LIKE :search_by_docs";
+    }
 
     if (!empty($month) && !empty($year)) {
         // If both month and year are provided
@@ -74,18 +69,16 @@ if($method == 'load_data'){
         $fileName = "$fileName%";
         $stmt->bindParam(':search_by_filename', $fileName, PDO::PARAM_STR);
     }
+    if (!empty($docs)) {
+        $docs = "%$docs%";
+        $stmt->bindParam(':search_by_docs', $docs, PDO::PARAM_STR);
+    }
     if (!empty($month)) {
         $stmt->bindParam(':month', $month, PDO::PARAM_INT);
     }
     if (!empty($year)) {
         $stmt->bindParam(':year', $year, PDO::PARAM_INT);
     }
-    // if (!empty($month)) {
-    //     $stmt->bindParam(':month', $month, PDO::PARAM_STR);
-    // }
-    // if (!empty($year)) {
-    //     $stmt->bindParam(':year', $year, PDO::PARAM_STR);
-    // }
     if (!empty($month) && !empty($year)) {
         $stmt->bindParam(':month', $month, PDO::PARAM_INT);
         $stmt->bindParam(':year', $year, PDO::PARAM_INT);
@@ -105,10 +98,10 @@ if($method == 'load_data'){
             $c++;
             echo '<tr >';
             echo '<td>' . $c . '</td>';
-            echo '<td>' . strtoupper($k['approver_status']) . '</td>';
             echo '<td>' . $k['serial_no'] . '</td>';
             echo '<td>' . $k['batch_no'] . '</td>';
             echo '<td>' . $k['group_no'] . '</td>';
+            // echo '<td>' . strtoupper($k['main_doc']) . '</td>';
             echo '<td>' . $k['training_group'] . '</td>';
             echo '<td title="'.$k['file_name'].'">' . (strlen($k['file_name']) > 50 ? substr($k['file_name'], 0, 50) . '...' : $k['file_name']) . '</td>';
             echo '<td>' . date('Y/m/d' , strtotime($k['approved_date'])) . '</td>';

@@ -1,8 +1,8 @@
 <footer class="main-footer text-sm">
-    Developed by: <em>Khennethlp</em>
-    <div class="float-right d-none d-sm-inline-block">
-      <strong>Copyright &copy;
-        <script>   
+  Developed by: <em>Khennethlp</em>
+  <div class="float-right d-none d-sm-inline-block">
+    <strong>Copyright &copy;
+      <script>   
         var currentYear = new Date().getFullYear();
         if (currentYear !== 2024) {
           document.write("2024 - " + currentYear);
@@ -10,7 +10,8 @@
           document.write(currentYear);
         };</script>. 
         </strong>
-      All rights reserved.
+        All rights reserved.
+        <a href="#" data-target="#problem" data-toggle="modal">Report a problem</a>
     </div>
   </footer>
 <?php
@@ -19,6 +20,7 @@ include '../../modals/logout_modal.php';
 include '../../modals/upload_modal.php';
 include '../../modals/upload_data.php';
 include '../../modals/update_uploads.php';
+include '../../modals/problem_modal.php';
 ?>
 
 <!-- <script src="plugins/js/custom.js"></script> -->

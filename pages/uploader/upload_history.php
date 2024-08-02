@@ -89,17 +89,25 @@
                       </div>
                     </div>
                   </div>
-             
+
                   <div class="card-body table-responsive p-0" style="height: 600px;">
+                    <div class="row mb-2" id="t_t1_breadcrumb">
+                      <div class="col-12">
+                        <ol class="breadcrumb bg-dark mb-0">
+                          <li class="breadcrumb-item"><a href="#" onclick="revisions2();">Back</a></li>
+                          <li class="breadcrumb-item" id="lbl_c1"></li>
+                        </ol>
+                      </div>
+                    </div>
                     <table class="table table-head-fixed text-nowrap table-hover text-center" id="table">
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Serial No.</th>
-                          <th>Filename</th>
-                          <th>By</th>
                           <th>Revision Count</th>
-                          <th>Revised Date</th>
+                          <th>Serial No.</th>
+                          <th>Batch No</th>
+                          <th>Group No</th>
+                          <!-- <th>Revised Date</th> -->
                         </tr>
                       </thead>
                       <tbody id="upload_history_table"> </tbody>

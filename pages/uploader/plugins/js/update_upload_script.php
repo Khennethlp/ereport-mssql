@@ -1,6 +1,7 @@
 <script>
     const updateUpload = () => {
         var update_id = document.getElementById('update_id').value;
+        var update_uploader_id = document.getElementById('update_uploader_id').value;
         // var update_serialNo = document.getElementById('series_no_label').text().trim();
         var update_serialNo = $('#series_no_label').text().trim();
         var fileInput = $('#attachment')[0];
@@ -11,6 +12,7 @@
         formData.append("method", "update_file_upload");
         formData.append("update_serialNo", update_serialNo);
         formData.append("update_id", update_id);
+        formData.append("update_uploader_id", update_uploader_id);
         formData.append("updated_status", updated_status);
 
         // Only append the file if it's provided

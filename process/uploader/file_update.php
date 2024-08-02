@@ -5,6 +5,7 @@ $response = ''; // Initialize an empty response variable
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['method'] == 'update_file_upload') {
     $id = $_POST['update_id'];
+    $emp_id = $_POST['update_uploader_id'];
     $serial_no = $_POST['update_serialNo'];
     $status = $_POST['updated_status'];
     $approver_status = '';
@@ -20,6 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
     }
 
     try {
+        $acc_sql = "SELECT emp_id, fullname FROM m_accounts WHERE emp_id = :emp_id";
+        $acc_stmt = $conn->prepare($acc_sql);
+        $acc_stmt->bindParam(':emp_id', $emp_id, PDO::PARAM_STR);
+        $acc_stmt->execute();
+        $account = $acc_stmt->fetch(PDO::FETCH_ASSOC);
+        $revised_by = $account['fullname'];
+
         // Fetch the current file name from the database
         $sql_fetch_file = "SELECT * FROM t_upload_file WHERE serial_no = :serial_no AND id = :id";
         $stmt_fetch_file = $conn->prepare($sql_fetch_file);
@@ -27,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
         $stmt_fetch_file->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt_fetch_file->execute();
         $file_info = $stmt_fetch_file->fetch(PDO::FETCH_ASSOC);
-        
+
         if ($file_info) {
             $main_doc = $file_info['main_doc'];
             $sub_doc = $file_info['sub_doc'];
@@ -62,6 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
                 $stmt_training_record->bindParam(':id', $id, PDO::PARAM_INT);
                 $stmt_training_record->execute();
 
+                $sql_file_revision = "INSERT INTO file_revisions (serial_no, revised_by) VALUES (:serial_no, :revised_by)";
+                $stmt_file_revision = $conn->prepare($sql_file_revision);
+                $stmt_file_revision->bindParam(':serial_no', $serial_no, PDO::PARAM_STR);
+                $stmt_file_revision->bindParam(':revised_by', $revised_by, PDO::PARAM_STR);
+                $stmt_file_revision->execute();
+
                 echo 'success';
             } else {
                 echo 'error';
@@ -75,4 +89,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
 } else {
     echo 'Invalid request method or missing parameters.';
 }
-?>

@@ -16,7 +16,6 @@
               $checker_id = $_SESSION['emp_id'];
 
               $sql = "SELECT DISTINCT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Pending' AND checker_id = :checker_id";
-              // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'pending' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
               $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
               $stmt->bindParam(':checker_id', $checker_id, PDO::PARAM_STR);
               $stmt->execute();
@@ -47,8 +46,6 @@
               require '../../process/conn.php';
               $checker_id = $_SESSION['emp_id'];
 
-              // $sql = "SELECT COUNT(serial_no) as total FROM t_training_record WHERE checker_status = 'Approved' AND uploader_name = :uploader_name";
-              // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'approved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
               $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE approver_status = 'Approved' AND checker_id = :checker_id";
               $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
               $stmt->bindParam(':checker_id', $checker_id, PDO::PARAM_STR);
@@ -82,7 +79,6 @@
               $checker_id = $_SESSION['emp_id'];
 
               $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Disapproved' AND approver_status = '' AND checker_id = :checker_id";
-              // $sql = "SELECT COUNT(*) as total FROM ( SELECT a.serial_no FROM t_training_record a RIGHT JOIN (SELECT serial_no, main_doc, sub_doc, file_name FROM t_upload_file) b ON a.serial_no = b.serial_no WHERE a.checker_status = 'disapproved' AND a.uploader_name = :uploader_name GROUP BY a.serial_no ) as grouped_records";
               $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
               $stmt->bindParam(':checker_id', $checker_id, PDO::PARAM_STR);
               $stmt->execute();

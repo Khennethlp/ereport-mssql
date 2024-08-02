@@ -34,6 +34,18 @@
               </p>
               </a>
         </li>
+        <li class="nav-item">
+          <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/uploader/upload_history.php") { ?>
+            <a href="upload_history.php" class="nav-link active">
+            <?php } else { ?>
+              <a href="upload_history.php" class="nav-link">
+              <?php } ?>
+              <i class="nav-icon fa fa-upload"></i>
+              <p>
+                UPLOAD HISTORY
+              </p>
+              </a>
+        </li>
 
         <?php include 'logout.php'; ?>
       </ul>

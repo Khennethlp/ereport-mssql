@@ -18,7 +18,14 @@
                 require '../../process/conn.php';
                 $uploader_name = $_SESSION['name'];
 
-                $sql = "SELECT DISTINCT COUNT(checker_status) as total FROM t_training_record WHERE checker_status = 'Pending' AND uploader_name = :uploader_name";
+                $sql = "SELECT COUNT(checker_status) as total FROM t_training_record 
+                WHERE 
+                CASE 
+                  WHEN checker_status = 'Pending' THEN TRUE
+                  WHEN checker_status = '' AND approver_status = 'Pending' THEN TRUE
+                  WHEN checker_status = 'Approved' AND approver_status = 'Pending' THEN TRUE
+                ELSE FALSE
+                END AND uploader_name = :uploader_name";
 
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
@@ -49,7 +56,12 @@
                 require '../../process/conn.php';
                 $uploader_name = $_SESSION['name'];
 
-                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE (checker_status = 'Approved' OR checker_status = '')  AND approver_status = 'Approved' AND uploader_name = :uploader_name";
+                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE
+                CASE 
+                  WHEN checker_status = 'Approved' AND checker_status = '' THEN TRUE
+                  WHEN approver_status = 'Approved' THEN TRUE
+                 ELSE FALSE
+                 END AND uploader_name = :uploader_name";
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
                 $stmt->execute();
@@ -80,7 +92,12 @@
                 require '../../process/conn.php';
                 $uploader_name = $_SESSION['name'];
 
-                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Disapproved' OR approver_status = 'Disapproved' AND uploader_name = :uploader_name";
+                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE 
+                  CASE
+                    WHEN checker_status = 'Disapproved' THEN TRUE
+                    WHEN approver_status = 'Disapproved' THEN TRUE
+                  ELSE FALSE
+                  END AND uploader_name = :uploader_name";
 
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
@@ -193,7 +210,7 @@
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Status</th> <!--Checker Status-->
+                          <th>Status</th> <!--Global Status-->
                           <th>Serial No.</th>
                           <th>Batch No.</th>
                           <th>Group No</th>

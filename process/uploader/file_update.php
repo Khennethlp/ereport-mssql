@@ -6,8 +6,10 @@ $response = ''; // Initialize an empty response variable
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['method'] == 'update_file_upload') {
     $id = $_POST['update_id'];
     $emp_id = $_POST['update_uploader_id'];
+    $training_group = $_POST['update_training_group'];
     $serial_no = $_POST['update_serialNo'];
-    $status = $_POST['updated_status'];
+    $approved_by = $_POST['approved_by'];
+    $check_by = $_POST['check_by'];
     $approver_status = '';
     $file = $_FILES['file_attached']['name'];
     $tmp_name = $_FILES['file_attached']['tmp_name'];
@@ -62,11 +64,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
                 $stmt_upload_file->execute();
 
                 // Update t_training_record
-                $sql_training_record = "UPDATE t_training_record SET update_upload_date = NOW(), checker_status = :status, checker_name = '', checked_date = '', checker_comment = '', approver_id = '', approver_name = '', approver_email = '', approved_date = '', approver_status = :approver_status, approver_comment = '' WHERE serial_no = :serial_no AND id = :id";
+                // $sql_training_record = "UPDATE t_training_record SET update_upload_date = NOW(), checker_status = :status, checker_name = '', checked_date = '', checker_comment = '', approver_id = '', approver_name = '', approver_email = '', approved_date = '', approver_status = :approver_status, approver_comment = '' WHERE serial_no = :serial_no AND id = :id";
+                // $stmt_training_record = $conn->prepare($sql_training_record);
+                // $stmt_training_record->bindParam(':status', $status, PDO::PARAM_STR);
+                // $stmt_training_record->bindParam(':approver_status', $approver_status, PDO::PARAM_STR);
+                // $stmt_training_record->bindParam(':serial_no', $serial_no, PDO::PARAM_STR);
+                // $stmt_training_record->bindParam(':id', $id, PDO::PARAM_INT);
+                // $stmt_training_record->execute();
+
+                // $sql_training_record = "UPDATE t_training_record SET update_upload_date = NOW(), checker_status = :status, checker_id = :user_id, checker_name = '', checked_date = '', checker_comment = '', approver_id = :user_id, approver_name = '', approver_email = '', approved_date = '', approver_status = :status, approver_comment = '' WHERE serial_no = :serial_no AND id = :id";
+                if ($training_group == 'MNTT' || $training_group == 'SEP') {
+                    $status = 'Pending';
+                    $user_id = $approved_by; // approver_id
+                    $column = "approver_status";
+                    $column_id = "approver_id";
+                } else {
+                    $status = 'Pending';
+                    $user_id = $check_by; // checker_id
+                    $column = "checker_status";
+                    $column_id = "checker_id";
+                }
+
+                $sql_training_record = "UPDATE t_training_record SET update_upload_date = NOW(), $column = :status, $column_id = :user_id, checker_name = '', checked_date = '', checker_comment = '', approver_name = '', approver_email = '', approved_date = '', approver_comment = '' WHERE serial_no = :serial_no AND id = :id";
+
                 $stmt_training_record = $conn->prepare($sql_training_record);
                 $stmt_training_record->bindParam(':status', $status, PDO::PARAM_STR);
-                $stmt_training_record->bindParam(':approver_status', $approver_status, PDO::PARAM_STR);
                 $stmt_training_record->bindParam(':serial_no', $serial_no, PDO::PARAM_STR);
+                $stmt_training_record->bindParam(':user_id', $user_id, PDO::PARAM_STR);
                 $stmt_training_record->bindParam(':id', $id, PDO::PARAM_INT);
                 $stmt_training_record->execute();
 

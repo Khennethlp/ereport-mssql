@@ -131,6 +131,7 @@ if ($method == 'load_data') {
             $checked_date = !empty($k['checked_date']) ? date('Y/m/d', strtotime($k['checked_date'])) : '';
             $approved_date = !empty($k['approved_date']) ? date('Y/m/d', strtotime($k['approved_date'])) : '';
             $uploader_id = $k['uploader_id'];
+            $tgroup = $k['training_group'];
             $serial_no = $k['serial_no'];
             $id = $k['id'];
 
@@ -183,7 +184,7 @@ if ($method == 'load_data') {
 
                 if ($file_path) {
                     // $data .= '<td style="cursor: pointer; color: #ffffff;"><a class="text-warning" href="' . $file_path . '" download>' . $filename . '</a></td>';
-                    $data .= '<td><a class="text-warning" href="../../pages/uploader/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . $file_path . '&uploader=' . $uploader_id . '" target="_blank">' . $filename . '</a></td>';
+                    $data .= '<td><a class="text-warning" href="../../pages/uploader/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&training_group='.$tgroup.'&file_path=' . $file_path . '&uploader=' . $uploader_id . '" target="_blank">' . $filename . '</a></td>';
                 } else {
                     $data .= '<td>File not found</td>';
                 }

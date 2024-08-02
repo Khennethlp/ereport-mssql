@@ -4,6 +4,7 @@ $file_path = $_GET['file_path'];
 $uploader = $_GET['uploader'];
 $serial_no = $_GET['serial_no'] . '<br>';
 $id = $_GET['id'];
+$tgroup = $_GET['training_group'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -99,6 +100,7 @@ $id = $_GET['id'];
     .fileDropArea {
         position: relative;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         width: 100%;
@@ -131,6 +133,11 @@ $id = $_GET['id'];
         color: #999;
     }
 
+    #files-area {
+        margin-top: 15px;
+        width: 100%;
+        text-align: center;
+    }
 
     .file-block {
         border-radius: 10px;
@@ -138,12 +145,12 @@ $id = $_GET['id'];
         margin: 5px;
         color: initial;
         display: inline-flex;
+    }
 
-        &>span.name {
-            padding-right: 10px;
-            width: max-content;
-            display: inline-flex;
-        }
+    .file-block>span.name {
+        padding-right: 10px;
+        width: max-content;
+        display: inline-flex;
     }
 
     .file-delete {
@@ -155,29 +162,15 @@ $id = $_GET['id'];
         justify-content: center;
         margin-right: 3px;
         cursor: pointer;
-
-        &:hover {
-            background-color: rgba(144, 163, 203, 0.2);
-            border-radius: 10px;
-        }
-
-        &>span {
-            transform: rotate(45deg);
-        }
     }
 
-    #file_list_tray {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        margin-top: 10%;
-        padding: 10%;
-        text-align: center;
+    .file-delete:hover {
+        background-color: rgba(144, 163, 203, 0.2);
+        border-radius: 10px;
     }
 
-    #files-area {
-        margin-left: 50px;
+    .file-delete>span {
+        transform: rotate(45deg);
     }
 </style>
 
@@ -219,7 +212,6 @@ $id = $_GET['id'];
                                 // }
                                 if (!empty($row['sub_doc'])) {
                                     $file_path .= $row['sub_doc'] . '/';
-                                  
                                 }
 
                                 $file_path .= !empty($row['updated_file']) ? $row['updated_file'] : $row['file_name'];
@@ -232,7 +224,7 @@ $id = $_GET['id'];
                                         $file_path = $file_path . $row['file_name'];
                                     }
                                 }
-                            
+
                                 // Check if the file exists
                                 if (file_exists($file_path)) {
                         ?>
@@ -264,9 +256,9 @@ $id = $_GET['id'];
                         <div class="row">
 
                             <div class="">
-                            
                                 <input type="hidden" id="update_id" value="<?php echo $id; ?>">
                                 <input type="hidden" id="update_uploader_id" value="<?php echo $uploader; ?>">
+                                <input type="hidden" id="update_training_group" value="<?php echo $tgroup; ?>">
                                 <label for="series_no_label" class="d-inline-block mb-0 text-lg">Serial no:&nbsp;&nbsp;</label>
                                 <p id="series_no_label" class="d-inline-block mb-0 text-lg"><?php echo $serial_no; ?></p>
                                 <label for="series_no_label" class="d-inline-block mb-0z text-lg">
@@ -274,44 +266,91 @@ $id = $_GET['id'];
                         </div>
                         <hr>
                         <div class="row">
-                            <div class="col-md-12" id="update_upload_container">
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <label for="attachment">Upload Updated File:</label>
-                                        <!-- <input type="file" id="files" class="form-control" style="height: 112px;"> -->
-                                        <p class=" text-center">
-                                        <div class="form-group fileDropArea" id="fileDropArea">
+                            <div class="col-md-12 mb-3" id="checker_container">
+                                <label for="">Check by:</label>
+                                <Select class="form-control" id="check_by">
+                                    <option value="">---Choose Checker---</option>
+                                    <?php
+                                    require '../../process/conn.php';
+
+                                    $sql = "SELECT emp_id, fullname FROM m_accounts WHERE role = 'checker'";
+                                    $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                                    $stmt->execute();
+
+                                    if ($stmt->rowCount() > 0) {
+                                        // Output data of each row
+                                        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                        // Output data of each row
+                                        foreach ($rows as $row) {
+
+                                            echo '<option value="' . $row["emp_id"] . '">' . $row["fullname"] . '</option>';
+                                        }
+                                    } else {
+                                        echo '<option value="">No data available</option>';
+                                    }
+                                    ?>
+
+                                </Select>
+                            </div>
+                            <div class="col-md-12 mb-3" id="approver_container">
+                                <label for="">Approve by:</label>
+                                <Select class="form-control" id="approved_by">
+                                    <option value="">---Choose Approver---</option>
+                                    <?php
+                                    require '../../process/conn.php';
+
+                                    $sql = "SELECT emp_id, fullname FROM m_accounts WHERE role = 'approver'";
+                                    $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                                    $stmt->execute();
+
+                                    if ($stmt->rowCount() > 0) {
+                                        // Output data of each row
+                                        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                        // Output data of each row
+                                        foreach ($rows as $row) {
+
+                                            echo '<option value="' . $row["emp_id"] . '">' . $row["fullname"] . '</option>';
+                                        }
+                                    } else {
+                                        echo '<option value="">No data available</option>';
+                                    }
+                                    ?>
+
+                                </Select>
+                            </div>
+                            <label for="attachment">Upload Updated File:</label>
+                            <!-- <div class="row"> -->
+                            <div class="col-md-12">
+                                <input type="file" class="form-control p-1" id="attachment" name="file[]">
+                                <div class="col-md-12" id="update_upload_container">
+                                    <!-- <div class="form-group fileDropArea" id="fileDropArea">
                                             <input type="file" class="custom-file-input" id="attachment" name="file[]">
                                             <p>Click or Drop file here</p>
-                                        </div>
-                                        </p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div id="file_list_tray">
-                                            <p id="files-area">
+                                            <div id="files-area">
                                                 <span id="filesList">
                                                     <span id="files-names"></span>
                                                 </span>
-                                            </p>
-                                        </div>
-                                    </div>
+                                            </div>
+                                        </div> -->
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-md-12 mt-2">
-                                <hr>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <button class="form-control btn_submit mb-2" id="submit_upload_btn" onclick="updateUpload();">
-                                            <i class="fas fa-paper-plane"></i>&nbsp;
-                                            Submit</button>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <button class="form-control btn_close" onclick="window.close(); history.back();">
-                                            <i class="fas fa-sign-out-alt "></i>
-                                            Close
-                                        </button>
-                                    </div>
+                        <div class="col-md-12 mt-2">
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button class="form-control btn_submit mb-2" id="submit_upload_btn" onclick="updateUpload();">
+                                        <i class="fas fa-paper-plane"></i>&nbsp;
+                                        Submit</button>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="form-control btn_close" onclick="window.close(); history.back();">
+                                        <i class="fas fa-sign-out-alt "></i>
+                                        Close
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -319,6 +358,7 @@ $id = $_GET['id'];
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <!-- jQuery -->
     <script src="../../plugins/jquery/dist/jquery.min.js"></script>
@@ -343,51 +383,51 @@ $id = $_GET['id'];
         //    // initializeFileInput("#files", "#filesList > #files-names");
         // });
 
-        const dt = new DataTransfer(); // Allows manipulation of the files of the input file
+        // const dt = new DataTransfer(); // Allows manipulation of the files of the input file
 
-        $("#attachment").on('change', function(e) {
-            // Clear the DataTransfer object and the displayed file list
-            dt.clearData();
-            $("#filesList > #files-names").empty();
+        // $("#attachment").on('change', function(e) {
+        //     // Clear the DataTransfer object and the displayed file list
+        //     dt.clearData();
+        //     $("#filesList > #files-names").empty();
 
-            // Ensure only one file is handled
-            if (this.files.length > 0) {
-                let fileBloc = $('<span/>', {
-                        class: 'file-block'
-                    }),
-                    fileName = $('<span/>', {
-                        class: 'name',
-                        text: this.files.item(0).name
-                    });
+        //     // Ensure only one file is handled
+        //     if (this.files.length > 0) {
+        //         let fileBloc = $('<span/>', {
+        //                 class: 'file-block'
+        //             }),
+        //             fileName = $('<span/>', {
+        //                 class: 'name',
+        //                 text: this.files.item(0).name
+        //             });
 
-                fileBloc.append('<span class="file-delete"><span>+</span></span>')
-                    .append(fileName);
-                $("#filesList > #files-names").append(fileBloc);
+        //         // fileBloc.append('<span class="file-delete"><span>+</span></span>')
+        //             // .append(fileName);
+        //         $("#filesList > #files-names").append(fileName);
 
-                // Add the single file to the DataTransfer object
-                dt.items.add(this.files[0]);
+        //         // Add the single file to the DataTransfer object
+        //         dt.items.add(this.files[0]);
 
-                // Update the input file with the new DataTransfer files
-                this.files = dt.files;
+        //         // Update the input file with the new DataTransfer files
+        //         this.files = dt.files;
 
-                // EventListener for the delete button created
-                $('span.file-delete').click(function() {
-                    let name = $(this).next('span.name').text();
-                    // Supprimer l'affichage du nom de fichier
-                    $(this).parent().remove();
-                    for (let i = 0; i < dt.items.length; i++) {
-                        // Correspondance du fichier et du nom
-                        if (name === dt.items[i].getAsFile().name) {
-                            // Suppression du fichier dans l'objet DataTransfer
-                            dt.items.remove(i);
-                            continue;
-                        }
-                    }
-                    // Mise à jour des fichiers de l'input file après suppression
-                    document.getElementById('attachment').files = dt.files;
-                });
-            }
-        });
+
+        //         $('span.file-delete').click(function() {
+        //             let name = $(this).next('span.name').text();
+
+        //             $(this).parent().remove();
+        //             // for (let i = 0; i < dt.items.length; i++) {
+
+        //             //     if (name === dt.items[i].getAsFile().name) {
+
+        //             //         dt.items.remove(i);
+        //             //         continue;
+        //             //     }
+        //             // }
+
+        //             document.getElementById('attachment').files = dt.files;
+        //         });
+        //     }
+        // });
     </script>
 
 

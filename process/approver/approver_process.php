@@ -89,6 +89,12 @@ if ($method == 'update_approved_uploader') {
                     $stmt->bindParam(':approver_name', $approver_name);
                     $stmt->execute();
 
+                    $sql_file_revision = "INSERT INTO file_revisions (serial_no, revised_by) VALUES (:serial_no, :revised_by)";
+                    $stmt_file_revision = $conn->prepare($sql_file_revision);
+                    $stmt_file_revision->bindParam(':serial_no', $serial_no, PDO::PARAM_STR);
+                    $stmt_file_revision->bindParam(':revised_by', $approver_name, PDO::PARAM_STR);
+                    $stmt_file_revision->execute();
+
                     echo 'success';
                 } else {
                     echo 'error';

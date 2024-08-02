@@ -82,6 +82,12 @@ if ($method == 'update_check_uploader') {
                     $stmt_training_record->bindParam(':approver_status', $approver_status);
                     $stmt_training_record->execute();
 
+                    $sql_file_revision = "INSERT INTO file_revisions (serial_no, revised_by) VALUES (:serial_no, :revised_by)";
+                    $stmt_file_revision = $conn->prepare($sql_file_revision);
+                    $stmt_file_revision->bindParam(':serial_no', $serial_no, PDO::PARAM_STR);
+                    $stmt_file_revision->bindParam(':revised_by', $checker_name, PDO::PARAM_STR);
+                    $stmt_file_revision->execute();
+
                     echo 'success';
                 } else {
                     echo 'error'; // Error moving the uploaded file

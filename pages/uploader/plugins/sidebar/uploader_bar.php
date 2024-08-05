@@ -40,7 +40,7 @@
             <?php } else { ?>
               <a href="upload_history.php" class="nav-link">
               <?php } ?>
-              <i class="nav-icon fa fa-upload"></i>
+              <i class="nav-icon fa fa-history"></i>
               <p>
                 UPLOAD HISTORY
               </p>

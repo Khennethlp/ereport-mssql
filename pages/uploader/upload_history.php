@@ -90,23 +90,24 @@
                     </div>
                   </div>
 
-                  <div class="card-body table-responsive p-0" style="height: 600px;">
+                  <div class="card table-responsive p-0" style="height: 600px;">
+                    <div class="card-body">
                     <div class="row mb-2" id="t_t1_breadcrumb">
                       <div class="col-12">
-                        <ol class="breadcrumb bg-dark mb-0">
+                        <ol class="breadcrumb bg-light mb-0">
                           <li class="breadcrumb-item"><a href="#" onclick="revisions2();">Back</a></li>
                           <li class="breadcrumb-item" id="lbl_c1"></li>
                         </ol>
                       </div>
                     </div>
-                    <table class="table table-head-fixed text-nowrap table-hover text-center" id="table">
+                    <table class="table table-head-fixed text-nowrap table-hover table-striped text-center" id="table">
                       <thead>
                         <tr>
                           <th>#</th>
                           <th>Revision Count</th>
                           <th>Serial No.</th>
-                          <th>Batch No</th>
-                          <th>Group No</th>
+                          <th>Batch No.</th>
+                          <th>Group No.</th>
                           <!-- <th>Revised Date</th> -->
                         </tr>
                       </thead>
@@ -115,6 +116,7 @@
                     <div id="history_load_more" class="text-center" style="display: none;">
                       <p class="badge badge-dark border border-outline p-2 mt-3 " style="cursor: pointer;">Load More...</p>
                     </div>
+                  </div>
                   </div>
                 </div>
               </div>

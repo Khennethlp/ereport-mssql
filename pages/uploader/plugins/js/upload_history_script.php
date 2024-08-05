@@ -1,14 +1,7 @@
 <script>
-    // $(document).ready(function () {
-    //     revisions();
-    // });
     document.addEventListener("DOMContentLoaded", function(){
         revisions();
     });
-
-    // document.getElementById('goBack').addEventListener("click", () =>{
-    //     revisions();
-    // })
 
     const revisions = () => {
         $.ajax({

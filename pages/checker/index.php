@@ -76,9 +76,9 @@
             <div class="inner">
               <?php
               require '../../process/conn.php';
-              $checker_id = $_SESSION['emp_id'];
+               $checker_id = $_SESSION['emp_id'];
 
-              $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Disapproved' AND approver_status = '' AND checker_id = :checker_id";
+              $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Disapproved' AND checker_id = :checker_id";
               $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
               $stmt->bindParam(':checker_id', $checker_id, PDO::PARAM_STR);
               $stmt->execute();

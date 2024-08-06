@@ -1,7 +1,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        initializeFileInput("#files", "#filesList > #files-names");
+
         load_data();
 
         // change to approver if selected training group is either MNTT or SEP
@@ -23,62 +23,6 @@
         document.getElementById('training_group').addEventListener('change', checkTrainingGroup);
     });
 
-    //File Selection and Displaying
-    const dt = new DataTransfer();
-
-    function initializeFileInput(selector, fileListSelector) {
-        $(selector).on('change', function(e) {
-            handleFileSelection(this, dt, fileListSelector);
-        });
-    }
-
-    function handleFileSelection(inputElement, dt, fileListSelector) {
-        for (var i = 0; i < inputElement.files.length; i++) {
-            let fileBloc = $('<span/>', {
-                    class: 'file-block'
-                }),
-                fileName = $('<span/>', {
-                    class: 'name',
-                    text: inputElement.files.item(i).name
-                });
-            fileBloc.append('<span class="file-delete" title="remove"><span><i class="fas fa-times"></i></span></span>')
-                .append(fileName);
-            $(fileListSelector).append(fileBloc);
-        };
-
-        for (let file of inputElement.files) {
-            dt.items.add(file);
-        }
-
-        inputElement.files = dt.files;
-        attachDeleteEvent(fileListSelector, dt);
-    }
-
-    function attachDeleteEvent(fileListSelector, dt) {
-        $('span.file-delete').off('click').on('click', function() {
-            let name = $(this).next('span.name').text();
-
-            $(this).parent().remove();
-            for (let i = 0; i < dt.items.length; i++) {
-                if (name === dt.items[i].getAsFile().name) {
-                    dt.items.remove(i);
-                    break;
-                }
-            }
-            document.getElementById('files').files = dt.files;
-        });
-    }
-
-    function deleteAllFiles(dt, fileListSelector) {
-        $(fileListSelector).empty(); // Clear the file list from the DOM
-        dt.items.clear(); // Clear the DataTransfer object
-        document.getElementById('files').files = dt.files; // Update the file input
-    }
-
-    const del = () => {
-        deleteAllFiles(dt, "#filesList > #files-names");
-
-    }
 
     const refresh = () => {
         $('#search_date').val('');
@@ -89,7 +33,7 @@
     const clear_btn = () => {
         $('#main_doc').val('');
         $('#sub_doc').val('');
-        $('#fileDropArea p').text('Click or Drop file here');
+        $('#fileName').text('Click or Drop file here.');
         $('#approval_by').val('');
         $('#batch_no').val('');
         $('#training_group').val('');

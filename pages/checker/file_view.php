@@ -63,7 +63,7 @@ $id = $_GET['id'];
     #iframe-container {
         /* position: relative; */
         width: 100%;
-        height: 633px;
+        height: 500px;
     }
 
     iframe {
@@ -180,62 +180,68 @@ $id = $_GET['id'];
         margin-left: 70px;
     }
 </style>
+<?php
+require '../../process/conn.php';
 
-<body>
+$serial_no = $_GET['serial_no'];
+$id = $_GET['id'];
+
+$sql = "SELECT * FROM t_upload_file WHERE serial_no = :serial_no AND id = :id";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(":serial_no", $serial_no);
+$stmt->bindParam(":id", $id);
+$stmt->execute();
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if ($rows) {
+    foreach ($rows as $row) {
+        // Constructing the file path
+        $file_path = '../../../uploads/ereport/' . $row['serial_no'] . '/';
+        $file_path .= $row['main_doc'] . '/';
+        if (!empty($row['sub_doc'])) {
+            $file_path .= $row['sub_doc'] . '/';
+        }
+        $file_path .= $row['file_name'];
+    }
+}
+
+$file_extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
+?>
+
+<body onload="handleNonPdfFiles('<?php echo htmlspecialchars($file_path); ?>', '<?php echo $file_extension; ?>')">
     <div class="row">
         <div class="col-md-6">
             <div class="card m-3">
                 <div class="card-body">
                     <div class="row">
-                        <button id="fullscreen-btn" style="width: 40%;" class="mx-2 mb-1" onclick="toggleFullscreen()">Fullscreen</button>
-                        <!-- <button id="btn_download" class="">Download</button> -->
-                        <!-- <a class="btn_download w-50 ml-auto" href="<?php urlencode($file_path) ?>" download>Download</a> -->
+                        <?php if ($file_path && $file_extension == 'pdf') : ?>
+                            <button id="fullscreen-btn" style="width: 40%;" class="mx-2 mb-1" onclick="toggleFullscreen()"><i class="fas fa-expand"></i>&nbsp; Fullscreen</button>
+                        <?php endif; ?>
                         <?php
-                        require '../../process/conn.php';
 
-                        // Assuming you've sanitized and validated these inputs to prevent SQL injection
-                        $serial_no = $_GET['serial_no'];
-                        $id = $_GET['id'];
-
-                        // Fetch the file details from the database
-                        $sql = "SELECT * FROM t_upload_file WHERE serial_no = :serial_no AND id = :id";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bindParam(":serial_no", $serial_no);
-                        $stmt->bindParam(":id", $id);
-                        $stmt->execute();
-                        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                        // $result = $stmt->rowCount();
-
-                        if ($rows) {
-                            foreach ($rows as $row) {
-                                // Constructing the file path
-                                $file_path = '../../../uploads/ereport/' . $row['serial_no'] . '/';
-                                $file_path .= $row['main_doc'] . '/';
-                                if (!empty($row['sub_doc'])) {
-                                    $file_path .= $row['sub_doc'] . '/';
-                                }
-                                $file_path .= $row['file_name'];
-
-                                // Check if the file exists
-                                if (file_exists($file_path)) {
+                        if (file_exists($file_path)) {
                         ?>
-                                    <a class="btn_download mx-2 mb-1 ml-auto" href="<?php echo $file_path; ?>" download>Download</a>
-                                    <!-- <button id="btn_download" style="width: 40%;" class="mx-2 mb-1 ml-auto" href="<?php echo $file_path; ?>" download>Download</button> -->
+                            <a class="btn_download mx-2 mb-1 ml-auto" href="<?php echo $file_path; ?>" download><i class="fas fa-download"></i> Download File</a>
                         <?php
-                                } else {
-                                    echo 'File not found.';
-                                }
-                            }
                         } else {
-                            echo 'No files found for the provided serial number and ID.';
+                            echo 'File not found.';
                         }
-
-
                         ?>
                     </div>
-                    <!-- <a href="#" onclick="downloadAndViewFile(\'' . htmlspecialchars($id) . '\', \'' . htmlspecialchars($serial_no) . '\', \'' . urlencode($file_path) . '\', \'' . htmlspecialchars($c_id) . '\', \'' . urlencode($k['file_name']) . '\')">' . htmlspecialchars($k['file_name']) . '</a>; -->
+
                     <div id="iframe-container">
-                        <iframe class="w-100" id="my-iframe" src="<?php echo $file_path ? $file_path : "No file to preview." ?>" frameborder="0" height="650" width="100%"></iframe>
+                        <?php if ($file_path && $file_extension == 'pdf') : ?>
+                            <iframe class="w-100" id="my-iframe" src="<?php echo htmlspecialchars($file_path); ?>" frameborder="0" height="650" width="100%"></iframe>
+                        <?php else : ?>
+                            <p class="text-center text-gray pt-5">
+                                <?php if ($file_extension == 'xls' || $file_extension == 'xlsx') : ?>
+                                    Preview is not available for Excel files.<br>
+                                    The file will be downloaded automatically or click the download button.
+                                <?php else : ?>
+                                    Preview is not available for this file type.
+                                <?php endif; ?>
+                            </p>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -269,7 +275,7 @@ $id = $_GET['id'];
                                     <?php
                                     require '../../process/conn.php';
 
-                                    $sql = "SELECT emp_id, fullname, email FROM m_accounts WHERE role = 'approver'";
+                                    $sql = "SELECT emp_id, fullname, email FROM m_accounts WHERE role = 'approver' AND secret_id != 'IT'";
                                     $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                                     $stmt->execute();
 
@@ -293,22 +299,11 @@ $id = $_GET['id'];
                             </div>
                             <div class="col-md-12" id="check_upload_container">
                                 <div class="row">
-                                    <div class="col-md-5">
-                                        <label for="attachment">Upload File:</label>
-                                        <p class="text-center">
-                                        <div class="form-group fileDropArea" id="fileDropArea">
-                                            <input type="file" class="custom-file-input" id="attachment" name="file[]" accept=".pdf, .xlxs, .xls, .csv">
-                                            <p>Click or Drop file here</p>
-                                        </div>
-                                        </p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div id="file_list_tray">
-                                            <p id="files-area">
-                                                <span id="filesList">
-                                                    <span id="files-names"></span>
-                                                </span>
-                                            </p>
+                                    <div class="col-md-12">
+                                    <label for="attachment">Upload File:</label>
+                                        <div class="fileDropArea" id="fileDropArea">
+                                            <input type="file" class="form-control p-1" id="attachment" name="file[]">
+                                            <span id="fileName" class="text-center">Click or drop file here.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -353,44 +348,30 @@ $id = $_GET['id'];
     <script src="../../dist/js/adminlte.js"></script>
     <!-- <script src="plugins/js/custom.js"></script> -->
     <script>
-        $(document).ready(function() {
-            //initializeFileInput("#files", "#filesList > #files-names");
-        });
+        function downloadFile(filePath) {
+            var link = document.createElement('a');
+            link.href = filePath;
+            link.download = filePath.split('/').pop();
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
 
-        const dt = new DataTransfer(); // Allows manipulation of the files of the input file
+        function handleNonPdfFiles(filePath, fileExtension) {
+            if (fileExtension === 'xls' || fileExtension === 'xlsx') {
+                downloadFile(filePath);
+            }
+        }
+    </script>
+    <script>
+            document.getElementById('attachment').addEventListener('change', function(event) {
+            const fileInput = event.target;
+            const fileNameSpan = document.getElementById('fileName');
 
-        $("#attachment").on('change', function(e) {
-            $("#filesList > #files-names").empty();
-
-            // Ensure only one file is handled
-            if (this.files.length > 0) {
-                let fileBloc = $('<span/>', {
-                    class: 'file-block'
-                });
-
-                let fileName = $('<span/>', {
-                    class: 'name',
-                    text: this.files[0].name
-                });
-
-                fileBloc.append('<span class="file-delete"><span>&times</span></span>')
-                    .append(fileName);
-                $("#filesList > #files-names").append(fileBloc);
-
-                // Add the single file to the DataTransfer object
-                dt.items.clear(); // Clear existing items before adding new one
-                dt.items.add(this.files[0]);
-
-                // Update the input file with the new DataTransfer files
-                this.files = dt.files;
-
-                // EventListener for the delete button created
-                $('span.file-delete').click(function() {
-                    // Clear the displayed file list and the DataTransfer object
-                    $("#filesList > #files-names").empty();
-                    dt.items.clear(); // Clear DataTransfer items
-                    document.getElementById('attachment').value = ''; // Clear the input file selection
-                });
+            if (fileInput.files.length > 0) {
+                fileNameSpan.textContent = fileInput.files[0].name;
+            } else {
+                fileNameSpan.textContent = 'Click or drop file here.';
             }
         });
     </script>

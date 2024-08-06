@@ -11,7 +11,7 @@
         };</script>. 
         </strong>
         All rights reserved.
-        <a href="#" data-target="#problem" data-toggle="modal">Report a problem</a>
+        <!-- <a href="#" data-target="#problem" data-toggle="modal">Report a problem</a> -->
     </div>
   </footer>
 <?php
@@ -23,6 +23,18 @@ include '../../modals/update_uploads.php';
 include '../../modals/problem_modal.php';
 ?>
 
+<script>
+  document.getElementById('files').addEventListener('change', function(event) {
+    const fileInput = event.target;
+    const fileNameSpan = document.getElementById('fileName');
+
+    if (fileInput.files.length > 0) {
+        fileNameSpan.textContent = fileInput.files[0].name;
+    } else {
+        fileNameSpan.textContent = 'Click or drop file here.';
+    }
+});
+</script>
 <!-- <script src="plugins/js/custom.js"></script> -->
 <!-- jQuery -->
 <script src="../../plugins/jquery/dist/jquery.min.js"></script>

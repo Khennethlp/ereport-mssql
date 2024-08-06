@@ -149,22 +149,26 @@
                         <div class="col-md-12">
                             <div class="row">
 
-                                <div class="col-md-6 mb-3">
-                                    <label for="files">Upload File:</label>
-                                    <!-- <input type="file" id="files" class="form-control" style="height: 112px;"> -->
+                                <div class="col-md-12 mb-3">
+                                    <!-- <label for="files">Upload File:</label>
                                     <div class="form-group file-drop-area" id="fileDropArea">
                                         <input type="file" class="custom-file-input" id="files" name="files">
                                         <p>Click or Drop file here</p>
-                                    </div>
+                                    </div> -->
+                                    <label for="files">Upload File:</label>
+                                        <div class="fileDropArea" id="fileDropArea">
+                                            <input type="file" class="form-control p-1" id="files" name="file">
+                                            <span id="fileName" class="text-center">Click or drop file here.</span>
+                                        </div>
                                 </div>
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <label for="files-names"></label>
                                     <p id="files-area">
                                         <span id="filesList">
                                             <span id="files-names"></span>
                                         </span>
                                     </p>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

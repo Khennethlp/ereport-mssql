@@ -212,7 +212,37 @@ if (!isset($_SESSION['username'])) {
         transform: rotate(45deg);
       } */
     }
+    .fileDropArea {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 120px;
+        padding: 25px;
+        border: 2px dashed #d1d1d1;
+        border-radius: 5px;
+        transition: border-color 0.3s;
+        cursor: pointer;
+        text-align: center;
+        flex-direction: column;
+    }
 
+    .fileDropArea input[type="file"] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    #fileName {
+        margin-top: 10px;
+        font-size: 18;
+        color: #333;
+    }
 
     input[type=date], 
     input[type=search], 

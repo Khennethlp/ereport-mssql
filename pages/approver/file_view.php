@@ -59,7 +59,7 @@ $id = $_GET['id'];
     #iframe-container {
         /* position: relative; */
         width: 100%;
-        height: 633px;
+        height: 500px;
     }
 
     iframe {
@@ -102,17 +102,14 @@ $id = $_GET['id'];
         align-items: center;
         justify-content: center;
         width: 100%;
-        height: 210px;
+        height: 110px;
         padding: 25px;
         border: 2px dashed #d1d1d1;
         border-radius: 5px;
         transition: border-color 0.3s;
         cursor: pointer;
         text-align: center;
-    }
-
-    .fileDropArea.dragover {
-        border-color: #007bff;
+        flex-direction: column;
     }
 
     .fileDropArea input[type="file"] {
@@ -131,53 +128,10 @@ $id = $_GET['id'];
         color: #999;
     }
 
-
-    .file-block {
-        border-radius: 10px;
-        background-color: rgba(144, 163, 203, 0.2);
-        margin: 5px;
-        color: initial;
-        display: inline-flex;
-
-        &>span.name {
-            padding-right: 10px;
-            width: max-content;
-            display: inline-flex;
-        }
-    }
-
-    .file-delete {
-        display: flex;
-        width: 24px;
-        color: initial;
-        background-color: #6eb4ff00;
-        font-size: large;
-        justify-content: center;
-        margin-right: 3px;
-        cursor: pointer;
-
-        &:hover {
-            background-color: rgba(144, 163, 203, 0.2);
-            border-radius: 10px;
-        }
-
-        &>span {
-            transform: rotate(45deg);
-        }
-    }
-
-    #file_list_tray {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        margin-top: 10%;
-        padding: 10%;
-        text-align: center;
-    }
-
-    #files-area {
-        margin-left: 50px;
+    #fileName {
+        margin-top: 10px;
+        font-size: 16px;
+        color: #333;
     }
 </style>
 
@@ -185,12 +139,9 @@ $id = $_GET['id'];
     <div class="row">
         <div class="col-md-6">
             <div class="card m-3">
-                <!-- <button id="fullscreen-btn" onclick="toggleFullscreen()">Fullscreen</button> -->
                 <div class="card-body">
                     <div class="row">
                         <button id="fullscreen-btn" style="width: 40%;" class="mx-2 mb-1" onclick="toggleFullscreen()">Fullscreen</button>
-                        <!-- <button id="btn_download" class="">Download</button> -->
-                        <!-- <a class="btn_download w-50 ml-auto" href="<?php urlencode($file_path) ?>" download>Download</a> -->
                         <?php
                         require '../../process/conn.php';
 
@@ -216,12 +167,11 @@ $id = $_GET['id'];
                                 if (!empty($row['sub_doc'])) {
                                     $file_path .= $row['sub_doc'] . '/';
                                 }
-                                
+
                                 $file_path .= $row['file_name'];
                                 if (file_exists($file_path)) {
                         ?>
                                     <a class="btn_download mx-2 mb-1 ml-auto" href="<?php echo $file_path; ?>" download>Download</a>
-                                    <!-- <button id="btn_download" style="width: 40%;" class="mx-2 mb-1 ml-auto" href="<?php echo $file_path; ?>" download>Download</button> -->
                         <?php
                                 } else {
                                     echo 'File not found.';
@@ -246,7 +196,6 @@ $id = $_GET['id'];
                 <div class="card-body">
                     <div class="card-body">
                         <div class="row">
-
                             <div class="">
                                 <input type="hidden" id="a_id" value="<?php echo $id; ?>">
                                 <input type="hidden" id="approved_id" value="<?php echo $approver; ?>">
@@ -264,57 +213,19 @@ $id = $_GET['id'];
                                     <option value="Approved">Approve</option>
                                     <option value="Disapproved">Disapprove</option>
                                 </select>
-
                             </div>
 
-                            <!-- <div class="col-md-6 mb-5">
-                                <label for="">Approval by:</label>
-                                <select class="form-control" name="approver_select" id="approver_select">
-                                    <option value="">---Choose Approver---</option>
-                                    <?php
-                                    require '../../process/conn.php';
-
-                                    $sql = "SELECT fullname, email FROM m_accounts WHERE role = 'approver'";
-                                    $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-                                    $stmt->execute();
-
-                                    if ($stmt->rowCount() > 0) {
-                                        // Output data of each row
-                                        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                                        // Output data of each row
-                                        foreach ($rows as $row) {
-                                            echo '<option value="' . $row["email"] . '">' . $row["fullname"] . '</option>';
-                                        }
-                                    } else {
-                                        echo '<option value="">No data available</option>';
-                                    }
-                                    ?>
-                                </select>
-                            </div> -->
                             <div class="col-md-12 mb-3">
                                 <label for="">Comment:</label>
                                 <textarea class="form-control" name="comment_approver" id="comment_approver" rows="3" cols="5" maxlength="250"></textarea>
                             </div>
                             <div class="col-md-12" id="approve_upload_container">
                                 <div class="row">
-                                    <div class="col-md-5">
+                                    <div class="col-md-12">
                                         <label for="attachment">Upload File:</label>
-                                        <!-- <input type="file" id="files" class="form-control" style="height: 112px;"> -->
-                                        <p class=" text-center">
-                                        <div class="form-group fileDropArea" id="fileDropArea">
-                                            <input type="file" class="custom-file-input" id="attachment" name="file[]">
-                                            <p>Click or Drop file here</p>
-                                        </div>
-                                        </p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div id="file_list_tray">
-                                            <p id="files-area">
-                                                <span id="filesList">
-                                                    <span id="files-names"></span>
-                                                </span>
-                                            </p>
+                                        <div class="fileDropArea" id="fileDropArea">
+                                            <input type="file" class="form-control p-1" id="attachment" name="file[]">
+                                            <span id="fileName" class="text-center">Click or drop file here.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -361,59 +272,19 @@ $id = $_GET['id'];
     <!-- <script src="plugins/js/custom.js"></script> -->
 
     <script>
-        $(document).ready(function() {
-           // initializeFileInput("#files", "#filesList > #files-names");
-        });
+        // for file dropping 
+        document.getElementById('attachment').addEventListener('change', function(event) {
+            const fileInput = event.target;
+            const fileNameSpan = document.getElementById('fileName');
 
-        const dt = new DataTransfer(); // Allows manipulation of the files of the input file
-
-        $("#attachment").on('change', function(e) {
-            // Clear the DataTransfer object and the displayed file list
-            dt.clearData();
-            $("#filesList > #files-names").empty();
-
-            // Ensure only one file is handled
-            if (this.files.length > 0) {
-                let fileBloc = $('<span/>', {
-                        class: 'file-block'
-                    }),
-                    fileName = $('<span/>', {
-                        class: 'name',
-                        text: this.files.item(0).name
-                    });
-
-                fileBloc.append('<span class="file-delete"><span>+</span></span>')
-                    .append(fileName);
-                $("#filesList > #files-names").append(fileBloc);
-
-                // Add the single file to the DataTransfer object
-                dt.items.add(this.files[0]);
-
-                // Update the input file with the new DataTransfer files
-                this.files = dt.files;
-
-                // EventListener for the delete button created
-                $('span.file-delete').click(function() {
-                    let name = $(this).next('span.name').text();
-                    // Supprimer l'affichage du nom de fichier
-                    $(this).parent().remove();
-                    for (let i = 0; i < dt.items.length; i++) {
-                        // Correspondance du fichier et du nom
-                        if (name === dt.items[i].getAsFile().name) {
-                            // Suppression du fichier dans l'objet DataTransfer
-                            dt.items.remove(i);
-                            continue;
-                        }
-                    }
-                    // Mise à jour des fichiers de l'input file après suppression
-                    document.getElementById('attachment').files = dt.files;
-                });
+            if (fileInput.files.length > 0) {
+                fileNameSpan.textContent = fileInput.files[0].name;
+            } else {
+                fileNameSpan.textContent = 'Click or drop file here.';
             }
         });
-    </script>
 
-
-    <script>
+        // for toggle full screen
         function toggleFullscreen() {
             var iframe = document.getElementById('my-iframe');
             if (!document.fullscreenElement && !document.mozFullScreenElement &&

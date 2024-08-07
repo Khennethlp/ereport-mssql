@@ -88,7 +88,7 @@
             },
             success: function(response) {
                 document.getElementById("table").innerHTML = response;
-                document.getElementById("lbl_c1").innerHTML = serial_no;
+                document.getElementById("lbl_c1").innerHTML = 'SN: '+ serial_no;
                 $('#t_t1_breadcrumb').show();
             }
           

@@ -6,17 +6,126 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <!-- <h1 class="m-0"><i class="fas fa-download"></i> STORE IN</h1> -->
-                </div><!-- /.col -->
+            <div class="row">
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon" style="background-color:#3765AA; color:#fff;"><i class="fas fa-upload"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">UPLOADER</span>
+                            <span class="info-box-number">
+                                <?php
+                                include '../../process/conn.php';
+
+                                $query = "SELECT COUNT(*) as total FROM m_accounts WHERE role = 'uploader' AND secret_id != 'IT'";
+                                $stmt = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                                $stmt->execute();
+                  
+                                if ($stmt->rowCount() > 0) {
+                                  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                  
+                                  foreach ($rows as $row) {
+                                    echo '<h4>' . $row['total'] . '</h4>';
+                                  }
+                                } else {
+                                  echo '<h3>No Record.</h3>';
+                                }
+                                ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon" style="background-color:#3765AA; color:#fff;"><i class="fas fa-user-check"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">CHECKER</span>
+                            <span class="info-box-number">
+                            <?php
+                                include '../../process/conn.php';
+
+                                $query = "SELECT COUNT(*) as total FROM m_accounts WHERE role = 'checker' AND secret_id != 'IT'";
+                                $stmt = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                                $stmt->execute();
+                  
+                                if ($stmt->rowCount() > 0) {
+                                  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                  
+                                  foreach ($rows as $row) {
+                                    echo '<h4>' . $row['total'] . '</h4>';
+                                  }
+                                } else {
+                                  echo '<h3>No Record.</h3>';
+                                }
+                                ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon" style="background-color:#3765AA; color:#fff;"><i class="fas fa-thumbs-up"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">APPROVER</span>
+                            <span class="info-box-number">
+                            <?php
+                                include '../../process/conn.php';
+
+                                $query = "SELECT COUNT(*) as total FROM m_accounts WHERE role = 'approver' AND secret_id != 'IT'";
+                                $stmt = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                                $stmt->execute();
+                  
+                                if ($stmt->rowCount() > 0) {
+                                  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                  
+                                  // Output data of each row
+                                  foreach ($rows as $row) {
+                                    echo '<h4>' . $row['total'] . '</h4>';
+                                  }
+                                } else {
+                                  echo '<h3>No Record.</h3>';
+                                }
+                                ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon" style="background-color:#3765AA; color:#fff;"><i class="fas fa-user-tie"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">ADMIN</span>
+                            <span class="info-box-number">
+                            <?php
+                                include '../../process/conn.php';
+
+                                $query = "SELECT COUNT(*) as total FROM m_accounts WHERE role = 'admin' ";
+                                $stmt = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                                $stmt->execute();
+                  
+                                if ($stmt->rowCount() > 0) {
+                                  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                  
+                                  // Output data of each row
+                                  foreach ($rows as $row) {
+                                    echo '<h4>' . $row['total'] . '</h4>';
+                                  }
+                                } else {
+                                  echo '<h3>No Record.</h3>';
+                                }
+                                ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="row mb-2">
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="index.php">Home</a></li>
                         <li class="breadcrumb-item ">Accounts</li>
                     </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
+                </div>
+            </div> -->
         </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
@@ -43,7 +152,6 @@
                                             Search
                                         </button>
                                     </div>
-
                                     <div class="col-md-2 ml-auto">
                                         <button class="form-control active " data-toggle="modal" data-target="#add_acc"><i class="fas fa-user-plus"></i> ADD USER</button>
                                     </div>

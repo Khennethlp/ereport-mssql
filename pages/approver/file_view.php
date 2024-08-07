@@ -135,55 +135,73 @@ $id = $_GET['id'];
     }
 </style>
 
-<body>
+<?php
+require '../../process/conn.php';
+
+// Assuming you've sanitized and validated these inputs to prevent SQL injection
+$serial_no = $_GET['serial_no'];
+$id = $_GET['id'];
+
+// Fetch the file details from the database
+$sql = "SELECT * FROM t_upload_file WHERE serial_no = :serial_no AND id = :id";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(":serial_no", $serial_no);
+$stmt->bindParam(":id", $id);
+$stmt->execute();
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// $result = $stmt->rowCount();
+
+if ($rows) {
+    foreach ($rows as $row) {
+        // Constructing the file path
+        $file_path = '../../../uploads/ereport/' . $row['serial_no'] . '/';
+        $file_path .= $row['main_doc'] . '/';
+
+        if (!empty($row['sub_doc'])) {
+            $file_path .= $row['sub_doc'] . '/';
+        }
+
+        $file_path .= $row['file_name'];
+    }
+}
+
+$file_extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
+?>
+
+<body onload="handleNonPdfFiles('<?php echo htmlspecialchars($file_path); ?>', '<?php echo $file_extension; ?>')">
     <div class="row">
         <div class="col-md-6">
             <div class="card m-3">
                 <div class="card-body">
                     <div class="row">
-                        <button id="fullscreen-btn" style="width: 40%;" class="mx-2 mb-1" onclick="toggleFullscreen()">Fullscreen</button>
+                        <?php if ($file_path && $file_extension == 'pdf') : ?>
+                            <button id="fullscreen-btn" style="width: 40%;" class="mx-2 mb-1" onclick="toggleFullscreen()">Fullscreen</button>
+                        <?php endif; ?>
                         <?php
-                        require '../../process/conn.php';
 
-                        // Assuming you've sanitized and validated these inputs to prevent SQL injection
-                        $serial_no = $_GET['serial_no'];
-                        $id = $_GET['id'];
-
-                        // Fetch the file details from the database
-                        $sql = "SELECT * FROM t_upload_file WHERE serial_no = :serial_no AND id = :id";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bindParam(":serial_no", $serial_no);
-                        $stmt->bindParam(":id", $id);
-                        $stmt->execute();
-                        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                        // $result = $stmt->rowCount();
-
-                        if ($rows) {
-                            foreach ($rows as $row) {
-                                // Constructing the file path
-                                $file_path = '../../../uploads/ereport/' . $row['serial_no'] . '/';
-                                $file_path .= $row['main_doc'] . '/';
-
-                                if (!empty($row['sub_doc'])) {
-                                    $file_path .= $row['sub_doc'] . '/';
-                                }
-
-                                $file_path .= $row['file_name'];
-                                if (file_exists($file_path)) {
+                        if (file_exists($file_path)) {
                         ?>
-                                    <a class="btn_download mx-2 mb-1 ml-auto" href="<?php echo $file_path; ?>" download>Download</a>
+                            <a class="btn_download mx-2 mb-1 ml-auto" href="<?php echo $file_path; ?>" download>Download</a>
                         <?php
-                                } else {
-                                    echo 'File not found.';
-                                }
-                            }
                         } else {
-                            echo 'No files found for the provided serial number and ID.';
+                            echo 'File not found.';
                         }
                         ?>
                         <div class="col-md-12">
                             <div id="iframe-container">
-                                <iframe class="w-100" id="my-iframe" src="<?= htmlspecialchars($file_path) ? htmlspecialchars($file_path) : "No file to preview." ?>" frameborder="0" height="650" width="100%"></iframe>
+                                <?php if ($file_path && $file_extension == 'pdf') : ?>
+                                    <iframe class="w-100" id="my-iframe" src="<?php echo htmlspecialchars($file_path); ?>" frameborder="0" height="650" width="100%"></iframe>
+                                <?php else : ?>
+                                    <p class="text-center text-gray pt-5">
+                                        <?php if ($file_extension == 'xls' || $file_extension == 'xlsx') : ?>
+                                            Preview is not available for Excel files.<br>
+                                            The file will be downloaded automatically or click the download button.
+                                        <?php else : ?>
+                                            Preview is not available for this file type.
+                                        <?php endif; ?>
+                                    </p>
+                                <?php endif; ?>
+                                <!-- <iframe class="w-100" id="my-iframe" src="<?= htmlspecialchars($file_path) ? htmlspecialchars($file_path) : "No file to preview." ?>" frameborder="0" height="650" width="100%"></iframe> -->
                             </div>
 
                         </div>
@@ -272,6 +290,21 @@ $id = $_GET['id'];
     <!-- <script src="plugins/js/custom.js"></script> -->
 
     <script>
+         function downloadFile(filePath) {
+            var link = document.createElement('a');
+            link.href = filePath;
+            link.download = filePath.split('/').pop();
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function handleNonPdfFiles(filePath, fileExtension) {
+            if (fileExtension === 'xls' || fileExtension === 'xlsx') {
+                downloadFile(filePath);
+            }
+        }
+
         // for file dropping 
         document.getElementById('attachment').addEventListener('change', function(event) {
             const fileInput = event.target;

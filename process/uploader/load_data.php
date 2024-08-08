@@ -80,10 +80,10 @@ if ($method == 'load_data') {
         $conditions[] = "a.batch_no = :search OR a.group_no = :search OR a.serial_no = :search OR a.training_group = :search OR a.checker_name = :search OR a.approver_name = :search";
     }
 
-    if(!empty($search_by_filename)){
+    if (!empty($search_by_filename)) {
         $conditions[] = "file_name = :search_by_filename";
     }
-    if(!empty($search_by_filename) && !empty($search)){
+    if (!empty($search_by_filename) && !empty($search)) {
         $conditions[] = "file_name = :search_by_filename AND a.training_group = :search";
     }
 
@@ -110,7 +110,7 @@ if ($method == 'load_data') {
     if (!empty($search)) {
         $stmt->bindParam(':search', $search, PDO::PARAM_STR);
     }
-    
+
     if (!empty($search_by_filename)) {
         $stmt->bindParam(':search_by_filename', $search_by_filename, PDO::PARAM_STR);
     }
@@ -172,6 +172,7 @@ if ($method == 'load_data') {
 
             $data .= '<tr style="' . $status_bg_color . ' ">';
             $data .= '<td>' . $c . '</td>';
+            // $data .= '<td><i class="fas fa-trash" style="color:var(--danger); font-size: 12px; cursor:pointer;"></i></td>';
             $data .= '<td ><span>' . $status_text . '</span></td>';
             $data .= '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
@@ -184,14 +185,14 @@ if ($method == 'load_data') {
 
                 if ($file_path) {
                     // $data .= '<td style="cursor: pointer; color: #ffffff;"><a class="text-warning" href="' . $file_path . '" download>' . $filename . '</a></td>';
-                    $data .= '<td><a class="text-warning" href="../../pages/uploader/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&training_group='.$tgroup.'&file_path=' . $file_path . '&uploader=' . $uploader_id . '" target="_blank">' . $filename . '</a></td>';
+                    $data .= '<td><a class="text-warning" href="../../pages/uploader/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&training_group=' . $tgroup . '&file_path=' . $file_path . '&uploader=' . $uploader_id . '" target="_blank">' . $filename . '</a></td>';
                 } else {
                     $data .= '<td>File not found</td>';
                 }
             } else {
                 // If status is not 'DISAPPROVED', just show the filename
                 // $data .= '<td>' . substr($filenames, 0, 50) . '</td>';
-                $data .= '<td title="'.$filenames.'">' . (strlen($filenames) > 50 ? substr($filenames, 0, 50) . '...' : $filenames) . '</td>';
+                $data .= '<td onclick="del(&quot;' . $k['id'] . '~!~' . $k['serial_no'] . '~!~' . $filenames . '&quot;);" data-toggle="modal" data-target="#delete_pending" style="cursor: pointer;" title="' . $filenames . '">' . (strlen($filenames) > 50 ? substr($filenames, 0, 50) . '...' : $filenames) . '</td>';
             }
 
             $data .= '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
@@ -237,4 +238,32 @@ if ($method == 'load_data') {
     $has_more = $stmt->rowCount() > 0;
 
     echo json_encode(['html' => $data, 'has_more' => $has_more]);
+}
+
+if ($method == 'del_data_pending') {
+    $id = $_POST['id'];
+    $serial_no = $_POST['serial_no'];
+
+    try {
+   
+        $sql_del_tr = "DELETE FROM t_training_record WHERE id = :id AND serial_no = :serial_no";
+        $stmt_tr = $conn->prepare($sql_del_tr);
+        $stmt_tr->bindParam(':id', $id);
+        $stmt_tr->bindParam(':serial_no', $serial_no);
+        $result_tr = $stmt_tr->execute();
+    
+        $sql_del_tf = "DELETE FROM t_upload_file WHERE id = :id AND serial_no = :serial_no";
+        $stmt_tf = $conn->prepare($sql_del_tf);
+        $stmt_tf->bindParam(':id', $id);
+        $stmt_tf->bindParam(':serial_no', $serial_no);
+        $result_tf = $stmt_tf->execute();
+    
+        if ($result_tr && $result_tf) {
+            echo 'success';
+        } else {
+            echo 'error';
+        }
+    } catch (PDOException $e) {
+        echo 'error';
+    }
 }

@@ -21,6 +21,7 @@ include '../../modals/upload_modal.php';
 include '../../modals/upload_data.php';
 include '../../modals/update_uploads.php';
 include '../../modals/problem_modal.php';
+include '../../modals/delete_pending.php';
 ?>
 
 <script>

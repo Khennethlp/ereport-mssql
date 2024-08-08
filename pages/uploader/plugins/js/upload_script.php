@@ -39,7 +39,7 @@
         $('#training_group').val('');
         $('#search_date').val('');
         $('#check_by').val('');
-        del();
+        // del();
     }
 
     const fetch_sub_doc = () => {
@@ -67,6 +67,63 @@
                 console.error('Error fetching sub documents:', error);
             }
         });
+    }
+
+    const del = (param) => {
+        var data = param.split('~!~');
+        var id = data[0];
+        var serialNo = data[1];
+        var filename = data[2];
+        console.log(param);
+
+        $('#del_id').val(id);
+        $('#del_serial').val(serialNo);
+        $('#filename').html(filename);
+
+    }
+
+    const del_data = () => {
+        var id = $('#del_id').val();
+        var serial_no = $('#del_serial').val();
+
+        $.ajax({
+            type: "POST",
+            url: '../../process/uploader/load_data.php',
+            cache: false,
+            data: {
+                method: 'del_data_pending',
+                id: id,
+                serial_no: serial_no
+            },
+            success: function (response) {
+                if(response.trim() == 'success'){
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'Record have been deleted successfully.',
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+                    load_data();
+                    $('#delete_pending').modal('hide');
+                }else if(response.trim() == 'error'){
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'There was an error deleting the record.',
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+                }
+            },
+            error: function (xhr, status, error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'An unexpected error occurred.',
+                text: 'Please try again later.',
+                showConfirmButton: true
+            });
+        }
+        });
+
     }
 
     let page = 1; // Initial page number
@@ -141,7 +198,7 @@
         $('#group_no').val('');
         $('#check_by').val('');
         $('#upload').modal('hide');
-        $('#fileDropArea p').text('Click or Drop file here');
+        $('#fileName').text('Click or Drop file here');
     }
 
     const upload = () => {
@@ -216,7 +273,6 @@
 
                         load_data();
                         clear_all();
-                        del();
 
                     } else if (response == 'exist') {
                         Swal.fire({

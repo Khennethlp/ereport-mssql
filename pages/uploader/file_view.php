@@ -177,11 +177,9 @@ $tgroup = $_GET['training_group'];
 <?php
 require '../../process/conn.php';
 
-// Assuming you've sanitized and validated these inputs to prevent SQL injection
 $serial_no = $_GET['serial_no'];
 $id = $_GET['id'];
 
-// Fetch the file details from the database
 $sql = "SELECT * FROM t_upload_file WHERE serial_no = :serial_no AND id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(":serial_no", $serial_no);
@@ -191,7 +189,6 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if ($rows) {
     foreach ($rows as $row) {
-        // Constructing the file path
         $file_path = '../../../uploads/ereport/' . $row['serial_no'] . '/';
         $file_path .= $row['main_doc'] . '/';
 
@@ -214,7 +211,8 @@ if ($rows) {
 $file_extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
 ?>
 
-<body onload="handleNonPdfFiles('<?php echo htmlspecialchars($file_path); ?>', '<?php echo $file_extension; ?>')">
+<body onload="handleNonPdfFiles('<?php echo addslashes(htmlspecialchars($file_path)); ?>', '<?php echo addslashes(htmlspecialchars($file_extension)); ?>')">
+
     <div class="row">
         <div class="col-md-6">
             <div class="card m-3">
@@ -265,8 +263,8 @@ $file_extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
                         <div class="row">
 
                             <div class="">
-                                <input type="hidden" id="update_id" value="<?php echo $file_extension; ?>">
-                                <input type="hidden" id="update_id" value="<?php echo $file_path; ?>">
+                                <input type="hidden" id="file_extension" value="<?php echo $file_extension; ?>">
+                                <input type="hidden" id="filepath" value="<?php echo $file_path; ?>">
                                 <input type="hidden" id="update_id" value="<?php echo $id; ?>">
                                 <input type="hidden" id="update_uploader_id" value="<?php echo $uploader; ?>">
                                 <input type="hidden" id="update_training_group" value="<?php echo $tgroup; ?>">
@@ -284,7 +282,7 @@ $file_extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
                                     <?php
                                     require '../../process/conn.php';
 
-                                    $sql = "SELECT emp_id, fullname FROM m_accounts WHERE role = 'checker' AND secret_id != 'IT'";
+                                    $sql = "SELECT emp_id, fullname FROM m_accounts WHERE role = 'checker'";
                                     $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                                     $stmt->execute();
 
@@ -311,7 +309,7 @@ $file_extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
                                     <?php
                                     require '../../process/conn.php';
 
-                                    $sql = "SELECT emp_id, fullname FROM m_accounts WHERE role = 'approver' AND secret_id != 'IT'";
+                                    $sql = "SELECT emp_id, fullname FROM m_accounts WHERE role = 'approver' ";
                                     $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                                     $stmt->execute();
 
@@ -381,8 +379,8 @@ $file_extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
     <script src="../../dist/js/adminlte.js"></script>
     <!-- <script src="plugins/js/custom.js"></script> -->
     <script>
-           // for file dropping 
-           document.getElementById('attachment').addEventListener('change', function(event) {
+        // for file dropping 
+        document.getElementById('attachment').addEventListener('change', function(event) {
             const fileInput = event.target;
             const fileNameSpan = document.getElementById('fileName');
 

@@ -30,13 +30,13 @@ if ($method == 'checker_table') {
                     ELSE a.checker_status
                 END AS checker_status,
                 CASE
-                    WHEN a.checker_status = 'Pending' THEN a.upload_date
-                    WHEN a.checker_status = 'Approved' THEN a.checked_date
-                    WHEN a.checker_status = 'Disapproved' THEN a.checked_date
+                    WHEN a.upload_date != '' AND a.update_upload_date = '' THEN a.upload_date
+                    WHEN a.update_upload_date != '' THEN a.update_upload_date
                 END AS checked_date,
                 a.checker_name, 
                 a.checker_email, 
                 a.upload_date, 
+                a.update_upload_date, 
                 a.batch_no AS batch_no, 
                 a.group_no AS group_no, 
                 a.training_group AS training_group, 

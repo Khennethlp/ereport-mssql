@@ -14,8 +14,9 @@
         };
 
         checkTrainingGroup();
-        document.getElementById('training_group').addEventListener('change', checkTrainingGroup);
+        document.getElementById('update_training_group').addEventListener('change', checkTrainingGroup);
     });
+
     const updateUpload = () => {
         var update_id = document.getElementById('update_id').value;
         var update_uploader_id = document.getElementById('update_uploader_id').value;
@@ -24,9 +25,7 @@
         var check_by = document.getElementById('check_by').value;
         var update_serialNo = $('#series_no_label').text().trim();
         var fileInput = $('#attachment')[0];
-        var file_attached = fileInput.files[0]; // Access the file correctly
-        // var update_serialNo = document.getElementById('series_no_label').text().trim();
-        // var updated_status = 'PENDING'; // Pending status for the checker
+        var file_attached = fileInput.files[0];
 
         var formData = new FormData();
         formData.append("method", "update_file_upload");
@@ -36,14 +35,11 @@
         formData.append("update_training_group", update_training_group);
         formData.append("approved_by", approved_by);
         formData.append("check_by", check_by);
-        // formData.append("updated_status", updated_status);
 
-        // Only append the file if it's provided
         if (file_attached) {
             formData.append('file_attached', file_attached);
         }
 
-        // Check if file is attached
         if (!file_attached) {
             Swal.fire({
                 icon: 'warning',
@@ -51,8 +47,9 @@
                 showConfirmButton: false,
                 timer: 1000
             });
-            return; // Exit the function if no file is attached
+            return;
         }
+        
         if (update_training_group == 'MNTT' || update_training_group == 'SEP') {
             if (approved_by == '') {
                 Swal.fire({
@@ -61,7 +58,7 @@
                     showConfirmButton: false,
                     timer: 1000
                 });
-                return; // Exit the function if no file is attached
+                return; 
             }
         } else {
             if (check_by == '') {
@@ -71,7 +68,7 @@
                     showConfirmButton: false,
                     timer: 1000
                 });
-                return; // Exit the function if no file is attached
+                return;
             }
         }
         $.ajax({

@@ -275,7 +275,7 @@ $file_extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
                                     <?php
                                     require '../../process/conn.php';
 
-                                    $sql = "SELECT emp_id, fullname, email FROM m_accounts WHERE role = 'approver' AND secret_id != 'IT'";
+                                    $sql = "SELECT emp_id, fullname, email FROM m_accounts WHERE role = 'approver'";
                                     $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                                     $stmt->execute();
 

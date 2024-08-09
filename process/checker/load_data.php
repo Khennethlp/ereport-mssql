@@ -10,12 +10,15 @@ if ($method == 'checker_table') {
     $date_to = isset($_POST['date_to']) ? $_POST['date_to'] : '';
     $checker_id = isset($_POST['checker_id']) ? $_POST['checker_id'] : '';
 
-    $acc_sql = "SELECT emp_id, email, fullname FROM m_accounts WHERE emp_id = :checker_id";
+    $page = isset($_POST['page']) ? (int)$_POST['page'] : 1;
+    $rowsPerPage = isset($_POST['rows_per_page']) ? (int)$_POST['rows_per_page'] : 50;
+    $offset = ($page - 1) * $rowsPerPage;
+
+    $acc_sql = "SELECT emp_id, fullname FROM m_accounts WHERE emp_id = :checker_id";
     $acc_stmt = $conn->prepare($acc_sql);
     $acc_stmt->bindParam(':checker_id', $checker_id, PDO::PARAM_STR);
     $acc_stmt->execute();
     $account = $acc_stmt->fetch(PDO::FETCH_ASSOC);
-    // $checker_email = $account['email'];
 
     $sql = "SELECT DISTINCT
                 a.serial_no AS serial_no, 
@@ -39,6 +42,8 @@ if ($method == 'checker_table') {
                 a.update_upload_date, 
                 a.batch_no AS batch_no, 
                 a.group_no AS group_no, 
+                a.upload_month AS upload_month, 
+                a.upload_year AS upload_year, 
                 a.training_group AS training_group, 
                 b.serial_no AS b_serial_no, 
                 b.main_doc, 
@@ -56,17 +61,21 @@ if ($method == 'checker_table') {
     // (a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' AND :status = 'Disapproved')
     // WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
     if (!empty($search_by)) {
-        $sql .= " AND a.serial_no LIKE :search_by";
+        $sql .= " AND a.serial_no LIKE :search_by OR a.batch_no LIKE :search_by OR a.group_no LIKE :search_by OR a.training_group LIKE :search_by OR a.upload_month LIKE :search_by OR b.file_name LIKE :search_by";
     }
     if (!empty($date_from) && !empty($date_to)) {
         $sql .= " AND a.upload_date BETWEEN :date_from AND :date_to";
     }
 
-    $sql .= "   ORDER BY id ASC";
+    $sql .= "   ORDER BY id ASC LIMIT :limit_plus_one OFFSET :offset";
 
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':checker_id', $checker_id, PDO::PARAM_STR);
     $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+
+    $limit_plus_one = $rowsPerPage + 1;
+    $stmt->bindParam(':limit_plus_one', $limit_plus_one, PDO::PARAM_INT);
+    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
 
     if (!empty($search_by)) {
         $search_by = "%$search_by%";
@@ -79,11 +88,18 @@ if ($method == 'checker_table') {
 
     $stmt->execute();
 
-    $c = 0;
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $has_more = count($rows) > $rowsPerPage;
+    if ($has_more) {
+        array_pop($rows); // Remove the extra row used for the check
+    }
 
-    if ($stmt->rowCount() > 0) {
-        while ($k = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $c++;
+    $data = '';
+    $c = $offset + 1;
+
+    // if ($stmt->rowCount() > 0) {
+        // while ($k = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            foreach ($rows as $k) {
             $serial_no = htmlspecialchars($k['b_serial_no']);
             $status_text = strtoupper(htmlspecialchars($k['checker_status']));
             $status_bg_color = '';
@@ -127,33 +143,38 @@ if ($method == 'checker_table') {
             $c_id = htmlspecialchars($k['c_id']);
             $id = htmlspecialchars($k['id']);
 
-            echo '<tr style="' . $status_bg_color . '">';
-            echo '<td>' . $c . '</td>';
-            echo '<td><span>' . strtoupper(htmlspecialchars($k['checker_status'])) . '</span></td>';
-            echo '<td>' . htmlspecialchars($k['b_serial_no']) . '</td>';
-            echo '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
-            echo '<td>' . htmlspecialchars($k['group_no']) . '</td>';
-            echo '<td>' . htmlspecialchars($k['training_group']) . '</td>';
+            $data .= '<tr style="' . $status_bg_color . '">';
+            $data .= '<td>' . $c . '</td>';
+            $data .= '<td><span>' . strtoupper(htmlspecialchars($k['checker_status'])) . '</span></td>';
+            $data .= '<td>' . htmlspecialchars($k['b_serial_no']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['group_no']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['upload_month']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['upload_year']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['training_group']) . '</td>';
 
             
             if (file_exists($file_path)) {
                 if ($status == 'approved' || $status == 'disapproved') {
-                    // echo '<td>' . htmlspecialchars($k['file_name']) . '</td>';
-                    echo '<td title="' . $k['file_name'] . '">' . (strlen($k['file_name']) > 50 ? substr($k['file_name'], 0, 50) . '...' : $k['file_name']) . '</td>';
+                    // $data .= '<td>' . htmlspecialchars($k['file_name']) . '</td>';
+                    $data .= '<td title="' . $k['file_name'] . '">' . (strlen($k['file_name']) > 50 ? substr($k['file_name'], 0, 50) . '...' : $k['file_name']) . '</td>';
                 } else {
-                    echo '<td><a href="../../pages/checker/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . $file_path . '&checker=' . htmlspecialchars($c_id) . '" target="_blank">' . $k['file_name'] . '</a></td>';
+                    $data .= '<td><a href="../../pages/checker/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . $file_path . '&checker=' . htmlspecialchars($c_id) . '" target="_blank">' . $k['file_name'] . '</a></td>';
                 }
             } else {
-                echo '<td>File not found</td>';
+                $data .= '<td>File not found</td>';
             }
 
-            echo '<td>' . htmlspecialchars($k['uploader_name']) . '</td>';
-            echo '<td>' . date('Y/m/d', strtotime($k['checked_date'])) . '</td>';
-            echo '</tr>';
+            $data .= '<td>' . htmlspecialchars($k['uploader_name']) . '</td>';
+            $data .= '<td>' . date('Y/m/d', strtotime($k['checked_date'])) . '</td>';
+            $data .= '</tr>';
+            $c++;
         }
-    } else {
-        echo '<tr >';
-        echo '<td colspan="7" class="text-center">No records found.</td>';
-        echo '</tr>';
+    
+
+    if (empty($data)) {
+        $data = '<tr><td colspan="10" style="text-align:center;">No data found.</td></tr>';
     }
+
+    echo json_encode(['html' => $data, 'has_more' => $has_more]);
 }

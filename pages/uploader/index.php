@@ -49,6 +49,7 @@
               </div>
             </div>
           </div>
+          
           <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
               <div class="inner">
@@ -141,26 +142,20 @@
                         </div>
 
                         <div class="col-md-3">
-                          <!-- <div class="col-md-12 mb-2"> -->
                           <label for="">Status:</label>
                           <select name="status" id="status" class="form-control">
-                            <option value="pending">Pending</option>
-                            <option value="approved">Approved</option>
-                            <option value="disapproved">Disapproved</option>
+                            <option value="pending">PENDING</option>
+                            <option value="approved">APPROVED</option>
+                            <option value="disapproved">DISAPPROVED</option>
                           </select>
-                          <!-- </div> -->
                         </div>
                         <div class="col-md-3">
-                          <!-- <div class="col-md-12 mb-2"> -->
                           <label for="">Date From:</label>
                           <input type="date" id="search_date_from" class="form-control">
-                          <!-- </div> -->
                         </div>
                         <div class="col-md-3">
-                          <!-- <div class="col-md-12 mb-2"> -->
                           <label for="">Date To:</label>
                           <input type="date" id="search_date_to" class="form-control">
-                          <!-- </div> -->
                         </div>
 
                         <div class="col-md-12">
@@ -211,6 +206,8 @@
                           <th>Serial No.</th>
                           <th>Batch No.</th>
                           <th>Group No</th>
+                          <th>Month</th>
+                          <th>Year</th>
                           <th>Training Group</th>
                           <th>Filename</th>
                           <th>Checked By</th>

@@ -282,7 +282,7 @@ $file_extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
                                     <?php
                                     require '../../process/conn.php';
 
-                                    $sql = "SELECT emp_id, fullname FROM m_accounts WHERE role = 'checker'";
+                                    $sql = "SELECT emp_id, fullname FROM m_accounts WHERE role = 'checker' AND secret_id != 'IT'";
                                     $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                                     $stmt->execute();
 
@@ -309,7 +309,7 @@ $file_extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
                                     <?php
                                     require '../../process/conn.php';
 
-                                    $sql = "SELECT emp_id, fullname FROM m_accounts WHERE role = 'approver' ";
+                                    $sql = "SELECT emp_id, fullname FROM m_accounts WHERE role = 'approver' AND secret_id != 'IT' ";
                                     $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                                     $stmt->execute();
 

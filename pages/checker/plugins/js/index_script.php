@@ -1,11 +1,11 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        document.getElementById('c_load_more').addEventListener('click', function(e) {
-            e.preventDefault();
-            isPagination = true;
-            load_data();
-        });
+        // document.getElementById('load_more').addEventListener('click', function(e) {
+        //     e.preventDefault();
+        //     isPagination = true;
+        //     load_data();
+        // });
 
         load_data();
         // checker();
@@ -13,11 +13,10 @@
 
     // --------------------------------------------------------------------------
 
-    let page = 1; // Initial page number
-    const rowsPerPage = 10; // Number of rows to fetch per request
-    let isPagination = false; // Flag to differentiate between initial load and pagination
+    let page = 1;
+    const rowsPerPage = 50;
 
-    const load_data = () => {
+    const load_data = (isPagination = false) => {
         if (!isPagination) {
             page = 1; // Reset page number for initial load
         }
@@ -44,13 +43,35 @@
                 rows_per_page: rowsPerPage
             },
             success: function(response) {
-                document.getElementById('checker_table').innerHTML = response;
-                // setTimeout(load_data, 5000);
+                // document.getElementById('checker_table').innerHTML = response;
+                const responseData = JSON.parse(response);
+                if (isPagination) {
+                    if (responseData.html.trim() !== '') {
+                        document.getElementById('checker_table').innerHTML += responseData.html;
+                        page++;
+                        if (responseData.has_more) {
+                            document.getElementById('load_more').style.display = 'block';
+                        } else {
+                            document.getElementById('load_more').style.display = 'none';
+                        }
+                    } else {
+                        document.getElementById('load_more').style.display = 'none';
+                    }
+                } else {
+                    document.getElementById('checker_table').innerHTML = responseData.html;
+                    page++;
+                    if (responseData.has_more) {
+                        document.getElementById('load_more').style.display = 'block';
+                    } else {
+                        document.getElementById('load_more').style.display = 'none';
+                    }
+                }
+        
             },
             error: function() {
                 console.log("Error loading data");
             }
         });
     }
-
+    document.getElementById('load_more').addEventListener('click', () => load_data(true));
 </script>

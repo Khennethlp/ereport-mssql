@@ -10,6 +10,10 @@ if ($method == 'approver_table') {
     $date_to = isset($_POST['date_to']) ? $_POST['date_to'] : '';
     $approver_id = isset($_POST['approver_id']) ? $_POST['approver_id'] : '';
 
+    $page = isset($_POST['page']) ? (int)$_POST['page'] : 1;
+    $rowsPerPage = isset($_POST['rows_per_page']) ? (int)$_POST['rows_per_page'] : 50;
+    $offset = ($page - 1) * $rowsPerPage;
+
     $sql = "SELECT DISTINCT a.id AS id, 
     a.serial_no AS serial_no, 
     a.batch_no As batch_no, 
@@ -41,6 +45,8 @@ if ($method == 'approver_table') {
     a.approver_id AS a_id, 
     a.approver_email AS approver_email, 
     a.group_no AS group_no, 
+    a.upload_month AS upload_month, 
+    a.upload_year AS upload_year, 
     a.training_group AS training_group, 
     b.serial_no, 
     b.main_doc AS main_doc,
@@ -60,18 +66,19 @@ if ($method == 'approver_table') {
                 )";
     }
     if (!empty($search_by)) {
-        $sql .= " AND a.serial_no LIKE :search_by";
+        $sql .= " AND a.serial_no LIKE :search_by OR a.batch_no LIKE :search_by OR a.group_no LIKE :search_by OR a.training_group LIKE :search_by OR a.upload_month LIKE :search_by OR b.file_name LIKE :search_by";
     }
     if (!empty($date_from) && !empty($date_to)) {
         $sql .= " AND a.upload_date BETWEEN :date_from AND :date_to";
     }
-    $sql .= " ORDER BY id ASC";
+    $sql .= " ORDER BY id ASC LIMIT :limit_plus_one OFFSET :offset";
 
     $stmt = $conn->prepare($sql);
+    $limit_plus_one = $rowsPerPage + 1;
+    $stmt->bindParam(':limit_plus_one', $limit_plus_one, PDO::PARAM_INT);
+    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
     $stmt->bindParam(':approver_id', $approver_id, PDO::PARAM_STR);
-    // $stmt->bindParam(':approver_email', $approver_email, PDO::PARAM_STR);
     $stmt->bindParam(':status', $status, PDO::PARAM_STR);
-
 
     if (!empty($search_by)) {
         $search_by = "%$search_by%";
@@ -83,80 +90,74 @@ if ($method == 'approver_table') {
     }
 
     $stmt->execute();
-    $c = 0;
-
-    if ($stmt->rowCount() > 0) {
-        while ($k = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $c++;
-            $serial_no = htmlspecialchars($k['serial_no']);
-            $status_text = strtoupper(htmlspecialchars($k['approver_status']));
-
-            $status_bg_color = '';
-            // $status_badge_color = '';
-            switch ($status_text) {
-                case 'APPROVED':
-                    $status_bg_color = 'background-color: var(--success); color: #fff;';
-                    // $status_badge_color = 'badge-success';
-                    break;
-                case 'PENDING':
-                    $status_bg_color = 'background-color: var(--warning);';
-                    // $status_badge_color = 'badge-secondary';
-                    break;
-                case 'DISAPPROVED':
-                    $status_bg_color = 'background-color: var(--danger); color: #fff;';
-                    // $status_badge_color = 'badge-danger';
-                    break;
-                default:
-                    $status_bg_color = 'background-color: var(--primary);';
-                    // $status_badge_color = 'badge-primary';
-                    break;
-            }
-
-            // $file_path = '../../../uploads/ereport/' . ($k['serial_no']) . '/';
-                // $file_path .= ($k['main_doc']) . '/';
-                // if (!empty($k['sub_doc'])) {
-                //     $file_path .= ($k['sub_doc']) . '/';
-                // }
-            // $file_path .= ($k['filenames']);
-
-            $file_path = '../../../uploads/ereport/' . $k['serial_no'] . '/' . $k['main_doc'] . '/';
-            if (!empty($k['sub_doc'])) {
-                $sub_doc_path = $file_path . $k['sub_doc'] . '/';
-
-                $file_path = $sub_doc_path;
-            }
-            $file_path .= $k['filenames'];
-
-            $a_id = htmlspecialchars($k['a_id']);
-            $id = htmlspecialchars($k['id']);
-
-            echo '<tr style="  ' . $status_bg_color . ' ">';
-            echo '<td>' . $c . '</td>';
-            echo '<td><span>' . strtoupper(htmlspecialchars($k['approver_status'])) . '</span></td>';
-            echo '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
-            echo '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
-            echo '<td>' . htmlspecialchars($k['group_no']) . '</td>';
-            echo '<td>' . htmlspecialchars($k['training_group']) . '</td>';
-
-            if (file_exists($file_path)) {
-                if ($status == 'approved' || $status == 'disapproved') {
-                    // echo '<td>' . ($k['filenames']) . '</td>';
-                    echo '<td title="'.$k['filenames'].'">' . (strlen($k['filenames']) > 50 ? substr($k['filenames'], 0, 50) . '...' : $k['filenames']) . '</td>';
-                } else {
-                    echo '<td><a href="../../pages/approver/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . $file_path . '&approver=' . htmlspecialchars($a_id) . '" target="_blank">' . htmlspecialchars($k['filenames']) . '</a></td>';
-                }
-            } else {
-                echo '<td>File not found</td>';
-            }
-
-            echo '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
-            echo '<td>' . htmlspecialchars($k['uploader_name']) . '</td>';
-            echo '<td>' . date('Y/m/d', strtotime($k['approved_date'])) . '</td>';
-            echo '</tr>';
-        }
-    } else {
-        echo '<tr>';
-        echo '<td colspan="7" class="text-center">No records found.</td>';
-        echo '</tr>';
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $has_more = count($rows) > $rowsPerPage;
+    if ($has_more) {
+        array_pop($rows);
     }
+
+    $data = '';
+    $c = $offset + 1;
+    foreach ($rows as $k) {
+        $serial_no = htmlspecialchars($k['serial_no']);
+        $status_text = strtoupper(htmlspecialchars($k['approver_status']));
+
+        $status_bg_color = '';
+        switch ($status_text) {
+            case 'APPROVED':
+                $status_bg_color = 'background-color: var(--success); color: #fff;';
+                break;
+            case 'PENDING':
+                $status_bg_color = 'background-color: var(--warning);';
+                break;
+            case 'DISAPPROVED':
+                $status_bg_color = 'background-color: var(--danger); color: #fff;';
+                break;
+            default:
+                $status_bg_color = 'background-color: var(--primary);';
+                break;
+        }
+
+        $file_path = '../../../uploads/ereport/' . $k['serial_no'] . '/' . $k['main_doc'] . '/';
+        if (!empty($k['sub_doc'])) {
+            $sub_doc_path = $file_path . $k['sub_doc'] . '/';
+
+            $file_path = $sub_doc_path;
+        }
+        $file_path .= $k['filenames'];
+
+        $a_id = htmlspecialchars($k['a_id']);
+        $id = htmlspecialchars($k['id']);
+
+        $data .= '<tr style="  ' . $status_bg_color . ' ">';
+        $data .= '<td>' . $c . '</td>';
+        $data .= '<td><span>' . strtoupper(htmlspecialchars($k['approver_status'])) . '</span></td>';
+        $data .= '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
+        $data .= '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
+        $data .= '<td>' . htmlspecialchars($k['group_no']) . '</td>';
+        $data .= '<td>' . htmlspecialchars($k['upload_month']) . '</td>';
+        $data .= '<td>' . htmlspecialchars($k['upload_year']) . '</td>';
+        $data .= '<td>' . htmlspecialchars($k['training_group']) . '</td>';
+
+        if (file_exists($file_path)) {
+            if ($status == 'approved' || $status == 'disapproved') {
+                $data .= '<td title="' . $k['filenames'] . '">' . (strlen($k['filenames']) > 50 ? substr($k['filenames'], 0, 50) . '...' : $k['filenames']) . '</td>';
+            } else {
+                $data .= '<td><a href="../../pages/approver/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&file_path=' . $file_path . '&approver=' . htmlspecialchars($a_id) . '" target="_blank">' . htmlspecialchars($k['filenames']) . '</a></td>';
+            }
+        } else {
+            $data .= '<td>File not found</td>';
+        }
+
+        $data .= '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
+        $data .= '<td>' . htmlspecialchars($k['uploader_name']) . '</td>';
+        $data .= '<td>' . date('Y/m/d', strtotime($k['approved_date'])) . '</td>';
+        $data .= '</tr>';
+        $c++;
+    }
+    if (empty($data)) {
+        $data = '<tr><td colspan="10" style="text-align:center;">No data found.</td></tr>';
+    }
+
+    echo json_encode(['html' => $data, 'has_more' => $has_more]);
 }

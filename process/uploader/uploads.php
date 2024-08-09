@@ -11,6 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
     $group_no = $_POST['group_no'];
     $uploader_id = $_POST['uploader_id'];
     $uploader_name = $_POST['uploader_name'];
+    $upload_by_month = $_POST['upload_by_month'];
+    $upload_by_year = $_POST['upload_by_year'];
    
     // $checker_status = $_POST['checker_status'];
     $checker_status = 'Pending';
@@ -79,12 +81,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
                 // Move the uploaded file to the designated folder
                 if (move_uploaded_file($_FILES['files']['tmp_name'][$key], $uploadFile)) {
                     // Insert a new record in t_training_record
-                    $stmt = $conn->prepare("INSERT INTO t_training_record (serial_no, batch_no, training_group, group_no, uploader_id, uploader_name, $column_id, $column) 
-                                            VALUES (:serial_no, :batch_no, :training_group, :group_no, :uploader_id, :uploader_name, :column_id, :checker_status)");
+                    $stmt = $conn->prepare("INSERT INTO t_training_record (serial_no, batch_no, training_group, group_no, upload_month, upload_year, uploader_id, uploader_name, $column_id, $column) 
+                                            VALUES (:serial_no, :batch_no, :training_group, :group_no, :by_month, :by_year, :uploader_id, :uploader_name, :column_id, :checker_status)");
                     $stmt->bindParam(":serial_no", $serial_no);
                     $stmt->bindParam(":batch_no", $batch_no);
                     $stmt->bindParam(":training_group", $training_group);
                     $stmt->bindParam(":group_no", $group_no);
+                    $stmt->bindParam(":by_month", $upload_by_month);
+                    $stmt->bindParam(":by_year", $upload_by_year);
                     $stmt->bindParam(":uploader_id", $uploader_id);
                     $stmt->bindParam(":uploader_name", $uploader_name);
                     $stmt->bindParam(":column_id", $id);

@@ -150,15 +150,15 @@
                           <input type="hidden" name="approver_id" id="approver_id" value="<?php echo $_SESSION['emp_id']; ?>">
                           <div class="col-md-3">
                             <label for="">Search:</label>
-                            <input type="search" class="form-control" name="" id="search_by" placeholder="search by serial no.">
+                            <input type="search" class="form-control" name="" id="search_by" placeholder="">
                           </div>
                           <div class="col-md-3">
                             <label for="">Status:</label>
                             <select name="status" id="approver_status" class="form-control">
                               <!-- <option value="">--All--</option> -->
-                              <option value="pending">Pending</option>
-                              <option value="approved">Approved</option>
-                              <option value="disapproved">Disapproved</option>
+                              <option value="pending">PENDING</option>
+                              <option value="approved">APPROVED</option>
+                              <option value="disapproved">DISAPPROVED</option>
                             </select>
                           </div>
                           
@@ -190,7 +190,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="card-body table-responsive p-0" style="height: 600px;">
+                  <div class="card-body table-responsive p-0" style="height: 620px;">
                     <table class="table table-head-fixed text-nowrap table-hover" id="table">
                       <thead>
                         <tr>
@@ -199,6 +199,8 @@
                           <th>Serial No.</th>
                           <th>Batch No.</th>
                           <th>Group No.</th>
+                          <th>Month</th>
+                          <th>Year</th>
                           <th>Training Group</th>
                           <th>Filename</th>
                           <th>Checked By</th>
@@ -208,7 +210,7 @@
                       </thead>
                       <tbody id="approver_table"> </tbody>
                     </table>
-                    <div id="a_load_more" class="text-center" style="display: none;">
+                    <div id="load_more" class="text-center" style="display: none;">
                       <p class="badge badge-dark border border-outline p-2 mt-3 " style="cursor: pointer;">Load More...</p>
                     </div>
                   </div>

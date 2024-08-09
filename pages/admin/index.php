@@ -221,18 +221,18 @@
                             <!-- <input type="date" id="search_date_from" class="form-control"> -->
                             <select name="search_by_date_from" id="search_by_month" class="form-control">
                               <option value=""></option>
-                              <option value="01">JAN</option>
-                              <option value="02">FEB</option>
-                              <option value="03">MAR</option>
-                              <option value="04">APR</option>
-                              <option value="05">MAY</option>
-                              <option value="06">JUN</option>
-                              <option value="07">JUL</option>
-                              <option value="08">AUG</option>
-                              <option value="09">SEP</option>
-                              <option value="10">OCT</option>
-                              <option value="11">NOV</option>
-                              <option value="12">DEC</option>
+                              <option value="January">JANUARY</option>
+                              <option value="February">FEBRUARY</option>
+                              <option value="March">MARCH</option>
+                              <option value="April">APRIL</option>
+                              <option value="May">MAY</option>
+                              <option value="June">JUNE</option>
+                              <option value="July">JULY</option>
+                              <option value="August">AUGUST</option>
+                              <option value="September">SEPTEMBER</option>
+                              <option value="October">OCTOBER</option>
+                              <option value="November">NOVEMBER</option>
+                              <option value="December">DECEMBER</option>
                             </select>
                           </div>
                           <div class="col-md-3">
@@ -243,8 +243,9 @@
                               <?php
                               $currentYear = date('Y');
                               for ($i = $currentYear; $i <= $currentYear + 10; $i++) {
-                                echo '<option value="' . $i . '"' . ($i == $currentYear ? ' selected' : '') . '>' . $i . '</option>';
+                                echo '<option value="' . $i . '">' . $i . '</option>';
                               }
+                              // ' . ($i == $currentYear ? ' selected' : '') . '
                               ?>
                             </select>
                           </div>
@@ -267,7 +268,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="card-body table-responsive p-0" style="height: 600px;">
+                  <div class="card-body table-responsive p-0" style="height: 620px;">
                     <table class="table table-head-fixed text-nowrap table-hover" id="table">
                       <thead>
                         <tr>
@@ -275,23 +276,24 @@
                           <th>Serial No.</th>
                           <th>Batch No.</th>
                           <th>Group No.</th>
-                          <!-- <th>Document</th> -->
+                          <th>Month</th>
+                          <th>Year</th>
                           <th>Training Group</th>
                           <th>Filename</th>
                           <th>Approved Date</th>
-                          <th></th>
+                          <th>Action</th>
                         </tr>
                       </thead>
                       <tbody id="admin_dashboard_table"> </tbody>
                     </table>
-                    <div id="a_load_more" class="text-center" style="display: none;">
-                      <p class="badge badge-dark border border-outline p-2 mt-3 " style="cursor: pointer;">Load More...</p>
+                    <div id="load_more" class="text-center" style="display: none;">
+                      <p class="badge badge-dark border border-outline px-3 py-2 mt-3 " style="cursor: pointer;">Load More...</p>
                     </div>
                   </div>
                   <hr>
                   <div class="col-md-4">
                     <div class="row">
-                      <span id="approved_count">Count: 0 </span>
+                      <span id="approved_count"></span>
                     </div>
                   </div>
                 </div>

@@ -266,7 +266,6 @@ $file_extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
                                     <option value="Approved">Approve</option>
                                     <option value="Disapproved">Disapprove</option>
                                 </select>
-
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="">Approval by:</label>
@@ -275,7 +274,7 @@ $file_extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
                                     <?php
                                     require '../../process/conn.php';
 
-                                    $sql = "SELECT emp_id, fullname, email FROM m_accounts WHERE role = 'approver'";
+                                    $sql = "SELECT emp_id, fullname, email FROM m_accounts WHERE role = 'approver' AND secret_id != 'IT'";
                                     $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                                     $stmt->execute();
 

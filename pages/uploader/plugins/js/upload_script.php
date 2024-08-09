@@ -208,6 +208,8 @@
         var group_no = document.getElementById('group_no').value;
         var uploader_name = document.getElementById('uploader_name').value;
         var uploader_id = document.getElementById('uploader_id').value;
+        var upload_by_month = document.getElementById('upload_by_month').value;
+        var upload_by_year = document.getElementById('upload_by_year').value;
 
         // var checker_id = document.getElementById('check_by').value;
         if (training_group == 'MNTT' || training_group == 'SEP') {
@@ -229,6 +231,8 @@
         formData.append('group_no', group_no);
         formData.append('uploader_id', uploader_id);
         formData.append('uploader_name', uploader_name);
+        formData.append('upload_by_month', upload_by_month);
+        formData.append('upload_by_year', upload_by_year);
 
         if (training_group == 'MNTT' || training_group == 'SEP') {
             formData.append('approver_id', approver_id);
@@ -241,7 +245,7 @@
             formData.append('files[]', files[i]);
         }
 
-        if (!main_doc || !batch_no || !training_group) {
+        if (!main_doc || !training_group) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Fields must not be empty!',

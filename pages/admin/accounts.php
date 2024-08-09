@@ -9,7 +9,7 @@
             <div class="row">
                 <div class="col-md-3 col-sm-6 col-12">
                     <div class="info-box">
-                        <span class="info-box-icon" style="background-color:#3765AA; color:#fff;"><i class="fas fa-upload"></i></span>
+                        <span class="info-box-icon" style="background-color:#3765AA; color:#fff;"><i class="fas fa-user"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">UPLOADER</span>
                             <span class="info-box-number">

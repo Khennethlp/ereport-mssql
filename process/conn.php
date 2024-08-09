@@ -1,5 +1,5 @@
 <?php
-$server_month = date('Y-m-d');
+$server_month = date('Y');
 date_default_timezone_set('Asia/Manila');
 $servername = 'localhost'; $username = 'root'; $password = '';
 // $servername = 'localhost'; $username = 'root'; $password = 'trspassword2022';

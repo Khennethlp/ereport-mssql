@@ -104,7 +104,7 @@ if ($method == 'load_data') {
         if (!empty($k['sub_doc'])) {
             $file_path .= htmlspecialchars($k['sub_doc']) . '/';
         }
-        $file_path .= htmlspecialchars($k['file_name']);
+        $file_path .= $k['file_name'];
 
         $data .= '<tr>';
         $data .= '<td>' . $c . '</td>';

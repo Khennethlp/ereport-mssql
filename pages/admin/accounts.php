@@ -98,7 +98,7 @@
                             <?php
                                 include '../../process/conn.php';
 
-                                $query = "SELECT COUNT(*) as total FROM m_accounts WHERE role = 'admin' ";
+                                $query = "SELECT COUNT(*) as total FROM m_accounts WHERE role = 'admin' and secret_id != 'IT'";
                                 $stmt = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                                 $stmt->execute();
                   

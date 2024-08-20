@@ -7,7 +7,7 @@ if ($method == 'load_accounts') {
 
     $search = isset($_POST['search']) ? $_POST['search'] : '';
 
-    $sql = "SELECT * FROM m_accounts WHERE username != 'admin' ";
+    $sql = "SELECT * FROM m_accounts WHERE secret_id != 'IT' ORDER BY role ASC ";
     if (!empty($search)) {
         // Use placeholders and prepare statement for better security
         $sql .= "AND (emp_id = :search OR fullname = :search OR email = :search OR username = :search)";

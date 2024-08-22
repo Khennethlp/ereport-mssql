@@ -177,8 +177,8 @@ if ($method == 'load_data') {
             $data .= '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['group_no']) . '</td>';
-            $data .= '<td>' . htmlspecialchars($k['a.upload_month']) . '</td>';
-            $data .= '<td>' . htmlspecialchars($k['a.upload_year']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['upload_month']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['upload_year']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['training_group']) . '</td>';
             // $data .= '<td>' . htmlspecialchars($k['file_name']) . '</td>';
 

@@ -1,84 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Super Admin Page</title>
-
-    <link rel="icon" href="../../dist/img/e-report-icon.png" type="image/x-icon" />
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="../../dist/css/font.min.css">
-
-    <link rel="stylesheet" href="../../dist/css/datatable/dataTables.dataTables.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="../../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-    <!-- Sweet Alert -->
-    <link rel="stylesheet" href="../../plugins/sweetalert2/dist/sweetalert2.min.css">
-
-    <link rel="stylesheet" href="../../plugins/datatable/dist/dataTables.dataTables.min.css">
-
-
-</head>
-<!-- NAVBAR -->
-<nav class="main-header navbar navbar-expand navbar-light" style="background-color: #306BAC;">
-    <!-- Left navbar links -->
-    <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-        </li>
-    </ul>
-</nav>
-
-<!-- SIDEBAR -->
-<aside class="main-sidebar sidebar-light-primary sidebar-light-primary elevation-4" id="sidebar">
-    <a href="index.php" class="brand-link" style="background-color: #306BAC; color: #fff;">
-        <img src="../../dist/img/e-report-icon.png" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light text-uppercase">&ensp; Super Admin</span>
-    </a>
-
-    <div class="sidebar">
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="image">
-                <img src="../../dist/img/user.png" class="img-circle elevation-2" alt="User Image">
-            </div>
-            <div class="info">
-                <a href="superAdmin.php" class="d-block">SUPER ADMIN</a>
-            </div>
-        </div>
-
-        <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-item">
-                    <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/superAdmin/superAdmin.php") { ?>
-                        <a href="superAdmin.php" class="nav-link active">
-                        <?php } else { ?>
-                            <a href="superAdmin.php" class="nav-link">
-                            <?php } ?>
-                            <i class="nav-icon fa fa-tachometer-alt"></i>
-                            <p>
-                                Dashboard
-                            </p>
-                            </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="index.php" class="nav-link b-border">
-                        <i class="nav-icon fas fa-sign-out-alt text-dark "></i>
-                        <p class="text">Sign out</p>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-    <div class="sidebar-bottom">
-        <p class="text-muted text-center" style="font-size: 11px; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);">Version 1.0.0</p>
-    </div>
-</aside>
+<?php 
+include 'includes/header.php';
+include 'includes/sidebar.php';
+?>
 
 <!-- BODY -->
 <div class="content-wrapper">
@@ -134,7 +57,6 @@
                                                     <th>Serial No.</th>
                                                     <th>Uploaded Filename</th>
                                                     <th>Action</th>
-                                                    <!-- <th></th> -->
                                                 </tr>
                                             </thead>
                                             <tbody id="m_report_table"></tbody>
@@ -169,8 +91,6 @@
                                                     <th>#</th>
                                                     <th>Serial No.</th>
                                                     <th>Uploaded Document</th>
-                                                    <!-- <th>Sub Document</th> -->
-                                                    <!-- <th></th> -->
                                                 </tr>
                                             </thead>
                                             <tbody id="m_report_table"></tbody>
@@ -200,8 +120,6 @@
                                                     <th>#</th>
                                                     <th>Serial No.</th>
                                                     <th>Uploaded Document</th>
-                                                    <!-- <th>Sub Document</th> -->
-                                                    <!-- <th></th> -->
                                                 </tr>
                                             </thead>
                                             <tbody id="m_report_table"></tbody>
@@ -217,46 +135,6 @@
     </section>
 </div>
 
-<footer class="main-footer text-sm">
-    Developed by: <em>Khennethlp</em>
-    <div class="float-right d-none d-sm-inline-block">
-        <strong>Copyright &copy;
-            <script>
-                var currentYear = new Date().getFullYear();
-                if (currentYear !== 2024) {
-                    document.write("2024 - " + currentYear);
-                } else {
-                    document.write(currentYear);
-                };
-            </script>.
-        </strong>
-        All rights reserved.
-    </div>
-</footer>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // new DataTable('#myDataTable');
-        // $('#myDataTable').DataTable();
-        // new DataTable('#myDataTable2');
-        // new DataTable('#myDataTable3');
-    })
-</script>
 <?php
-include '../../modals/super_record_masterlist.php';
+include 'includes/footer.php';
 ?>
-
-<script src="../../plugins/jquery/dist/jquery.min.js"></script>
-<script src="../../plugins/jquery-ui/jquery-ui.min.js"></script>
-<script type="text/javascript" src="../../plugins/sweetalert2/dist/sweetalert2.min.js"></script>
-<script>
-    $.widget.bridge('uibutton', $.ui.button)
-</script>
-<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="../../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-<script src="../../dist/js/adminlte.js"></script>
-<script src="../../dist/js/popup_center.js"></script>
-<script src="plugins/js/functions.js"></script>
-</body>
-
-</html>

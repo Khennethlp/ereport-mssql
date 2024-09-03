@@ -35,8 +35,11 @@ if ($method == 'checker_table') {
                 CASE
                     WHEN a.upload_date != '' AND a.update_upload_date = '' THEN a.upload_date
                     WHEN a.update_upload_date != '' THEN a.update_upload_date
-                END AS checked_date,
-                a.checker_name, 
+                END AS upload_date,
+                a.checker_name AS checked_by, 
+                a.checked_date AS checked_date,
+                a.approver_name AS approved_by, 
+                a.approved_date AS approved_date,
                 a.checker_email, 
                 a.upload_date, 
                 a.update_upload_date, 
@@ -166,7 +169,11 @@ if ($method == 'checker_table') {
             }
 
             $data .= '<td>' . htmlspecialchars($k['uploader_name']) . '</td>';
-            $data .= '<td>' . date('Y/m/d', strtotime($k['checked_date'])) . '</td>';
+            $data .= '<td>' . date('Y/m/d', strtotime($k['upload_date'])) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['checked_by']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['checked_date']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['approved_by']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['approved_date']) . '</td>';
             $data .= '</tr>';
             $c++;
         }

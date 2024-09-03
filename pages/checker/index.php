@@ -202,7 +202,11 @@
                           <th>Training Group</th>
                           <th>Filenames</th>
                           <th>Upload By</th>
-                          <th>Date</th>
+                          <th>Upload Date</th>
+                          <th>Checked By</th>
+                          <th>Checked Date</th>
+                          <th>Approved By</th>
+                          <th>Approved Date</th>
                         </tr>
                       </thead>
                       <tbody id="checker_table"> </tbody>

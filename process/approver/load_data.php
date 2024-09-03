@@ -32,11 +32,20 @@ if ($method == 'approver_table') {
             WHEN a.approver_status = 'Approved' THEN a.approved_date
             WHEN a.approver_status = 'Disapproved' THEN a.approved_date
         END AS approved_date,
+            CASE
+                    WHEN a.upload_date != '' AND a.update_upload_date = '' THEN a.upload_date
+                    WHEN a.update_upload_date != '' THEN a.update_upload_date
+                END AS upload_date,
         CASE
             WHEN a.checker_status = 'Approved' AND a.approver_status = 'Pending' THEN a.checker_name
             WHEN a.checker_status = 'Approved' AND a.approver_status = 'Approved' THEN a.checker_name
             WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN a.checker_name
         END AS checker_name,
+        CASE
+            WHEN a.approver_status = 'Pending' THEN a.approver_name
+            WHEN a.approver_status = 'Approved' THEN a.approver_name
+            WHEN a.approver_status = 'Disapproved' THEN a.approver_name
+        END AS approver_name,
         CASE
             WHEN a.approver_status = 'Pending' THEN a.uploader_name
             WHEN a.approver_status = 'Approved' THEN a.uploader_name
@@ -149,8 +158,11 @@ if ($method == 'approver_table') {
             $data .= '<td>File not found</td>';
         }
 
-        $data .= '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
         $data .= '<td>' . htmlspecialchars($k['uploader_name']) . '</td>';
+        $data .= '<td>' . date('Y/m/d', strtotime($k['upload_date'])) . '</td>';
+        $data .= '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
+        $data .= '<td>' . date('Y/m/d', strtotime($k['checked_date'])) . '</td>';
+        $data .= '<td>' . htmlspecialchars($k['approver_name']) . '</td>';
         $data .= '<td>' . date('Y/m/d', strtotime($k['approved_date'])) . '</td>';
         $data .= '</tr>';
         $c++;

@@ -280,6 +280,9 @@
                           <th>Year</th>
                           <th>Training Group</th>
                           <th>Filename</th>
+                          <th>Checked By</th>
+                          <th>Checked Date</th>
+                          <th>Approved By</th>
                           <th>Approved Date</th>
                           <th>Action</th>
                         </tr>

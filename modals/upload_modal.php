@@ -28,7 +28,29 @@
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="">Group No.</label>
-                                    <input type="text" class="form-control" id="group_no">
+                                    <!-- <input type="text" class="form-control" id="group_no"> -->
+                                    <input type="text" list="group_no" class=" form-control" placeholder="">
+                                    <datalist id="group_no">
+                                        <?php
+                                        require '../../process/conn.php';
+                                        $sql = "SELECT DISTINCT group_no FROM t_training_record ";
+                                        $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                                        $stmt->execute();
+
+                                        if ($stmt->rowCount() > 0) {
+                                            // Output data of each row
+                                            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                            // Output data of each row
+                                            foreach ($rows as $row) {
+
+                                                echo '<option value="' . $row["group_no"] . '">' . $row["group_no"] . '</option>';
+                                            }
+                                        } else {
+                                            echo '<option value="">No data available</option>';
+                                        }
+                                        ?>
+                                    </datalist>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="">Month:</label>
@@ -80,15 +102,15 @@
                                         <option value="" selected>--SELECT DOCUMENT--</option>
                                         <?php
                                         require '../../process/conn.php';
-    
+
                                         $sql = "SELECT DISTINCT main_doc FROM m_report_title";
                                         $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                                         $stmt->execute();
-    
+
                                         if ($stmt->rowCount() > 0) {
                                             // Output data of each row
                                             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
                                             // Output data of each row
                                             foreach ($rows as $row) {
                                                 echo '<option value="' . $row["main_doc"] . '">' . $row["main_doc"] . '</option>';

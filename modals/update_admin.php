@@ -22,30 +22,59 @@
                     </div>
                     <div class="col-md-4 mb-2">
                         <label for="">Group No:</label>
-                        <input type="text" id="update_group" class="form-control" placeholder="">
+                        <input type="text" list="update_group" class="update_group form-control" placeholder="">
+                        <datalist id="update_group">
+                            <?php
+                            require '../../process/conn.php';
+                            $sql = "SELECT DISTINCT group_no FROM t_training_record ";
+                            $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                            $stmt->execute();
+
+                            if ($stmt->rowCount() > 0) {
+                                // Output data of each row
+                                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                // Output data of each row
+                                foreach ($rows as $row) {
+
+                                    echo '<option value="' . $row["group_no"] . '">' . $row["group_no"] . '</option>';
+                                }
+                            } else {
+                                echo '<option value="">No data available</option>';
+                            }
+                            ?>
+                        </datalist>
                     </div>
                     <div class="col-md-4 mb-2">
                         <label for="">Month:</label>
                         <!-- <input type="text" id="update_month" class="form-control" placeholder=""> -->
                         <select name="update_month" id="update_month" class="form-control">
-                              <option value=""></option>
-                              <option value="January">January</option>
-                              <option value="February">February</option>
-                              <option value="March">March</option>
-                              <option value="April">April</option>
-                              <option value="May">May</option>
-                              <option value="June">June</option>
-                              <option value="July">July</option>
-                              <option value="August">August</option>
-                              <option value="September">September</option>
-                              <option value="October">October</option>
-                              <option value="November">November</option>
-                              <option value="December">December</option>
-                            </select>
+                            <option value=""></option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
                     </div>
                     <div class="col-md-4 mb-2">
                         <label for="">Year:</label>
-                        <input type="text" id="update_year" class="form-control" placeholder="">
+                        <input type="number" list="update_year" class="update_year form-control" placeholder="Select a year">
+                        <datalist id="update_year">
+                            <?php
+                            $currentYear = date('Y');
+                            for ($i = $currentYear; $i <= $currentYear + 10; $i++) {
+                                echo '<option value="' . $i . '">' . $i . '</option>';
+                            }
+                            ?>
+                        </datalist>
                     </div>
                     <div class="col-md-4 mb-2">
                         <label for="">Training Group:</label>
@@ -77,27 +106,27 @@
                         <label for="">Document:</label>
                         <!-- <input type="text" id="update_doc" class="form-control" placeholder=""> -->
                         <select class="form-control" name="update_doc" id="update_doc">
-                              <option value="" selected></option>
-                              <?php
-                              require '../../process/conn.php';
+                            <option value="" selected></option>
+                            <?php
+                            require '../../process/conn.php';
 
-                              $sql = "SELECT DISTINCT main_doc FROM m_report_title";
-                              $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-                              $stmt->execute();
+                            $sql = "SELECT DISTINCT main_doc FROM m_report_title";
+                            $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                            $stmt->execute();
 
-                              if ($stmt->rowCount() > 0) {
+                            if ($stmt->rowCount() > 0) {
                                 // Output data of each row
                                 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                 // Output data of each row
                                 foreach ($rows as $row) {
-                                  echo '<option value="' . $row["main_doc"] . '">' . $row["main_doc"] . '</option>';
+                                    echo '<option value="' . $row["main_doc"] . '">' . $row["main_doc"] . '</option>';
                                 }
-                              } else {
+                            } else {
                                 echo '<option value="">No data available</option>';
-                              }
-                              ?>
-                            </select>
+                            }
+                            ?>
+                        </select>
                     </div>
                     <div class="col-md-6 mb-2">
                         <label for="">Filename:</label>

@@ -156,7 +156,28 @@
                           </div>
                           <div class="col-md-3">
                             <label for="">Search By Group No:</label>
-                            <input type="search" class="form-control" name="" id="search_by_groupNo" placeholder="">
+                            <input type="search" class="form-control" name="" list="search_by_groupNo" placeholder="">
+                            <datalist id="search_by_groupNo">
+                              <?php
+                              require '../../process/conn.php';
+                              $sql = "SELECT DISTINCT group_no FROM t_training_record ";
+                              $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                              $stmt->execute();
+
+                              if ($stmt->rowCount() > 0) {
+                                // Output data of each row
+                                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                // Output data of each row
+                                foreach ($rows as $row) {
+
+                                  echo '<option value="' . $row["group_no"] . '">' . $row["group_no"] . '</option>';
+                                }
+                              } else {
+                                echo '<option value="">No data available</option>';
+                              }
+                              ?>
+                            </datalist>
                           </div>
                           <div class="col-md-3">
                             <label for="">Search By Training Group:</label>

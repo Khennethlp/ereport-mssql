@@ -100,9 +100,11 @@
         $('#update_id').val(id);
         $('#update_serial_no').val(serial_no);
         $('#update_batch').val(batch_no);
-        $('#update_group').val(group_no);
+        // $('#update_group').val(group_no);
+        $('.update_group').val(group_no); //classname
         $('#update_month').val(month);
-        $('#update_year').val(year);
+        // $('#update_year').val(year);
+        $('.update_year').val(year); //classname
         $('#update_tgroup').val(training_group);
         $('#update_filename').val(filename);
         $('#update_doc').val(main_doc);
@@ -117,9 +119,11 @@
         var id = document.getElementById('update_id').value;
         var serialNo = document.getElementById('update_serial_no').value;
         var batchNo = document.getElementById('update_batch').value;
-        var groupNo = document.getElementById('update_group').value;
+        // var groupNo = document.getElementById('update_group').value;
+        var groupNo = document.getElementsByClassName('update_group')[0].value; //classname
         var month = document.getElementById('update_month').value;
-        var year = document.getElementById('update_year').value;
+        // var year = document.getElementById('update_year').value;
+        var year = document.getElementsByClassName('update_year')[0].value; //classname
         var trainingGroup = document.getElementById('update_tgroup').value;
         var mainDoc = document.getElementById('update_doc').value;
         var filename = document.getElementById('update_filename').value;
@@ -151,7 +155,7 @@
 
                     load_data();
                     $('#update_admin').modal('hide');
-                }else if (response == 'error') {
+                } else if (response == 'error') {
                     Swal.fire({
                         icon: 'error',
                         title: 'Failed to update.',
@@ -160,7 +164,7 @@
                     });
 
                     load_data();
-                }else{
+                } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'Something went wrong.',

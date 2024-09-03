@@ -7,10 +7,14 @@ if ($method == 'load_data') {
 
     $uploader_name = isset($_POST['uploader_name']) ? $_POST['uploader_name'] : '';
     $status = isset($_POST['status']) ? $_POST['status'] : '';
-    $search = isset($_POST['search']) ? $_POST['search'] : '';
+    $search_by_serialNo = isset($_POST['search_by_serialNo']) ? $_POST['search_by_serialNo'] : '';
+    $search_by_batchNo = isset($_POST['search_by_batchNo']) ? $_POST['search_by_batchNo'] : '';
+    $search_by_groupNo = isset($_POST['search_by_groupNo']) ? $_POST['search_by_groupNo'] : '';
+    $search_by_tgroup = isset($_POST['search_by_tgroup']) ? $_POST['search_by_tgroup'] : '';
+    $search_by_docs = isset($_POST['search_by_docs']) ? $_POST['search_by_docs'] : '';
     $search_by_filename = isset($_POST['search_by_filename']) ? $_POST['search_by_filename'] : '';
-    $date_from = isset($_POST['date_from']) ? $_POST['date_from'] : '';
-    $date_to = isset($_POST['date_to']) ? $_POST['date_to'] : '';
+    $month = isset($_POST['month']) ? $_POST['month'] : '';
+    $year = isset($_POST['year']) ? $_POST['year'] : '';
 
     $page = isset($_POST['page']) ? (int)$_POST['page'] : 1;
     $rowsPerPage = isset($_POST['rows_per_page']) ? (int)$_POST['rows_per_page'] : 10;
@@ -72,12 +76,29 @@ if ($method == 'load_data') {
         )";
     }
 
-    if (!empty($date_from) && !empty($date_to)) {
-        $conditions[] = "a.upload_date BETWEEN :date_from AND :date_to";
+    // if (!empty($date_from) && !empty($date_to)) {
+    //     $conditions[] = "a.upload_date BETWEEN :date_from AND :date_to";
+    // }
+    if (!empty($year)) {
+        $sql .= "a.upload_year = :year";
     }
-
-    if (!empty($search)) {
-        $conditions[] = "a.batch_no = :search OR a.group_no = :search OR a.serial_no = :search OR a.training_group = :search OR a.checker_name = :search OR a.approver_name = :search";
+    if (!empty($month)) {
+        $sql .= "a.upload_month LIKE :month";
+    }
+    if (!empty($search_by_serialNo)) {
+        $conditions[] = "a.serial_no = :search_by_serialNo";
+    }
+    if (!empty($search_by_batchNo)) {
+        $conditions[] = "a.batch_no = :search_by_batchNo";
+    }
+    if (!empty($search_by_groupNo)) {
+        $conditions[] = "a.group_no = :search_by_groupNo";
+    }
+    if (!empty($search_by_tgroup)) {
+        $conditions[] = "a.training_group = :search_by_tgroup";
+    }
+    if (!empty($search_by_docs)) {
+        $conditions[] = "b.main_doc = :search_by_docs";
     }
 
     if (!empty($search_by_filename)) {
@@ -86,7 +107,6 @@ if ($method == 'load_data') {
     if (!empty($search_by_filename) && !empty($search)) {
         $conditions[] = "file_name = :search_by_filename AND a.training_group = :search";
     }
-
     if (!empty($conditions)) {
         $sql .= " AND " . implode(" AND ", $conditions);
     }
@@ -101,24 +121,42 @@ if ($method == 'load_data') {
     if (!empty($status)) {
         $stmt->bindParam(':status', $status, PDO::PARAM_STR);
     }
-
-    if (!empty($date_from) && !empty($date_to)) {
-        $stmt->bindParam(':date_from', $date_from, PDO::PARAM_STR);
-        $stmt->bindParam(':date_to', $date_to, PDO::PARAM_STR);
+    if (!empty($year)) {
+        $stmt->bindParam(':year', $year);
+    }
+    if (!empty($month)) {
+        $stmt->bindParam(':month', $month);
     }
 
-    if (!empty($search)) {
-        $stmt->bindParam(':search', $search, PDO::PARAM_STR);
+    // if (!empty($date_from) && !empty($date_to)) {
+    //     $stmt->bindParam(':date_from', $date_from, PDO::PARAM_STR);
+    //     $stmt->bindParam(':date_to', $date_to, PDO::PARAM_STR);
+    // }
+
+    if (!empty($search_by_serialNo)) {
+        $stmt->bindParam(':search_by_serialNo', $search_by_serialNo, PDO::PARAM_STR);
+    }
+    if (!empty($search_by_batchNo)) {
+        $stmt->bindParam(':search_by_batchNo', $search_by_batchNo, PDO::PARAM_STR);
+    }
+    if (!empty($search_by_groupNo)) {
+        $stmt->bindParam(':search_by_groupNo', $search_by_groupNo, PDO::PARAM_STR);
+    }
+    if (!empty($search_by_tgroup)) {
+        $stmt->bindParam(':search_by_tgroup', $search_by_tgroup, PDO::PARAM_STR);
+    }
+    if (!empty($search_by_docs)) {
+        $stmt->bindParam(':search_by_docs', $search_by_docs, PDO::PARAM_STR);
     }
 
     if (!empty($search_by_filename)) {
         $stmt->bindParam(':search_by_filename', $search_by_filename, PDO::PARAM_STR);
     }
 
-    if (!empty($search_by_filename) && !empty($search)) {
-        $stmt->bindParam(':search_by_filename', $search_by_filename, PDO::PARAM_STR);
-        $stmt->bindParam(':search', $search, PDO::PARAM_STR);
-    }
+    // if (!empty($search_by_filename) && !empty($search)) {
+    //     $stmt->bindParam(':search_by_filename', $search_by_filename, PDO::PARAM_STR);
+    //     $stmt->bindParam(':search', $search, PDO::PARAM_STR);
+    // }
 
     $stmt->execute();
 

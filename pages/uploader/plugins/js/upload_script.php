@@ -1,7 +1,15 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
+        document.querySelectorAll('#approver_status, #search_by_serialNo, #search_by_batchNo, #search_by_groupNo, #search_by_filename').forEach(input => {
+            input.addEventListener("keyup", e => {
+                if (e.which === 13) {
+                    load_data();
+                }
+            });
+        });
 
+        //load data by default
         load_data();
 
         // change to approver if selected training group is either MNTT or SEP
@@ -95,33 +103,33 @@
                 id: id,
                 serial_no: serial_no
             },
-            success: function (response) {
-                if(response.trim() == 'success'){
+            success: function(response) {
+                if (response.trim() == 'success') {
                     Swal.fire({
-                    icon: 'success',
-                    title: 'Record have been deleted successfully.',
-                    showConfirmButton: false,
-                    timer: 1000
-                });
+                        icon: 'success',
+                        title: 'Record have been deleted successfully.',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
                     load_data();
                     $('#delete_pending').modal('hide');
-                }else if(response.trim() == 'error'){
+                } else if (response.trim() == 'error') {
                     Swal.fire({
-                    icon: 'error',
-                    title: 'There was an error deleting the record.',
-                    showConfirmButton: false,
-                    timer: 1000
-                });
+                        icon: 'error',
+                        title: 'There was an error deleting the record.',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
                 }
             },
-            error: function (xhr, status, error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'An unexpected error occurred.',
-                text: 'Please try again later.',
-                showConfirmButton: true
-            });
-        }
+            error: function(xhr, status, error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'An unexpected error occurred.',
+                    text: 'Please try again later.',
+                    showConfirmButton: true
+                });
+            }
         });
 
     }
@@ -134,12 +142,16 @@
             page = 1; // Reset page number for initial load
         }
 
-        var status = $('#status').val();
-        var search = $('#search').val();
-        var search_by_filename = $('#search_by_filename').val();
-        var date_from = $('#search_date_from').val();
-        var date_to = $('#search_date_to').val();
         var uploader_name = $('#uploader_name').val();
+        var status = $('#status').val();
+        var search_by_serialNo = $('#search_by_serialNo').val();
+        var search_by_batchNo = $('#search_by_batchNo').val();
+        var search_by_groupNo = $('#search_by_groupNo').val();
+        var search_by_tgroup = $('#search_by_tgroup').val();
+        var search_by_docs = $('#search_by_docs').val();
+        var search_by_filename = $('#search_by_filename').val();
+        var month = $('#search_by_month').val();
+        var year = $('#search_by_year').val();
 
         // sessionStorage.setItem('status', status);
         $.ajax({
@@ -149,10 +161,14 @@
             data: {
                 method: 'load_data',
                 status: status,
-                search: search,
+                search_by_serialNo: search_by_serialNo,
+                search_by_batchNo: search_by_batchNo,
+                search_by_groupNo: search_by_groupNo,
+                search_by_tgroup: search_by_tgroup,
+                search_by_docs: search_by_docs,
                 search_by_filename: search_by_filename,
-                date_from: date_from,
-                date_to: date_to,
+                month: month,
+                year: year,
                 uploader_name: uploader_name,
                 page: page,
                 rows_per_page: rowsPerPage

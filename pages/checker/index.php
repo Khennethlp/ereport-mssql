@@ -76,7 +76,7 @@
             <div class="inner">
               <?php
               require '../../process/conn.php';
-               $checker_id = $_SESSION['emp_id'];
+              $checker_id = $_SESSION['emp_id'];
 
               $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE checker_status = 'Disapproved' AND checker_id = :checker_id";
               $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
@@ -144,31 +144,119 @@
                       <div class="col-md-12">
                         <div class="row">
                           <input type="hidden" name="checker_id" id="checker_id" value="<?php echo $_SESSION['emp_id']; ?>">
-                          <div class="col-md-3">
-                            <label for="">Search:</label>
-                            <input type="search" class="form-control" name="search_by" id="search_by" placeholder="">
-                          </div>
-                          <div class="col-md-3">
+                          <div class="col-md-3 mb-2">
                             <label for="">Status:</label>
-                            <select name="status" id="status" class="form-control">
+                            <select name="status" id="status" class="form-control bg-cyan">
                               <!-- <option value="">--All--</option> -->
                               <option value="pending">PENDING</option>
                               <option value="approved">APPROVED</option>
                               <option value="disapproved">DISAPPROVED</option>
                             </select>
                           </div>
-                        
-                          <div class="col-md-3">
-                            <label for="">From:</label>
-                            <input type="date" class="form-control" name="search_by_date_from" id="search_by_date_from">
+
+                          <div class="col-md-3 mb-2">
+                            <label for="">Search By Serial No:</label>
+                            <input type="search" id="search_by_serialNo" class="form-control">
                           </div>
-                          <div class="col-md-3">
-                            <label for="">To:</label>
-                            <input type="date" class="form-control" name="search_by_date_to" id="search_by_date_to">
+                          <div class="col-md-3 mb-2">
+                            <label for="">Search By Batch No:</label>
+                            <input type="search" id="search_by_batchNo" class="form-control">
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <label for="">Search By Group No:</label>
+                            <input type="search" id="search_by_groupNo" class="form-control">
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <label for="">Search By Training Group:</label>
+                            <!-- <input type="search" id="search_by_tgroup" class="form-control"> -->
+                            <select class="form-control" name="search_by_tgroup" id="search_by_tgroup">
+                              <option value=""></option>
+                              <?php
+                              require '../../process/conn.php';
+
+                              $sql = "SELECT DISTINCT training_title FROM t_training_group";
+                              $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                              $stmt->execute();
+
+                              if ($stmt->rowCount() > 0) {
+                                // Output data of each row
+                                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                // Output data of each row
+                                foreach ($rows as $row) {
+                                  echo '<option value="' . $row["training_title"] . '">' . $row["training_title"] . '</option>';
+                                }
+                              } else {
+                                echo '<option value="">No data available</option>';
+                              }
+                              ?>
+                            </select>
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <label for="">Search By Document:</label>
+                            <!-- <input type="search" class="form-control" name="" id="search_by_docs" placeholder=""> -->
+                            <select class="form-control" name="search_by_docs" id="search_by_docs">
+                              <option value="" selected></option>
+                              <?php
+                              require '../../process/conn.php';
+
+                              $sql = "SELECT DISTINCT main_doc FROM m_report_title";
+                              $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                              $stmt->execute();
+
+                              if ($stmt->rowCount() > 0) {
+                                // Output data of each row
+                                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                // Output data of each row
+                                foreach ($rows as $row) {
+                                  echo '<option value="' . $row["main_doc"] . '">' . $row["main_doc"] . '</option>';
+                                }
+                              } else {
+                                echo '<option value="">No data available</option>';
+                              }
+                              ?>
+                            </select>
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <label for="">Month:</label>
+                            <select name="search_by_date_from" id="search_by_month" class="form-control">
+                              <option value=""></option>
+                              <option value="January">JANUARY</option>
+                              <option value="February">FEBRUARY</option>
+                              <option value="March">MARCH</option>
+                              <option value="April">APRIL</option>
+                              <option value="May">MAY</option>
+                              <option value="June">JUNE</option>
+                              <option value="July">JULY</option>
+                              <option value="August">AUGUST</option>
+                              <option value="September">SEPTEMBER</option>
+                              <option value="October">OCTOBER</option>
+                              <option value="November">NOVEMBER</option>
+                              <option value="December">DECEMBER</option>
+                            </select>
+                          </div>
+                          <div class="col-md-3 mb-2">
+                            <label for="">Year:</label>
+                            <select name="search_by_date_to" id="search_by_year" class="form-control">
+                              <option value=""></option>
+                              <?php
+                              $currentYear = date('Y');
+                              for ($i = $currentYear; $i <= $currentYear + 10; $i++) {
+                                echo '<option value="' . $i . '">' . $i . '</option>';
+                              }
+                              // ' . ($i == $currentYear ? ' selected' : '') . '
+                              ?>
+                            </select>
                           </div>
 
+
                         </div>
-                        <div class="row">
+                        <div class="row mb-3">
+                          <div class="col-md-3 mb-2">
+                            <label for="">Search by Filename:</label>
+                            <input type="search" id="search_by_filename" class="form-control">
+                          </div>
                           <div class="col-md-3 ml-auto">
                             <label for="">&nbsp;</label>
                             <button class="form-control btn_check_refresh" onclick="load_data();">

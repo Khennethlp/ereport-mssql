@@ -5,10 +5,15 @@ $method = $_POST['method'];
 
 if ($method == 'approver_table') {
     $status = isset($_POST['status']) ? $_POST['status'] : '';
-    $search_by = isset($_POST['search_by']) ? $_POST['search_by'] : '';
-    $date_from = isset($_POST['date_from']) ? $_POST['date_from'] : '';
-    $date_to = isset($_POST['date_to']) ? $_POST['date_to'] : '';
     $approver_id = isset($_POST['approver_id']) ? $_POST['approver_id'] : '';
+    $search_by_serialNo = isset($_POST['search_by_serialNo']) ? $_POST['search_by_serialNo'] : '';
+    $search_by_batchNo = isset($_POST['search_by_batchNo']) ? $_POST['search_by_batchNo'] : '';
+    $search_by_groupNo = isset($_POST['search_by_groupNo']) ? $_POST['search_by_groupNo'] : '';
+    $search_by_tgroup = isset($_POST['search_by_tgroup']) ? $_POST['search_by_tgroup'] : '';
+    $search_by_docs = isset($_POST['search_by_docs']) ? $_POST['search_by_docs'] : '';
+    $search_by_filename = isset($_POST['search_by_filename']) ? $_POST['search_by_filename'] : '';
+    $month = isset($_POST['month']) ? $_POST['month'] : '';
+    $year = isset($_POST['year']) ? $_POST['year'] : '';
 
     $page = isset($_POST['page']) ? (int)$_POST['page'] : 1;
     $rowsPerPage = isset($_POST['rows_per_page']) ? (int)$_POST['rows_per_page'] : 50;
@@ -74,11 +79,29 @@ if ($method == 'approver_table') {
                    (a.approver_status = 'Approved' AND :status = 'Approved')
                 )";
     }
-    if (!empty($search_by)) {
-        $sql .= " AND a.serial_no LIKE :search_by OR a.batch_no LIKE :search_by OR a.group_no LIKE :search_by OR a.training_group LIKE :search_by OR a.upload_month LIKE :search_by OR b.file_name LIKE :search_by";
+    if (!empty($search_by_serialNo)) {
+        $sql .= " AND a.serial_no LIKE :search_by_serialNo";
     }
-    if (!empty($date_from) && !empty($date_to)) {
-        $sql .= " AND a.upload_date BETWEEN :date_from AND :date_to";
+    if (!empty($search_by_batchNo)) {
+        $sql .= " AND a.batch_no LIKE :search_by_batchNo";
+    }
+    if (!empty($search_by_groupNo)) {
+        $sql .= " AND a.group_no LIKE :search_by_groupNo";
+    }
+    if (!empty($search_by_tgroup)) {
+        $sql .= " AND a.training_group LIKE :search_by_tGroup";
+    }
+    if (!empty($search_by_filename)) {
+        $sql .= " AND b.file_name LIKE :search_by_filename";
+    }
+    if (!empty($search_by_docs)) {
+        $sql .= " AND b.main_doc LIKE :search_by_docs";
+    }
+    if (!empty($year)) {
+        $sql .= " AND a.upload_year = :year";
+    }
+    if (!empty($month)) {
+        $sql .= " AND a.upload_month LIKE :month";
     }
     $sql .= " ORDER BY id ASC LIMIT :limit_plus_one OFFSET :offset";
 
@@ -89,13 +112,36 @@ if ($method == 'approver_table') {
     $stmt->bindParam(':approver_id', $approver_id, PDO::PARAM_STR);
     $stmt->bindParam(':status', $status, PDO::PARAM_STR);
 
-    if (!empty($search_by)) {
-        $search_by = "%$search_by%";
-        $stmt->bindParam(':search_by', $search_by, PDO::PARAM_STR);
+    if (!empty($search_by_serialNo)) {
+        $search_by_serialNo = "$search_by_serialNo%";
+        $stmt->bindParam(':search_by_serialNo', $search_by_serialNo, PDO::PARAM_STR);
     }
-    if (!empty($date_from) && !empty($date_to)) {
-        $stmt->bindParam(':date_from', $date_from, PDO::PARAM_STR);
-        $stmt->bindParam(':date_to', $date_to, PDO::PARAM_STR);
+    if (!empty($search_by_batchNo)) {
+        $search_by_batchNo = "$search_by_batchNo%";
+        $stmt->bindParam(':search_by_batchNo', $search_by_batchNo, PDO::PARAM_STR);
+    }
+    if (!empty($search_by_groupNo)) {
+        $search_by_groupNo = "$search_by_groupNo%";
+        $stmt->bindParam(':search_by_groupNo', $search_by_groupNo, PDO::PARAM_STR);
+    }
+    if (!empty($search_by_tgroup)) {
+        $search_by_tgroup = "$search_by_tgroup%";
+        $stmt->bindParam(':search_by_tGroup', $search_by_tgroup, PDO::PARAM_STR);
+    }
+    if (!empty($search_by_filename)) {
+        $search_by_filename = "$search_by_filename%";
+        $stmt->bindParam(':search_by_filename', $search_by_filename, PDO::PARAM_STR);
+    }
+    if (!empty($search_by_docs)) {
+        $search_by_docs = "%$search_by_docs%";
+        $stmt->bindParam(':search_by_docs', $search_by_docs, PDO::PARAM_STR);
+    }
+    if (!empty($year)) {
+        $stmt->bindParam(':year', $year, PDO::PARAM_INT);
+    }
+    if (!empty($month)) {
+        $month = "$month%";
+        $stmt->bindParam(':month', $month, PDO::PARAM_STR);
     }
 
     $stmt->execute();

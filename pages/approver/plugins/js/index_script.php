@@ -5,10 +5,19 @@
         //     isPagination = true;
         //     load_data();
         // });
+        document.querySelectorAll('#approver_status, #search_by_serialNo, #search_by_batchNo, #search_by_groupNo, #search_by_filename').forEach(input => {
+            input.addEventListener("keyup", e => {
+                if (e.which === 13) {
+                    load_data();
+                }
+            });
+        });
+
+        //load data by default
         load_data();
     });
 
-    let page = 1; 
+    let page = 1;
     const rowsPerPage = 50;
     const load_data = (isPagination = false) => {
         if (!isPagination) {
@@ -16,12 +25,17 @@
         }
 
         const status = document.getElementById('approver_status').value;
-        const date_from = document.getElementById('search_by_date_from').value;
-        const date_to = document.getElementById('search_by_date_to').value;
         const approver_id = document.getElementById('approver_id').value;
-        const search_by = document.getElementById('search_by').value;
+        var search_by_serialNo = $('#search_by_serialNo').val();
+        var search_by_batchNo = $('#search_by_batchNo').val();
+        var search_by_groupNo = $('#search_by_groupNo').val();
+        var search_by_tgroup = $('#search_by_tgroup').val();
+        var search_by_docs = $('#search_by_docs').val();
+        var search_by_filename = $('#search_by_filename').val();
+        var month = $('#search_by_month').val();
+        var year = $('#search_by_year').val();
 
-        var stats =sessionStorage.setItem('status', status);
+        var stats = sessionStorage.setItem('status', status);
         $.ajax({
             type: "POST",
             url: '../../process/approver/load_data.php',
@@ -30,9 +44,14 @@
                 method: 'approver_table',
                 status: status,
                 approver_id: approver_id,
-                search_by: search_by,
-                date_from: date_from,
-                date_to: date_to,
+                search_by_serialNo: search_by_serialNo,
+                search_by_batchNo: search_by_batchNo,
+                search_by_groupNo: search_by_groupNo,
+                search_by_tgroup: search_by_tgroup,
+                search_by_docs: search_by_docs,
+                search_by_filename: search_by_filename,
+                month: month,
+                year: year,
                 page: page,
                 rows_per_page: rowsPerPage
 

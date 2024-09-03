@@ -23,6 +23,7 @@ include '../../modals/add_training.php';
 
 include '../../modals/update_docs.php';
 include '../../modals/update_training.php';
+include '../../modals/update_admin.php';
 
 
 ?>

@@ -4,7 +4,8 @@
         counts();
     });
 
-    let page = 1; 
+
+    let page = 1;
     const rowsPerPage = 50;
     const load_data = (isPagination = false) => {
         if (!isPagination) {
@@ -76,6 +77,97 @@
             success: function(response) {
                 $('#approved_count').html(response);
 
+            }
+        });
+    }
+
+    const update_data_admin = (param) => {
+        var data = param.split('~!~');
+        var id = data[0];
+        var serial_no = data[1];
+        var batch_no = data[2];
+        var group_no = data[3];
+        var month = data[4];
+        var year = data[5];
+        var training_group = data[6];
+        var filename = data[7];
+        var checked_by = data[8];
+        var checked_date = data[9];
+        var approved_by = data[10];
+        var approved_date = data[11];
+        var main_doc = data[12];
+
+        $('#update_id').val(id);
+        $('#update_serial_no').val(serial_no);
+        $('#update_batch').val(batch_no);
+        $('#update_group').val(group_no);
+        $('#update_month').val(month);
+        $('#update_year').val(year);
+        $('#update_tgroup').val(training_group);
+        $('#update_filename').val(filename);
+        $('#update_doc').val(main_doc);
+        $('#update_checkedBy').val(checked_by);
+        $('#update_checkedDate').val(checked_date);
+        $('#update_approvedBy').val(approved_by);
+        $('#update_approvedDate').val(approved_date);
+        console.log(param);
+    }
+
+    const update_admin = () => {
+        var id = document.getElementById('update_id').value;
+        var serialNo = document.getElementById('update_serial_no').value;
+        var batchNo = document.getElementById('update_batch').value;
+        var groupNo = document.getElementById('update_group').value;
+        var month = document.getElementById('update_month').value;
+        var year = document.getElementById('update_year').value;
+        var trainingGroup = document.getElementById('update_tgroup').value;
+        var mainDoc = document.getElementById('update_doc').value;
+        var filename = document.getElementById('update_filename').value;
+
+        $.ajax({
+            type: "POST",
+            url: "../../process/admin/load_data.php",
+            data: {
+                method: 'update_admin',
+                id: id,
+                serialNo: serialNo,
+                batchNo: batchNo,
+                groupNo: groupNo,
+                month: month,
+                year: year,
+                trainingGroup: trainingGroup,
+                mainDoc: mainDoc,
+                filename: filename,
+
+            },
+            success: function(response) {
+                if (response == 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Updated successfully!',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+
+                    load_data();
+                    $('#update_admin').modal('hide');
+                }else if (response == 'error') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed to update.',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+
+                    load_data();
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Something went wrong.',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+                }
             }
         });
     }

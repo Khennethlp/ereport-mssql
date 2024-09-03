@@ -106,7 +106,7 @@ if ($method == 'load_data') {
         }
         $file_path .= $k['file_name'];
 
-        $data .= '<tr>';
+        $data .= '<tr style="cursor: pointer;" data-toggle="modal" data-target="#update_admin" onclick="update_data_admin(&quot;'. $k['id'] . '~!~' . $k['serial_no'] . '~!~' . $k['batch_no'] . '~!~' . $k['group_no'] . '~!~' . $k['upload_month'] . '~!~' . $k['upload_year'] . '~!~' . $k['training_group'] . '~!~' . $k['file_name'] . '~!~' . $k['checker_name'] . '~!~' . $k['checked_date'] . '~!~' . $k['approver_name'] . '~!~' . $k['approved_date'] . '~!~' . $k['main_doc'] . '&quot;)">';
         $data .= '<td>' . $c . '</td>';
         $data .= '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
         $data .= '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
@@ -280,4 +280,45 @@ if ($method == 'counts') {
     } else {
         echo 'Total: 0';
     }
+}
+
+if ($method == 'update_admin') {
+    $id = $_POST['id'];
+    $serialNo = $_POST['serialNo'];
+    $batchNo = $_POST['batchNo'];
+    $groupNo = $_POST['groupNo'];
+    $month = $_POST['month'];
+    $year = $_POST['year'];
+    $trainingGroup = $_POST['trainingGroup'];
+    $mainDoc = $_POST['mainDoc'];
+    $filename = $_POST['filename'];
+   
+    try{
+        $sql_training_record = "UPDATE t_training_record SET batch_no = :batch_no, group_no = :group_no, training_group = :training_group, upload_month = :upload_month, upload_year = :upload_year WHERE id = :id AND serial_no = :serialNo";
+        $stmt = $conn->prepare($sql_training_record);
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':serialNo', $serialNo);
+        $stmt->bindParam(':batch_no', $batchNo);
+        $stmt->bindParam(':group_no', $groupNo);
+        $stmt->bindParam(':training_group', $trainingGroup);
+        $stmt->bindParam(':upload_month', $month);
+        $stmt->bindParam(':upload_year', $year);
+    
+        if($stmt->execute()){
+            
+            $sql_upload_file = "UPDATE t_upload_file SET main_doc = :main_doc, file_name = :file_name WHERE id = :id AND serial_no = :serialNo";
+            $stmt = $conn->prepare($sql_upload_file);
+            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':serialNo', $serialNo);
+            $stmt->bindParam(':main_doc', $mainDoc);
+            $stmt->bindParam(':file_name', $filename);
+            $stmt->execute();
+            echo 'success';
+        }else {
+            echo 'error';
+        }
+    }catch(PDOException $e){
+        echo 'error: ' . $e->getMessage();
+    }
+    
 }

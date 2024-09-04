@@ -287,7 +287,7 @@ $file_extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
                                             echo '<option value="' . $row["emp_id"] . '">' . $row["fullname"] . '</option>';
                                         }
                                     } else {
-                                        echo '<option value="">No data available</option>';
+                                        echo '<option value="">No approver available</option>';
                                     }
                                     ?>
                                 </select>

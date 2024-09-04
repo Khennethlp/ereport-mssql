@@ -215,6 +215,7 @@ if ($method == 'checker_table') {
             $data .= '<td>' . htmlspecialchars($k['group_no']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['upload_month']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['upload_year']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['main_doc']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['training_group']) . '</td>';
 
             

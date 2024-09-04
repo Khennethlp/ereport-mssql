@@ -146,15 +146,15 @@
                       <div class="col-md-12">
                         <div class="row">
                           <input type="hidden" name="approver_id" id="approver_id" value="<?php echo $_SESSION['emp_id']; ?>">
-                          <div class="col-md-3">
+                          <div class="col-md-3 mb-2">
                             <label for="">Search By Serial No:</label>
                             <input type="search" class="form-control" name="" id="search_by_serialNo" placeholder="">
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-3 mb-2">
                             <label for="">Search By Batch No:</label>
                             <input type="search" class="form-control" name="" id="search_by_batchNo" placeholder="">
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-3 mb-2">
                             <label for="">Search By Group No:</label>
                             <input type="search" class="form-control" name="" list="search_by_groupNo" placeholder="">
                             <datalist id="search_by_groupNo">
@@ -179,7 +179,7 @@
                               ?>
                             </datalist>
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-3 mb-2">
                             <label for="">Search By Training Group:</label>
                             <!-- <input type="search" class="form-control" name="" id="search_by_tgroup" placeholder=""> -->
                             <select class="form-control" name="search_by_tgroup" id="search_by_tgroup">
@@ -205,7 +205,7 @@
                               ?>
                             </select>
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-3 mb-2">
                             <label for="">Search By Document:</label>
                             <!-- <input type="search" class="form-control" name="" id="search_by_docs" placeholder=""> -->
                             <select class="form-control" name="search_by_docs" id="search_by_docs">
@@ -231,11 +231,11 @@
                               ?>
                             </select>
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-3 mb-2">
                             <label for="">Search By Filename:</label>
                             <input type="search" class="form-control" name="" id="search_by_filename" placeholder="">
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-3 mb-2">
                             <!-- <label for="">From:</label> -->
                             <!-- <input type="date" class="form-control" name="" id="search_by_date_from"> -->
                             <label for="">Month:</label>
@@ -256,7 +256,7 @@
                               <option value="December">DECEMBER</option>
                             </select>
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-3 mb-2">
                             <label for="">Year:</label>
                             <!-- <input type="date" class="form-control" name="" id="search_by_date_to"> -->
                             <select name="search_by_date_to" id="search_by_year" class="form-control">
@@ -270,14 +270,14 @@
                               ?>
                             </select>
                           </div>
-                          <div class="col-md-3 ml-auto">
+                          <div class="col-md-3 mb-2 ml-auto">
                             <label for="">&nbsp;</label>
                             <button class="form-control active" onclick="load_data();">
                               <i class="fas fa-search"></i>&nbsp;
                               Search
                             </button>
                           </div>
-                          <div class="col-md-3 ">
+                          <div class="col-md-3 mb-2 ">
                             <label for="">&nbsp;</label>
                             <button class="form-control btn-secondary btn_check" style="background-color: var(--gray);" onclick="location.reload();">
                               <i class="fas fa-sync-alt"></i>&nbsp;
@@ -299,6 +299,7 @@
                           <th>Group No.</th>
                           <th>Month</th>
                           <th>Year</th>
+                          <th>Document</th>
                           <th>Training Group</th>
                           <th>Filename</th>
                           <th>Checked By</th>

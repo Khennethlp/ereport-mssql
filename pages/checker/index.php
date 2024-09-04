@@ -287,6 +287,7 @@
                           <th>Group No.</th>
                           <th>Month</th>
                           <th>Year</th>
+                          <th>Document</th>
                           <th>Training Group</th>
                           <th>Filenames</th>
                           <th>Upload By</th>

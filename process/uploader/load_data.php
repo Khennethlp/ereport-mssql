@@ -22,7 +22,7 @@ if ($method == 'load_data') {
 
     $sql = "SELECT 
                 a.*, 
-                b.main_doc, 
+                b.main_doc AS main_doc, 
                 b.sub_doc, 
                 b.file_name AS file_name,
                 b.updated_file AS updated_file,
@@ -217,6 +217,7 @@ if ($method == 'load_data') {
             $data .= '<td>' . htmlspecialchars($k['group_no']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['upload_month']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['upload_year']) . '</td>';
+            $data .= '<td>' . htmlspecialchars($k['main_doc']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['training_group']) . '</td>';
 
             if ($status_text == 'DISAPPROVED') {

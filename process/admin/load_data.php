@@ -113,6 +113,7 @@ if ($method == 'load_data') {
         $data .= '<td>' . htmlspecialchars($k['group_no']) . '</td>';
         $data .= '<td>' . htmlspecialchars($k['upload_month']) . '</td>';
         $data .= '<td>' . htmlspecialchars($k['upload_year']) . '</td>';
+        $data .= '<td>' . htmlspecialchars($k['main_doc']) . '</td>';
         $data .= '<td>' . htmlspecialchars($k['training_group']) . '</td>';
         $data .= '<td title="' . $k['file_name'] . '">' . (strlen($k['file_name']) > 45 ? substr($k['file_name'], 0, 45) . '...' : $k['file_name']) . '</td>';
         

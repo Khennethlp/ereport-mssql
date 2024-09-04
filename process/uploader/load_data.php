@@ -218,26 +218,24 @@ if ($method == 'load_data') {
             $data .= '<td>' . htmlspecialchars($k['upload_month']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['upload_year']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['training_group']) . '</td>';
-            // $data .= '<td>' . htmlspecialchars($k['file_name']) . '</td>';
 
             if ($status_text == 'DISAPPROVED') {
-                // Check if 'for approval' or 'for checking' folders exist and have files
-
                 if ($file_path) {
-                    // $data .= '<td style="cursor: pointer; color: #ffffff;"><a class="text-warning" href="' . $file_path . '" download>' . $filename . '</a></td>';
                     $data .= '<td><a class="text-warning" href="../../pages/uploader/file_view.php?id=' . $id . '&serial_no=' . $serial_no . '&training_group=' . $tgroup . '&file_path=' . $file_path . '&uploader=' . $uploader_id . '" target="_blank">' . $filename . '</a></td>';
                 } else {
                     $data .= '<td>File not found</td>';
                 }
             } else {
-                // If status is not 'DISAPPROVED', just show the filename
-                // $data .= '<td>' . substr($filenames, 0, 50) . '</td>';
-                $data .= '<td onclick="del(&quot;' . $k['id'] . '~!~' . $k['serial_no'] . '~!~' . $filenames . '&quot;);" data-toggle="modal" data-target="#delete_pending" style="cursor: pointer;" title="' . $filenames . '">' . (strlen($filenames) > 50 ? substr($filenames, 0, 50) . '...' : $filenames) . '</td>';
+                if ($status_text == 'APPROVED' || $status_text == 'FOR APPROVAL') {
+                    $data .= '<td title="' . $filenames . '">' . (strlen($filenames) > 50 ? substr($filenames, 0, 50) . '...' : $filenames) . '</td>';
+                } else {
+                    // PENDING: allow to delete row
+                    $data .= '<td onclick="del(&quot;' . $k['id'] . '~!~' . $k['serial_no'] . '~!~' . $filenames . '&quot;);" data-toggle="modal" data-target="#delete_pending" style="cursor: pointer;" title="' . $filenames . '">' . (strlen($filenames) > 50 ? substr($filenames, 0, 50) . '...' : $filenames) . '</td>';
+                }
             }
 
             $data .= '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
             $data .= '<td>' . htmlspecialchars($checked_date) . '</td>';
-            // $data .= '<td>' . htmlspecialchars($k['checker_comment']) . '</td>';
             '<td><span>' . strtoupper(htmlspecialchars($k['approver_status'])) . '</span></td>'; // hidden to table
             $data .= '<td>' . htmlspecialchars($k['approver_name']) . '</td>';
             $data .= '<td>' . htmlspecialchars($approved_date) . '</td>';
@@ -285,19 +283,19 @@ if ($method == 'del_data_pending') {
     $serial_no = $_POST['serial_no'];
 
     try {
-   
+
         $sql_del_tr = "DELETE FROM t_training_record WHERE id = :id AND serial_no = :serial_no";
         $stmt_tr = $conn->prepare($sql_del_tr);
         $stmt_tr->bindParam(':id', $id);
         $stmt_tr->bindParam(':serial_no', $serial_no);
         $result_tr = $stmt_tr->execute();
-    
+
         $sql_del_tf = "DELETE FROM t_upload_file WHERE id = :id AND serial_no = :serial_no";
         $stmt_tf = $conn->prepare($sql_del_tf);
         $stmt_tf->bindParam(':id', $id);
         $stmt_tf->bindParam(':serial_no', $serial_no);
         $result_tf = $stmt_tf->execute();
-    
+
         if ($result_tr && $result_tf) {
             echo 'success';
         } else {

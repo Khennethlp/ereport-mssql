@@ -113,7 +113,7 @@ if ($method == 'load_data') {
 
     $sql .= " ORDER BY a.id ASC LIMIT :limit OFFSET :offset";
 
-    $stmt = $conn->prepare($sql);
+    $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
     $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
     $stmt->bindParam(':limit', $rowsPerPage, PDO::PARAM_INT);
     $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);

@@ -23,7 +23,7 @@
         <!-- Add icons to the links using the .nav-icon class
              with font-awesome or any other icon font library -->
         <li class="nav-item">
-          <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/admin/index.php") { ?>
+          <?php if ($_SERVER['REQUEST_URI'] == "/e-report-ms/pages/admin/index.php") { ?>
             <a href="index.php" class="nav-link active">
             <?php } else { ?>
               <a href="index.php" class="nav-link">
@@ -35,7 +35,7 @@
               </a>
         </li>
         <li class="nav-item">
-          <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/admin/masterlist.php") { ?>
+          <?php if ($_SERVER['REQUEST_URI'] == "/e-report-ms/pages/admin/masterlist.php") { ?>
             <a href="masterlist.php" class="nav-link active">
             <?php } else { ?>
               <a href="masterlist.php" class="nav-link">
@@ -47,7 +47,7 @@
               </a>
         </li>
         <li class="nav-item">
-          <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/admin/accounts.php") { ?>
+          <?php if ($_SERVER['REQUEST_URI'] == "/e-report-ms/pages/admin/accounts.php") { ?>
             <a href="accounts.php" class="nav-link active">
             <?php } else { ?>
               <a href="accounts.php" class="nav-link">
@@ -60,7 +60,7 @@
         </li>
        
         <!-- <li class="nav-item">
-          <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/admin/page4.php") { ?>
+          <?php if ($_SERVER['REQUEST_URI'] == "/e-report-ms/pages/admin/page4.php") { ?>
             <a href="page4.php" class="nav-link active">
             <?php } else { ?>
               <a href="page4.php" class="nav-link">

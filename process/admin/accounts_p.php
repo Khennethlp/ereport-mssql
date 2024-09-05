@@ -7,31 +7,38 @@ if ($method == 'load_accounts') {
 
     $search = isset($_POST['search']) ? $_POST['search'] : '';
 
-    $sql = "SELECT * FROM m_accounts WHERE secret_id != 'IT' ORDER BY role ASC ";
-    if (!empty($search)) {
-        // Use placeholders and prepare statement for better security
-        $sql .= "AND (emp_id = :search OR fullname = :search OR email = :search OR username = :search)";
+    // Prepare the base SQL query
+     $sql = "SELECT * FROM m_accounts WHERE secret_id != 'IT' ORDER BY role ASC";
+
+     if (!empty($search)) {
+        // Use placeholders for the search query and wrap in parentheses for proper SQL logic
+        $sql .= " AND (emp_id LIKE :search OR fullname LIKE :search OR email LIKE :search OR username LIKE :search)";
     }
+
     
+    // Prepare the statement without cursor scrolling
     $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-    
+
     if (!empty($search)) {
-        // Bind parameter for each placeholder
-        $stmt->bindParam(':search', $search, PDO::PARAM_STR);
+        $searchTerm = "%{$search}%"; // Wrap the search term with wildcards for LIKE operator
+        $stmt->bindParam(':search', $searchTerm, PDO::PARAM_STR);
     }
+    
+    // Execute the statement
     $stmt->execute();
 
     $c = 0;
     if ($stmt->rowCount() > 0) {
-        foreach ($stmt->fetchAll() as $k) {
+        // Fetch all results
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $k) {
             $c++;
-            echo '<tr style="cursor:pointer;" class="modal-trigger" data-toggle="modal" data-target="#update_account" onclick="get_accounts_details(&quot;' . $k['id'] . '~!~' . $k['emp_id'] . '~!~' . $k['username'] . '~!~' . $k['fullname'] . '~!~' . $k['email'] . '~!~' . $k['password'] . '~!~' . $k['role'] . '&quot;)">';
-            echo '<td>' . $c . '</td>';
-            echo '<td>' . $k['emp_id'] . '</td>';
-            echo '<td>' . $k['fullname'] . '</td>';
-            echo '<td>' . $k['username'] . '</td>';
-            // echo '<td>' . $k['email'] . '</td>';
-            echo '<td>' . $k['role'] . '</td>';
+            echo '<tr style="cursor:pointer;" class="modal-trigger" data-toggle="modal" data-target="#update_account" onclick="get_accounts_details(&quot;' . htmlspecialchars($k['id']) . '~!~' . htmlspecialchars($k['emp_id']) . '~!~' . htmlspecialchars($k['username']) . '~!~' . htmlspecialchars($k['fullname']) . '~!~' . htmlspecialchars($k['email']) . '~!~' . htmlspecialchars($k['password']) . '~!~' . htmlspecialchars($k['role']) . '&quot;)">';
+            echo '<td>' . htmlspecialchars($c) . '</td>';
+            echo '<td>' . htmlspecialchars($k['emp_id']) . '</td>';
+            echo '<td>' . htmlspecialchars($k['fullname']) . '</td>';
+            echo '<td>' . htmlspecialchars($k['username']) . '</td>';
+            // echo '<td>' . htmlspecialchars($k['email']) . '</td>';
+            echo '<td>' . htmlspecialchars($k['role']) . '</td>';
             // echo '<td>' .  date('Y/M/d', strtotime($k['created_at'])) . '</td>';
             echo '</tr>';
         }

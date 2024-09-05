@@ -16,16 +16,9 @@
     </div>
 </footer>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // new DataTable('#myDataTable');
-        // $('#myDataTable').DataTable();
-        // new DataTable('#myDataTable2');
-        // new DataTable('#myDataTable3');
-    })
-</script>
 <?php
-include '../../modals/super_record_masterlist.php';
+include '../../modals/remove.php';
+include '../../modals/update_admin.php';
 ?>
 
 <script src="../../plugins/jquery/dist/jquery.min.js"></script>
@@ -38,7 +31,6 @@ include '../../modals/super_record_masterlist.php';
 <script src="../../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <script src="../../dist/js/adminlte.js"></script>
 <script src="../../dist/js/popup_center.js"></script>
-<script src="plugins/js/functions.js"></script>
 </body>
 
 </html>

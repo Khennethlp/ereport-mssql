@@ -24,3 +24,17 @@
 
 
 </head>
+<style>
+     .parent .hidden_edit{
+        visibility: hidden; 
+        margin: 0;
+        padding: 0;
+    }
+    .parent:hover .hidden_edit{
+        visibility: visible;
+        margin: 0;
+        padding: 0;
+    }
+   
+  
+</style>

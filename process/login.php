@@ -16,7 +16,7 @@ if (isset($_POST['Login'])) {
 
         // Prepare SQL statement with placeholders
         $sql = "SELECT * FROM m_accounts WHERE username = :username AND password = :password AND role = :role";
-        $stmt = $conn->prepare($sql);
+        $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
         $stmt->bindParam(':role', $user);
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':password', $password);
@@ -82,7 +82,7 @@ if (isset($_POST['superLogin'])) {
     $password = $_POST['superPassword'];
 
     $sql = "SELECT * FROM m_accounts WHERE secret_id = :password ";
-    $stmt = $conn->prepare($sql);
+    $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
     $stmt->bindParam(':password', $password);
     $stmt->execute();
 
@@ -107,6 +107,6 @@ if (isset($_POST['superLogin'])) {
 if (isset($_POST['Logout'])) {
     session_unset();
     session_destroy();
-    header('Location: /e-report/index.php');
+    header('Location: /e-report-ms/index.php');
     exit;
 }

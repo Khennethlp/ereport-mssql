@@ -39,29 +39,36 @@
                 rows_per_page: rowsPerPage
             },
             success: function(response) {
-                // document.getElementById('admin_dashboard_table').innerHTML = response;
-                const responseData = JSON.parse(response);
-                if (isPagination) {
-                    if (responseData.html.trim() !== '') {
-                        document.getElementById('admin_dashboard_table').innerHTML += responseData.html;
+                try {
+                    // document.getElementById('admin_dashboard_table').innerHTML = response;
+                    const responseData = JSON.parse(response);
+                    if (isPagination) {
+                        if (responseData.html.trim() !== '') {
+                            document.getElementById('admin_dashboard_table').innerHTML += responseData.html;
+                            page++;
+                            if (responseData.has_more) {
+                                document.getElementById('load_more').style.display = 'block';
+                            } else {
+                                document.getElementById('load_more').style.display = 'none';
+                            }
+                        } else {
+                            document.getElementById('load_more').style.display = 'none';
+                        }
+                    } else {
+                        document.getElementById('admin_dashboard_table').innerHTML = responseData.html;
                         page++;
                         if (responseData.has_more) {
                             document.getElementById('load_more').style.display = 'block';
                         } else {
                             document.getElementById('load_more').style.display = 'none';
                         }
-                    } else {
-                        document.getElementById('load_more').style.display = 'none';
                     }
-                } else {
-                    document.getElementById('admin_dashboard_table').innerHTML = responseData.html;
-                    page++;
-                    if (responseData.has_more) {
-                        document.getElementById('load_more').style.display = 'block';
-                    } else {
-                        document.getElementById('load_more').style.display = 'none';
-                    }
+                } catch (e) {
+                    console.error('Failed to parse response:', e);
                 }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('AJAX request failed:', textStatus, errorThrown);
             }
         });
     }

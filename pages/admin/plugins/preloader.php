@@ -1,5 +1,5 @@
   <!-- Preloader -->
-  <div id="preloader" class="preloader flex-column justify-content-center align-items-center">
+  <!-- <div id="preloader" class="preloader flex-column justify-content-center align-items-center">
     <img class="animation__shake" src="../../dist/img/hourglass.gif" alt="logo" height="60" width="60">
     <noscript>
       <br>
@@ -7,4 +7,4 @@
       <br>
       <span>Call IT Personnel Immediately!!! They will fix it right away.</span>
     </noscript>
-  </div>
+  </div> -->

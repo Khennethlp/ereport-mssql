@@ -18,14 +18,14 @@
                 require '../../process/conn.php';
                 $uploader_name = $_SESSION['name'];
 
-                $sql = "SELECT COUNT(checker_status) as total FROM t_training_record 
-                WHERE 
-                CASE 
-                  WHEN checker_status = 'Pending' THEN TRUE
-                  WHEN checker_status = '' AND approver_status = 'Pending' THEN TRUE
-                  WHEN checker_status = 'Approved' AND approver_status = 'Pending' THEN TRUE
-                ELSE FALSE
-                END AND uploader_name = :uploader_name";
+                $sql = "SELECT COUNT(*) as total
+                FROM t_training_record
+                WHERE uploader_name = :uploader_name
+                  AND (
+                      (checker_status = 'Pending')
+                      OR (checker_status = '' AND approver_status = 'Pending')
+                      OR (checker_status = 'Approved' AND approver_status = 'Pending')
+                  )";
 
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
@@ -57,12 +57,14 @@
                 require '../../process/conn.php';
                 $uploader_name = $_SESSION['name'];
 
-                $sql = "SELECT COUNT(*) as total FROM t_training_record WHERE
-                CASE 
-                  WHEN checker_status = 'Approved' AND checker_status = '' THEN TRUE
-                  WHEN approver_status = 'Approved' THEN TRUE
-                 ELSE FALSE
-                 END AND uploader_name = :uploader_name";
+                $sql = "SELECT COUNT(*) as total 
+                FROM t_training_record 
+                WHERE (
+                    (checker_status = 'Approved' AND checker_status = '') OR
+                    (approver_status = 'Approved')
+                )
+                AND uploader_name = :uploader_name";
+        
                 $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
                 $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
                 $stmt->execute();
@@ -158,27 +160,27 @@
                           <label for="">Search By Training Group:</label>
                           <!-- <input type="search" id="search_by_tgroup" class="form-control"> -->
                           <select class="form-control" name="search_by_tgroup" id="search_by_tgroup">
-                              <option value=""></option>
-                              <?php
-                              require '../../process/conn.php';
+                            <option value=""></option>
+                            <?php
+                            require '../../process/conn.php';
 
-                              $sql = "SELECT DISTINCT training_title FROM t_training_group";
-                              $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-                              $stmt->execute();
+                            $sql = "SELECT DISTINCT training_title FROM t_training_group";
+                            $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+                            $stmt->execute();
 
-                              if ($stmt->rowCount() > 0) {
-                                // Output data of each row
-                                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            if ($stmt->rowCount() > 0) {
+                              // Output data of each row
+                              $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                // Output data of each row
-                                foreach ($rows as $row) {
-                                  echo '<option value="' . $row["training_title"] . '">' . $row["training_title"] . '</option>';
-                                }
-                              } else {
-                                echo '<option value="">No data available</option>';
+                              // Output data of each row
+                              foreach ($rows as $row) {
+                                echo '<option value="' . $row["training_title"] . '">' . $row["training_title"] . '</option>';
                               }
-                              ?>
-                            </select>
+                            } else {
+                              echo '<option value="">No data available</option>';
+                            }
+                            ?>
+                          </select>
                         </div>
                         <div class="col-md-3 mb-2">
                           <label for="">Search By Document:</label>

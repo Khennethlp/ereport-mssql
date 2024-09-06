@@ -4,7 +4,6 @@ include '../../process/conn.php';
 $method = $_POST['method'];
 
 if ($method == 'load_data') {
-
     $uploader_name = isset($_POST['uploader_name']) ? $_POST['uploader_name'] : '';
     $status = isset($_POST['status']) ? $_POST['status'] : '';
     $search_by_serialNo = isset($_POST['search_by_serialNo']) ? $_POST['search_by_serialNo'] : '';
@@ -21,7 +20,7 @@ if ($method == 'load_data') {
     $offset = ($page - 1) * $rowsPerPage;
 
     $sql = "SELECT 
-                a.*, 
+                a.*,
                 b.main_doc AS main_doc, 
                 b.sub_doc, 
                 b.file_name AS file_name,
@@ -35,55 +34,47 @@ if ($method == 'load_data') {
                     WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
                     WHEN a.checker_status = 'Disapproved' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
                     WHEN a.checker_status = 'Approved' AND a.approver_status = 'Approved' THEN 'Approved'
-                    WHEN a.checker_status = '' AND a.approver_status = 'Pending' THEN 'For Approval'
-                    WHEN a.checker_status = '' AND a.approver_status = 'Approved' THEN 'Approved'
-                    WHEN a.checker_status = '' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
+                    WHEN ISNULL(a.checker_status, '') = '' AND a.approver_status = 'Pending' THEN 'For Approval'
+                    WHEN ISNULL(a.checker_status, '') = '' AND a.approver_status = 'Approved' THEN 'Approved'
+                    WHEN ISNULL(a.checker_status, '') = '' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
                 END AS global_status, 
                 CASE 
                     WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN a.approver_name
-                    WHEN a.checker_status = '' AND a.approver_status = 'Disapproved' THEN a.approver_name
+                    WHEN ISNULL(a.checker_status, '') = '' AND a.approver_status = 'Disapproved' THEN a.approver_name
                     WHEN a.checker_status = 'Disapproved' THEN a.checker_name
                 END AS disapprover_name,
                 CASE
-                    -- WHEN a.checker_comment != '' THEN a.checker_comment
-                    -- WHEN a.approver_comment != '' THEN a.approver_comment
                     WHEN a.checker_status = 'Disapproved' THEN a.checker_comment
                     WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN a.approver_comment
-                    WHEN a.checker_status = '' AND a.approver_status = 'Disapproved' THEN a.approver_comment
+                    WHEN ISNULL(a.checker_status, '') = '' AND a.approver_status = 'Disapproved' THEN a.approver_comment
                 END AS global_comment
             FROM 
                 t_training_record a 
             RIGHT JOIN 
-                (SELECT id, serial_no, main_doc, sub_doc, file_name, updated_file, uploader_updated_file  FROM t_upload_file ) b 
-            ON 
-                a.serial_no = b.serial_no AND a.id=b.id
-            WHERE 
-                uploader_name = :uploader_name";
+                (SELECT id, serial_no, main_doc, sub_doc, file_name, updated_file, uploader_updated_file  
+                 FROM t_upload_file) b 
+            ON a.serial_no = b.serial_no AND a.id = b.id
+            WHERE uploader_name = :uploader_name";
 
     $conditions = [];
     if (!empty($status)) {
         $conditions[] = "(
-            (a.checker_status = 'Pending' AND :status = 'Pending') OR
-            (a.checker_status = 'Disapproved' AND :status = 'Disapproved') OR
-            (a.checker_status = 'Approved' AND a.approver_status = 'Pending' AND :status = 'Pending') OR
-            (a.checker_status = 'Approved' AND a.approver_status = 'Approved' AND :status = 'Approved') OR
-            (a.checker_status = 'Disapproved' AND a.approver_status = 'Disapproved' AND :status = 'Disapproved') OR
-            (a.checker_status = 'Disapproved' AND a.approver_status = 'Pending' AND :status = 'Disapproved') OR
-            (a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' AND :status = 'Disapproved') OR
-            (a.checker_status = '' AND a.approver_status = 'Pending' AND :status = 'Pending') OR
-            (a.checker_status = '' AND a.approver_status = 'Approved' AND :status = 'Approved') OR
-            (a.checker_status = '' AND a.approver_status = 'Disapproved' AND :status = 'Disapproved') 
+            (a.checker_status = 'Pending' AND  '{$status}' = 'Pending') OR
+            (a.checker_status = 'Disapproved' AND  '{$status}' = 'Disapproved') OR
+            (a.checker_status = 'Approved' AND a.approver_status = 'Pending' AND  '{$status}' = 'Pending') OR
+            (a.checker_status = 'Approved' AND a.approver_status = 'Approved' AND  '{$status}' = 'Approved') OR
+            (a.checker_status = 'Disapproved' AND a.approver_status = 'Disapproved' AND  '{$status}' = 'Disapproved') OR
+            (ISNULL(a.checker_status, '') = '' AND a.approver_status = 'Pending' AND  '{$status}' = 'Pending') OR
+            (ISNULL(a.checker_status, '') = '' AND a.approver_status = 'Approved' AND  '{$status}' = 'Approved') OR
+            (ISNULL(a.checker_status, '') = '' AND a.approver_status = 'Disapproved' AND  '{$status}' = 'Disapproved')
         )";
     }
-
-    // if (!empty($date_from) && !empty($date_to)) {
-    //     $conditions[] = "a.upload_date BETWEEN :date_from AND :date_to";
-    // }
+ 
     if (!empty($year)) {
-        $sql .= "a.upload_year = :year";
+        $conditions[] = "a.upload_year = :year";
     }
     if (!empty($month)) {
-        $sql .= "a.upload_month LIKE :month";
+        $conditions[] = "a.upload_month LIKE :month";
     }
     if (!empty($search_by_serialNo)) {
         $conditions[] = "a.serial_no = :search_by_serialNo";
@@ -100,71 +91,75 @@ if ($method == 'load_data') {
     if (!empty($search_by_docs)) {
         $conditions[] = "b.main_doc = :search_by_docs";
     }
-
     if (!empty($search_by_filename)) {
-        $conditions[] = "file_name = :search_by_filename";
+        $conditions[] = "b.file_name = :search_by_filename";
     }
-    if (!empty($search_by_filename) && !empty($search)) {
-        $conditions[] = "file_name = :search_by_filename AND a.training_group = :search";
-    }
+
     if (!empty($conditions)) {
         $sql .= " AND " . implode(" AND ", $conditions);
     }
 
-    $sql .= " ORDER BY a.id ASC LIMIT :limit OFFSET :offset";
+    $sql .= " ORDER BY a.id ASC OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY";
 
     $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+
+    // Binding parameters
     $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
     $stmt->bindParam(':limit', $rowsPerPage, PDO::PARAM_INT);
     $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
 
-    if (!empty($status)) {
-        $stmt->bindParam(':status', $status, PDO::PARAM_STR);
-    }
+    // if (!empty($status)) {
+    //     $status = "$status";
+    //     $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+    // }
     if (!empty($year)) {
-        $stmt->bindParam(':year', $year);
+        $year = "$year%";
+        $stmt->bindParam(':year', $year, PDO::PARAM_STR);
     }
     if (!empty($month)) {
-        $stmt->bindParam(':month', $month);
+        $month = "$month%";
+        $stmt->bindParam(':month', $month, PDO::PARAM_STR);
     }
-
-    // if (!empty($date_from) && !empty($date_to)) {
-    //     $stmt->bindParam(':date_from', $date_from, PDO::PARAM_STR);
-    //     $stmt->bindParam(':date_to', $date_to, PDO::PARAM_STR);
-    // }
-
     if (!empty($search_by_serialNo)) {
+        $search_by_serialNo = "$search_by_serialNo%";
         $stmt->bindParam(':search_by_serialNo', $search_by_serialNo, PDO::PARAM_STR);
     }
     if (!empty($search_by_batchNo)) {
+        $search_by_batchNo = "$search_by_batchNo%";
         $stmt->bindParam(':search_by_batchNo', $search_by_batchNo, PDO::PARAM_STR);
     }
     if (!empty($search_by_groupNo)) {
+        $search_by_groupNo = "$search_by_groupNo%";
         $stmt->bindParam(':search_by_groupNo', $search_by_groupNo, PDO::PARAM_STR);
     }
     if (!empty($search_by_tgroup)) {
+        $search_by_tgroup = "$search_by_tgroup%";
         $stmt->bindParam(':search_by_tgroup', $search_by_tgroup, PDO::PARAM_STR);
     }
     if (!empty($search_by_docs)) {
+        $search_by_docs = "$search_by_docs%";
         $stmt->bindParam(':search_by_docs', $search_by_docs, PDO::PARAM_STR);
     }
-
     if (!empty($search_by_filename)) {
+        $search_by_filename = "$search_by_filename%";
         $stmt->bindParam(':search_by_filename', $search_by_filename, PDO::PARAM_STR);
     }
 
-    // if (!empty($search_by_filename) && !empty($search)) {
-    //     $stmt->bindParam(':search_by_filename', $search_by_filename, PDO::PARAM_STR);
-    //     $stmt->bindParam(':search', $search, PDO::PARAM_STR);
-    // }
-
+    // Executing the statement
     $stmt->execute();
 
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $has_more = count($rows) > $rowsPerPage;
+    if ($has_more) {
+        array_pop($rows); // Remove the extra row used for the check
+    }
+    // var_dump($rows);
+    // print_r($rows);
     $c = $offset + 1;
     $data = '';
 
     if ($stmt->rowCount() > 0) {
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $k) {
+        foreach ($rows as $k) {
             $status_text = strtoupper(htmlspecialchars($k['global_status']));
             $checked_date = !empty($k['checked_date']) ? date('Y/m/d', strtotime($k['checked_date'])) : '';
             $approved_date = !empty($k['approved_date']) ? date('Y/m/d', strtotime($k['approved_date'])) : '';
@@ -173,7 +168,9 @@ if ($method == 'load_data') {
             $serial_no = $k['serial_no'];
             $id = $k['id'];
 
-            // Set background color based on status
+            // echo '<pre>';
+            // print_r($k);
+            // echo '</pre>';
             $status_bg_color = '';
             // $status_badge_color = '';
             switch ($status_text) {
@@ -252,57 +249,39 @@ if ($method == 'load_data') {
             $data .= '</tr>';
             $c++;
         }
-    } else {
-        $data .= '<tr style="text-align:center;"><td colspan="12">No records found.</td></tr>';
     }
-
-    // Check if there are more rows beyond the current page
-    $nextOffset = $offset + $rowsPerPage;
-    $stmt->bindParam(':offset', $nextOffset, PDO::PARAM_INT);
-
-    if (!empty($status)) {
-        $stmt->bindParam(':status', $status, PDO::PARAM_STR);
-    }
-
-    if (!empty($date_from) && !empty($date_to)) {
-        $stmt->bindParam(':date_from', $date_from, PDO::PARAM_STR);
-        $stmt->bindParam(':date_to', $date_to, PDO::PARAM_STR);
-    }
-
-    if (!empty($search)) {
-        $stmt->bindParam(':search', $search, PDO::PARAM_STR);
-    }
-
-    $stmt->execute();
-    $has_more = $stmt->rowCount() > 0;
-
-    echo json_encode(['html' => $data, 'has_more' => $has_more]);
+    // $data = $sql;
+    echo json_encode([
+        'html' => $data,
+        'has_more' => $has_more
+    ]);
 }
 
-if ($method == 'del_data_pending') {
-    $id = $_POST['id'];
-    $serial_no = $_POST['serial_no'];
 
-    try {
+// if ($method == 'del_data_pending') {
+//     $id = $_POST['id'];
+//     $serial_no = $_POST['serial_no'];
 
-        $sql_del_tr = "DELETE FROM t_training_record WHERE id = :id AND serial_no = :serial_no";
-        $stmt_tr = $conn->prepare($sql_del_tr);
-        $stmt_tr->bindParam(':id', $id);
-        $stmt_tr->bindParam(':serial_no', $serial_no);
-        $result_tr = $stmt_tr->execute();
+//     try {
 
-        $sql_del_tf = "DELETE FROM t_upload_file WHERE id = :id AND serial_no = :serial_no";
-        $stmt_tf = $conn->prepare($sql_del_tf);
-        $stmt_tf->bindParam(':id', $id);
-        $stmt_tf->bindParam(':serial_no', $serial_no);
-        $result_tf = $stmt_tf->execute();
+//         $sql_del_tr = "DELETE FROM t_training_record WHERE id = :id AND serial_no = :serial_no";
+//         $stmt_tr = $conn->prepare($sql_del_tr);
+//         $stmt_tr->bindParam(':id', $id);
+//         $stmt_tr->bindParam(':serial_no', $serial_no);
+//         $result_tr = $stmt_tr->execute();
 
-        if ($result_tr && $result_tf) {
-            echo 'success';
-        } else {
-            echo 'error';
-        }
-    } catch (PDOException $e) {
-        echo 'error';
-    }
-}
+//         $sql_del_tf = "DELETE FROM t_upload_file WHERE id = :id AND serial_no = :serial_no";
+//         $stmt_tf = $conn->prepare($sql_del_tf);
+//         $stmt_tf->bindParam(':id', $id);
+//         $stmt_tf->bindParam(':serial_no', $serial_no);
+//         $result_tf = $stmt_tf->execute();
+
+//         if ($result_tr && $result_tf) {
+//             echo 'success';
+//         } else {
+//             echo 'error';
+//         }
+//     } catch (PDOException $e) {
+//         echo 'error';
+//     }
+// }

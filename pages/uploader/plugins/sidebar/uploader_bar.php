@@ -23,7 +23,7 @@
         <!-- Add icons to the links using the .nav-icon class
              with font-awesome or any other icon font library -->
         <li class="nav-item">
-          <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/uploader/index.php") { ?>
+          <?php if ($_SERVER['REQUEST_URI'] == "/e-report-ms/pages/uploader/index.php") { ?>
             <a href="index.php" class="nav-link active">
             <?php } else { ?>
               <a href="index.php" class="nav-link">
@@ -35,7 +35,7 @@
               </a>
         </li>
         <li class="nav-item">
-          <?php if ($_SERVER['REQUEST_URI'] == "/e-report/pages/uploader/upload_history.php") { ?>
+          <?php if ($_SERVER['REQUEST_URI'] == "/e-report-ms/pages/uploader/upload_history.php") { ?>
             <a href="upload_history.php" class="nav-link active">
             <?php } else { ?>
               <a href="upload_history.php" class="nav-link">

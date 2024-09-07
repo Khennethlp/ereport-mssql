@@ -61,19 +61,12 @@ if ($method == 'checker_table') {
 
     if (!empty($status)) {
         $sql .=  " AND (
-                       (a.checker_status = 'Pending' AND :status = 'Pending') OR
-                       (a.checker_status = 'Disapproved' AND :status = 'Disapproved') OR
-                       (a.checker_status = 'Approved' AND a.approver_status = 'Approved' AND :status = 'Approved')
+                       (a.checker_status = 'Pending' AND '{$status}' = 'Pending') OR
+                       (a.checker_status = 'Disapproved' AND '{$status}' = 'Disapproved') OR
+                       (a.checker_status = 'Approved' AND a.approver_status = 'Approved' AND '{$status}' = 'Approved')
                     )";
     }
-    // (a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' AND :status = 'Disapproved')
-    // WHEN a.checker_status = 'Approved' AND a.approver_status = 'Disapproved' THEN 'Disapproved'
-    // if (!empty($search_by)) {
-    //     $sql .= " AND a.serial_no LIKE :search_by OR a.batch_no LIKE :search_by OR a.group_no LIKE :search_by OR a.training_group LIKE :search_by OR a.upload_month LIKE :search_by OR b.file_name LIKE :search_by";
-    // }
-    // if (!empty($date_from) && !empty($date_to)) {
-    //     $sql .= " AND a.upload_date BETWEEN :date_from AND :date_to";
-    // }
+
     if (!empty($search_by_serialNo)) {
         $sql .= " AND a.serial_no LIKE :search_by_serialNo";
     }
@@ -99,24 +92,15 @@ if ($method == 'checker_table') {
         $sql .= " AND a.upload_month LIKE :month";
     }
 
-    $sql .= "   ORDER BY id ASC LIMIT :limit_plus_one OFFSET :offset";
+    $sql .= " ORDER BY id ASC OFFSET :offset ROWS FETCH NEXT :limit_plus_one ROWS ONLY";
 
-    $stmt = $conn->prepare($sql);
+    $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
     $stmt->bindParam(':checker_id', $checker_id, PDO::PARAM_STR);
-    $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+    // $stmt->bindParam(':status', $status, PDO::PARAM_STR);
 
     $limit_plus_one = $rowsPerPage + 1;
     $stmt->bindParam(':limit_plus_one', $limit_plus_one, PDO::PARAM_INT);
     $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-
-    // if (!empty($search_by)) {
-    //     $search_by = "%$search_by%";
-    //     $stmt->bindParam(':search_by', $search_by, PDO::PARAM_STR);
-    // }
-    // if (!empty($date_from) && !empty($date_to)) {
-    //     $stmt->bindParam(':date_from', $date_from, PDO::PARAM_STR);
-    //     $stmt->bindParam(':date_to', $date_to, PDO::PARAM_STR);
-    // }
 
     if (!empty($search_by_serialNo)) {
         $search_by_serialNo = "$search_by_serialNo%";
@@ -186,14 +170,6 @@ if ($method == 'checker_table') {
                     // $status_badge_color = 'badge-primary';
                     break;
             }
-
-            // $file_path = '../../../uploads/ereport/' . $k['serial_no'] . '/';
-            // $file_path .= $k['main_doc'] . '/';
-            // if (!empty($k['sub_doc'])) {
-                //  $file_path .= $k['sub_doc'] . '/';
-                // }
-                // $file_path .= $k['file_name'];
-            // Check if 'sub_doc' is provided and adjust the path
            
             $file_path = '../../../uploads/ereport/' . $k['serial_no'] . '/' . $k['main_doc'] . '/';
             if (!empty($k['sub_doc'])) {

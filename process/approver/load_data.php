@@ -70,13 +70,13 @@ if ($method == 'approver_table') {
     FROM t_training_record a 
     RIGHT JOIN (SELECT id, serial_no, main_doc, sub_doc, updated_file, file_name FROM t_upload_file) b 
     ON a.serial_no = b.serial_no AND a.id=b.id 
-    WHERE a.approver_id = :approver_id AND a.approver_status = :status ";
+    WHERE a.approver_id = :approver_id AND a.approver_status = '{$status}' ";
 
     if (!empty($status)) {
         $sql .=  " AND (
-                   (a.approver_status = 'Pending' AND :status = 'Pending') OR
-                   (a.approver_status = 'Disapproved' AND :status = 'Disapproved') OR
-                   (a.approver_status = 'Approved' AND :status = 'Approved')
+                   (a.approver_status = 'Pending' AND '{$status}' = 'Pending') OR
+                   (a.approver_status = 'Disapproved' AND '{$status}' = 'Disapproved') OR
+                   (a.approver_status = 'Approved' AND '{$status}' = 'Approved')
                 )";
     }
     if (!empty($search_by_serialNo)) {
@@ -103,14 +103,13 @@ if ($method == 'approver_table') {
     if (!empty($month)) {
         $sql .= " AND a.upload_month LIKE :month";
     }
-    $sql .= " ORDER BY id ASC LIMIT :limit_plus_one OFFSET :offset";
+    $sql .= " ORDER BY id ASC OFFSET :offset ROWS FETCH NEXT :limit_plus_one ROWS ONLY";
 
-    $stmt = $conn->prepare($sql);
+    $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
     $limit_plus_one = $rowsPerPage + 1;
     $stmt->bindParam(':limit_plus_one', $limit_plus_one, PDO::PARAM_INT);
     $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
     $stmt->bindParam(':approver_id', $approver_id, PDO::PARAM_STR);
-    $stmt->bindParam(':status', $status, PDO::PARAM_STR);
 
     if (!empty($search_by_serialNo)) {
         $search_by_serialNo = "$search_by_serialNo%";

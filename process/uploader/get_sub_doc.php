@@ -7,7 +7,7 @@ if ($method == 'get_sub_doc') {
     $main_doc = $_POST['main_doc'];
 
     $sql = "SELECT sub_doc FROM m_report_title WHERE main_doc = :main_doc AND sub_doc IS NOT NULL";
-    $stmt = $conn->prepare($sql);
+    $stmt = $conn->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
     $stmt->execute(array(':main_doc' => $main_doc));
 
     if ($stmt->rowCount() > 0) {

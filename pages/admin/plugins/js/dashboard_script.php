@@ -6,7 +6,7 @@
 
 
     let page = 1;
-    const rowsPerPage = 10;
+    const rowsPerPage = 50;
     const load_data = (isPagination = false) => {
         if (!isPagination) {
             page = 1; // Reset page number for initial load

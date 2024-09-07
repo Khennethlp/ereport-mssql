@@ -134,12 +134,12 @@
 
     }
 
-    let page = 1; // Initial page number
-    const rowsPerPage = 10; // Number of rows to fetch per request
+    let page = 1;
+    const rowsPerPage = 50;
 
     const load_data = (isPagination = false) => {
         if (!isPagination) {
-            page = 1; // Reset page number for the initial load
+            page = 1;
         }
 
         var uploader_name = $('#uploader_name').val();

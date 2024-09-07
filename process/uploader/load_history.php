@@ -25,17 +25,33 @@ if ($method == 'load_revision_data') {
 </thead>';
 
     $revisions_sql = "
-        SELECT b.id, a.serial_no, a.file_name, b.count, b.revised_by AS revised_by, 
-               b.revision_date AS revision_date, c.batch_no AS batch_no, 
-               c.group_no AS group_no, c.training_group AS training_group 
-        FROM t_upload_file a 
-        INNER JOIN (
-            SELECT id, COUNT(serial_no) AS count, serial_no, revision_date, revised_by 
-            FROM file_revisions 
-            GROUP BY serial_no
-        ) b ON a.serial_no = b.serial_no 
-        INNER JOIN t_training_record c ON b.serial_no = c.serial_no 
-        WHERE c.uploader_name = :uploader_name";
+        SELECT 
+    a.id, 
+    a.serial_no, 
+    a.file_name, 
+    b.count, 
+    b.revised_by, 
+    b.revision_date, 
+    c.batch_no, 
+    c.group_no, 
+    c.training_group
+FROM 
+    t_upload_file a
+INNER JOIN (
+    SELECT 
+        serial_no, 
+        COUNT(*) AS count, 
+        MAX(revision_date) AS revision_date, 
+        MAX(revised_by) AS revised_by
+    FROM 
+        file_revisions
+    GROUP BY 
+        serial_no
+) b ON a.serial_no = b.serial_no
+INNER JOIN 
+    t_training_record c ON b.serial_no = c.serial_no
+WHERE 
+    c.uploader_name = :uploader_name";
 
     if (!empty($serialNo)) {
         $revisions_sql .= " AND a.serial_no LIKE :serial_no";
@@ -53,9 +69,9 @@ if ($method == 'load_revision_data') {
         $revisions_sql .= " AND b.revision_date BETWEEN :dateFrom AND :dateTo";
     }
 
-    $revisions_sql .= " GROUP BY a.serial_no ORDER BY a.id DESC";
+    $revisions_sql .= " ORDER BY a.id DESC";
 
-    $stmt = $conn->prepare($revisions_sql);
+    $stmt = $conn->prepare($revisions_sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
     $stmt->bindParam(':uploader_name', $uploader_name, PDO::PARAM_STR);
 
     if (!empty($serialNo)) {
@@ -204,7 +220,7 @@ if ($method == 'load_t_t2') {
                       RIGHT JOIN file_revisions b ON a.serial_no = b.serial_no 
                       WHERE b.serial_no = :serial_no ORDER BY b.revision_date DESC";
 
-    $stmt = $conn->prepare($revisions_sql);
+    $stmt = $conn->prepare($revisions_sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
     $stmt->bindParam(':serial_no', $serial_no, PDO::PARAM_STR);
 
     $stmt->execute();
@@ -217,7 +233,7 @@ if ($method == 'load_t_t2') {
             echo '<td>' . $c . '</td>';
             echo '<td>' . $k['file_name'] . '</td>';
             echo '<td>' . $k['revised_by'] . '</td>';
-            echo '<td>' . date('Y/m/d h:i:s', strtotime($k['revision_date'])) . '</td>';
+            echo '<td>' . date('Y/m/d', strtotime($k['revision_date'])) . '</td>';
             echo '</tr>';
         }
     } else {

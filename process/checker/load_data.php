@@ -171,7 +171,7 @@ if ($method == 'checker_table') {
                     break;
             }
            
-            $file_path = '../../../uploads/ereport/' . $k['serial_no'] . '/' . $k['main_doc'] . '/';
+            $file_path = '../../../uploads/ereports/' . $k['serial_no'] . '/' . $k['main_doc'] . '/';
             if (!empty($k['sub_doc'])) {
                 $sub_doc_path = $file_path . $k['sub_doc'] . '/';
 

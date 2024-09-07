@@ -154,7 +154,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if ($rows) {
     foreach ($rows as $row) {
         // Constructing the file path
-        $file_path = '../../../uploads/ereport/' . $row['serial_no'] . '/';
+        $file_path = '../../../uploads/ereports/' . $row['serial_no'] . '/';
         $file_path .= $row['main_doc'] . '/';
 
         if (!empty($row['sub_doc'])) {

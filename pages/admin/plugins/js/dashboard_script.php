@@ -6,7 +6,7 @@
 
 
     let page = 1;
-    const rowsPerPage = 50;
+    const rowsPerPage = 10;
     const load_data = (isPagination = false) => {
         if (!isPagination) {
             page = 1; // Reset page number for initial load
@@ -46,10 +46,10 @@
                         if (responseData.html.trim() !== '') {
                             document.getElementById('admin_dashboard_table').innerHTML += responseData.html;
                             page++;
-                            if (responseData.has_more) {
-                                document.getElementById('load_more').style.display = 'block';
-                            } else {
+                            if (responseData.has_more != false) {
                                 document.getElementById('load_more').style.display = 'none';
+                            } else {
+                                document.getElementById('load_more').style.display = 'block';
                             }
                         } else {
                             document.getElementById('load_more').style.display = 'none';
@@ -57,10 +57,10 @@
                     } else {
                         document.getElementById('admin_dashboard_table').innerHTML = responseData.html;
                         page++;
-                        if (responseData.has_more) {
-                            document.getElementById('load_more').style.display = 'block';
-                        } else {
+                        if (responseData.has_more != false) {
                             document.getElementById('load_more').style.display = 'none';
+                        } else {
+                            document.getElementById('load_more').style.display = 'block';
                         }
                     }
                 } catch (e) {

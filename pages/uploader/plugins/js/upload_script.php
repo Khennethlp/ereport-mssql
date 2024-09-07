@@ -139,7 +139,7 @@
 
     const load_data = (isPagination = false) => {
         if (!isPagination) {
-            page = 1; // Reset page number for initial load
+            page = 1; // Reset page number for the initial load
         }
 
         var uploader_name = $('#uploader_name').val();
@@ -153,7 +153,6 @@
         var month = $('#search_by_month').val();
         var year = $('#search_by_year').val();
 
-        // sessionStorage.setItem('status', status);
         $.ajax({
             type: "POST",
             url: '../../process/uploader/load_data.php',
@@ -177,23 +176,22 @@
                 const responseData = JSON.parse(response);
                 if (isPagination) {
                     if (responseData.html.trim() !== '') {
-                        document.getElementById('t_table').innerHTML += responseData.html;
-                        page++;
-                        if (responseData.has_more) {
-                            document.getElementById('load_more').style.display = 'block';
+                        document.getElementById('t_table').innerHTML += responseData.html; // Append new rows
+                        page++; // Increment page for next fetch
+                        if (responseData.has_more != false) {
+                            document.getElementById('load_more').style.display = 'none'; 
+                            
                         } else {
-                            document.getElementById('load_more').style.display = 'none';
+                            document.getElementById('load_more').style.display = 'block';
                         }
-                    } else {
-                        document.getElementById('load_more').style.display = 'none';
                     }
                 } else {
-                    document.getElementById('t_table').innerHTML = responseData.html;
-                    page++;
-                    if (responseData.has_more) {
-                        document.getElementById('load_more').style.display = 'block';
-                    } else {
+                    document.getElementById('t_table').innerHTML = responseData.html; // Replace with new data
+                    page++; // Increment page for the next fetch
+                    if (responseData.has_more != false) {
                         document.getElementById('load_more').style.display = 'none';
+                    } else {
+                        document.getElementById('load_more').style.display = 'block';
                     }
                 }
             },
@@ -203,7 +201,9 @@
         });
     }
 
+    // Event listener for the Load More button
     document.getElementById('load_more').addEventListener('click', () => load_data(true));
+
 
     const clear_all = () => {
         // Clear form inputs & hide modal

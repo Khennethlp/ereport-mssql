@@ -106,10 +106,8 @@ if ($method == 'load_data') {
 
     // Fetch results
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $has_more = count($rows) > $rowsPerPage;
-    if ($has_more) {
-        array_pop($rows); // Remove the extra row used for the check
-    }
+    $has_more = count($rows) < $rowsPerPage;
+
 
     $data = '';
     $c = $offset + 1;

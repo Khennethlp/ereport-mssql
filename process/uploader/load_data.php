@@ -69,7 +69,7 @@ if ($method == 'load_data') {
             (ISNULL(a.checker_status, '') = '' AND a.approver_status = 'Disapproved' AND  '{$status}' = 'Disapproved')
         )";
     }
- 
+
     if (!empty($year)) {
         $conditions[] = "a.upload_year = :year";
     }
@@ -113,35 +113,28 @@ if ($method == 'load_data') {
     //     $stmt->bindParam(':status', $status, PDO::PARAM_STR);
     // }
     if (!empty($year)) {
-        $year = "$year%";
-        $stmt->bindParam(':year', $year, PDO::PARAM_STR);
+        $stmt->bindParam(':year', $year);
     }
     if (!empty($month)) {
-        $month = "$month%";
-        $stmt->bindParam(':month', $month, PDO::PARAM_STR);
+        $stmt->bindParam(':month', $month);
     }
     if (!empty($search_by_serialNo)) {
-        $search_by_serialNo = "$search_by_serialNo%";
         $stmt->bindParam(':search_by_serialNo', $search_by_serialNo, PDO::PARAM_STR);
     }
     if (!empty($search_by_batchNo)) {
-        $search_by_batchNo = "$search_by_batchNo%";
         $stmt->bindParam(':search_by_batchNo', $search_by_batchNo, PDO::PARAM_STR);
     }
     if (!empty($search_by_groupNo)) {
-        $search_by_groupNo = "$search_by_groupNo%";
         $stmt->bindParam(':search_by_groupNo', $search_by_groupNo, PDO::PARAM_STR);
     }
     if (!empty($search_by_tgroup)) {
-        $search_by_tgroup = "$search_by_tgroup%";
         $stmt->bindParam(':search_by_tgroup', $search_by_tgroup, PDO::PARAM_STR);
     }
     if (!empty($search_by_docs)) {
-        $search_by_docs = "$search_by_docs%";
         $stmt->bindParam(':search_by_docs', $search_by_docs, PDO::PARAM_STR);
     }
+
     if (!empty($search_by_filename)) {
-        $search_by_filename = "$search_by_filename%";
         $stmt->bindParam(':search_by_filename', $search_by_filename, PDO::PARAM_STR);
     }
 
@@ -149,14 +142,10 @@ if ($method == 'load_data') {
     $stmt->execute();
 
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $has_more = count($rows) > $rowsPerPage;
-    if ($has_more) {
-        array_pop($rows); // Remove the extra row used for the check
-    }
-    // var_dump($rows);
-    // print_r($rows);
-    $c = $offset + 1;
+    $has_more = count($rows) < $rowsPerPage;
+
     $data = '';
+    $c = $offset + 1;
 
     if ($stmt->rowCount() > 0) {
         foreach ($rows as $k) {
@@ -168,46 +157,34 @@ if ($method == 'load_data') {
             $serial_no = $k['serial_no'];
             $id = $k['id'];
 
-            // echo '<pre>';
-            // print_r($k);
-            // echo '</pre>';
             $status_bg_color = '';
-            // $status_badge_color = '';
             switch ($status_text) {
                 case 'APPROVED':
                     $status_bg_color = 'background-color: var(--success); color: #fff;';
-                    // $status_badge_color = 'badge-success';
                     break;
                 case 'FOR CHECKING': //PENDING
                     $status_bg_color = 'background-color: var(--warning);';
-                    // $status_badge_color = 'badge-secondary';
                     break;
                 case 'DISAPPROVED':
                     $status_bg_color = 'background-color: var(--danger); color: #fff;';
-                    // $status_badge_color = 'badge-danger';
                     break;
                 case 'FOR APPROVAL':
                     $status_bg_color = 'background-color: var(--primary); color: #fff;';
-                    // $status_badge_color = 'badge-danger';
                     break;
                 default:
                     $status_bg_color = 'background-color: var(--secondary);';
-                    // $status_badge_color = 'badge-primary';
                     break;
             }
 
             $file_path = '../../../uploads/ereport/' . ($k['serial_no']) . '/';
             $file_path .= ($k['main_doc']) . '/';
 
-            // Check if 'for approval' or 'for checking' folders exist and have files
             $sub_doc_path = !empty($k['sub_doc']) ? $file_path . $k['sub_doc'] . '/' : $file_path;
-            // $filename = !empty($k['uploader_updated_file']) ? $k['uploader_updated_file'] : (!empty($k['updated_file']) ? $k['updated_file'] : $k['file_name']);
             $filename = !empty($k['updated_file']) ? $k['updated_file'] : $k['file_name'];
             $filenames = $k['file_name'];
 
             $data .= '<tr style="' . $status_bg_color . ' ">';
             $data .= '<td>' . $c . '</td>';
-            // $data .= '<td><i class="fas fa-trash" style="color:var(--danger); font-size: 12px; cursor:pointer;"></i></td>';
             $data .= '<td ><span>' . $status_text . '</span></td>';
             $data .= '<td>' . htmlspecialchars($k['serial_no']) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['batch_no']) . '</td>';
@@ -234,7 +211,7 @@ if ($method == 'load_data') {
 
             $data .= '<td>' . htmlspecialchars($k['checker_name']) . '</td>';
             $data .= '<td>' . htmlspecialchars($checked_date) . '</td>';
-            '<td><span>' . strtoupper(htmlspecialchars($k['approver_status'])) . '</span></td>'; // hidden to table
+            // $data .= '<td><span>' . strtoupper(htmlspecialchars($k['approver_status'])) . '</span></td>'; // hidden to table
             $data .= '<td>' . htmlspecialchars($k['approver_name']) . '</td>';
             $data .= '<td>' . htmlspecialchars($approved_date) . '</td>';
             $data .= '<td>' . htmlspecialchars($k['global_comment']) . '</td>';
@@ -250,10 +227,13 @@ if ($method == 'load_data') {
             $c++;
         }
     }
-    // $data = $sql;
+
+    if (empty($data)) {
+        $data = '<tr><td colspan="10" style="text-align:center;">No data found.</td></tr>';
+    }
+
     echo json_encode([
-        'html' => $data,
-        'has_more' => $has_more
+        'html' => $data, 'has_more' => $has_more
     ]);
 }
 

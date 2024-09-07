@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
         $revised_by = $account['fullname'];
 
         $sql_fetch_file = "SELECT * FROM t_upload_file WHERE serial_no = :serial_no AND id = :id";
-        $stmt_fetch_file = $conn->prepare($sql_fetch_file);
+        $stmt_fetch_file = $conn->prepare($sql_fetch_file, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
         $stmt_fetch_file->bindParam(':serial_no', $serial_no, PDO::PARAM_STR);
         $stmt_fetch_file->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt_fetch_file->execute();
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['method']) && $_POST['m
                     $column_id = "checker_id";
                 }
 
-                $sql_training_record = "UPDATE t_training_record SET update_upload_date = NOW(), $column = :status, $column_id = :user_id, checker_name = '', checked_date = '', checker_comment = '', approver_name = '', approver_email = '', approved_date = '', approver_comment = '' WHERE serial_no = :serial_no AND id = :id";
+                $sql_training_record = "UPDATE t_training_record SET update_upload_date = GETDATE(), $column = :status, $column_id = :user_id, checker_name = '', checked_date = '', checker_comment = '', approver_name = '', approver_email = '', approved_date = '', approver_comment = '' WHERE serial_no = :serial_no AND id = :id";
                 $stmt_training_record = $conn->prepare($sql_training_record);
                 $stmt_training_record->bindParam(':status', $status, PDO::PARAM_STR);
                 $stmt_training_record->bindParam(':serial_no', $serial_no, PDO::PARAM_STR);
